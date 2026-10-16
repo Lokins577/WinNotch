@@ -71,11 +71,13 @@ Monitor user-selected download folders and integrate Windows notification
 listener access. Provide history, dismiss/open behavior where supported, and
 clear consent states.
 
-Status: in progress. Download monitoring is implemented with explicit folder
+Status: implemented. Download monitoring includes explicit folder
 selection, browser temporary-file recognition, stable-file completion,
 top/vertical/compact island surfaces, persistence, and live lifecycle toggling.
-Windows notification-listener permission and inbox behavior remain in this
-module.
+The notification half uses `UserNotificationListener`, explicit consent,
+foreground synchronization, per-item dismissal, revocation checks, island
+surfaces, and a clear unsupported state. The current Inno build cannot receive
+that Windows capability; MSIX identity and signing remain module 15 work.
 
 ### 4. Music expansion and AI agent activity
 

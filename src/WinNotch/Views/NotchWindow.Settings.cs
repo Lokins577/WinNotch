@@ -10,7 +10,12 @@ public partial class NotchWindow
     {
         var window = new FeatureCatalogWindow(
             _settings,
-            new[] { BuiltInFeatures.Timers.Id, BuiltInFeatures.Downloads.Id },
+            new[]
+            {
+                BuiltInFeatures.Timers.Id,
+                BuiltInFeatures.Downloads.Id,
+                BuiltInFeatures.Notifications.Id
+            },
             SetFeatureAvailabilityAsync)
         {
             Owner = this,
@@ -24,7 +29,8 @@ public partial class NotchWindow
     private async Task SetFeatureAvailabilityAsync(FeatureDescriptor feature, bool enabled)
     {
         if (feature.Id != BuiltInFeatures.Timers.Id
-            && feature.Id != BuiltInFeatures.Downloads.Id)
+            && feature.Id != BuiltInFeatures.Downloads.Id
+            && feature.Id != BuiltInFeatures.Notifications.Id)
             throw new InvalidOperationException($"Feature {feature.Id} is not live-toggleable yet.");
 
         bool previous = _settings.IsFeatureAvailable(feature);
@@ -63,6 +69,10 @@ public partial class NotchWindow
         {
             BindDownloadViews(enabled);
         }
+        else if (feature.Id == BuiltInFeatures.Notifications.Id)
+        {
+            BindNotificationViews(enabled);
+        }
 
         RefreshPluginHostLayout();
     }
@@ -100,6 +110,22 @@ public partial class NotchWindow
         else
         {
             DownloadCompact.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void BindNotificationViews(bool enabled)
+    {
+        NotificationOpenView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        VerticalNotificationView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        if (enabled && _services.Notifications is { } notifications)
+        {
+            NotificationOpenView.Bind(notifications);
+            VerticalNotificationView.Bind(notifications, compact: true);
+            NotificationCompact.Bind(notifications);
+        }
+        else
+        {
+            NotificationCompact.Visibility = Visibility.Collapsed;
         }
     }
 

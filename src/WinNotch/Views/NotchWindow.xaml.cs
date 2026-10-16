@@ -369,6 +369,7 @@ public partial class NotchWindow : Window
         return baseHeight
             + GetMeasuredElementHeight(TimerOpenView, availableWidth)
             + GetMeasuredElementHeight(DownloadOpenView, availableWidth)
+            + GetMeasuredElementHeight(NotificationOpenView, availableWidth)
             + GetMeasuredPanelHeight(PluginOpenPanel, availableWidth);
     }
 
@@ -382,6 +383,7 @@ public partial class NotchWindow : Window
         return baseHeight
             + GetMeasuredElementHeight(TimerOpenView, availableWidth)
             + GetMeasuredElementHeight(DownloadOpenView, availableWidth)
+            + GetMeasuredElementHeight(NotificationOpenView, availableWidth)
             + GetMeasuredPanelHeight(PluginOpenPanel, availableWidth);
     }
 
@@ -390,6 +392,7 @@ public partial class NotchWindow : Window
         return NotchConstants.SideOpenHeight
             + GetMeasuredElementHeight(VerticalTimerView, 136)
             + GetMeasuredElementHeight(VerticalDownloadView, 136)
+            + GetMeasuredElementHeight(VerticalNotificationView, 136)
             + GetMeasuredPanelHeight(VerticalPluginOpenPanel, 136);
     }
 

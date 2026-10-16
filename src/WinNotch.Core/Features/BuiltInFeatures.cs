@@ -42,9 +42,12 @@ public static class BuiltInFeatures
         Maturity: FeatureMaturity.Available,
         Dependencies: new[] { Island.Id });
 
-    public static readonly FeatureDescriptor Notifications = Planned(
+    public static readonly FeatureDescriptor Notifications = new(
         "island.notifications", "Notification activities", FeatureGroup.Island,
-        "Permission-based notification previews and inbox actions.");
+        "Permission-based notification previews and inbox actions.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Experimental,
+        Dependencies: new[] { Island.Id });
 
     public static readonly FeatureDescriptor Downloads = new(
         "island.downloads", "Download activities", FeatureGroup.Island,

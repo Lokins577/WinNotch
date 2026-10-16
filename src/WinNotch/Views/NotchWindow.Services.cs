@@ -89,6 +89,17 @@ public partial class NotchWindow
             DownloadCompact.Bind(downloads);
         }
 
+        // Windows notification inbox (permission gated)
+        bool notificationsAvailable = _settings.IsFeatureAvailable(BuiltInFeatures.Notifications);
+        NotificationOpenView.Visibility = notificationsAvailable ? Visibility.Visible : Visibility.Collapsed;
+        VerticalNotificationView.Visibility = notificationsAvailable ? Visibility.Visible : Visibility.Collapsed;
+        if (notificationsAvailable && _services.Notifications is { } notifications)
+        {
+            NotificationOpenView.Bind(notifications);
+            VerticalNotificationView.Bind(notifications, compact: true);
+            NotificationCompact.Bind(notifications);
+        }
+
         // Calendar
         CalendarPanel_View.Bind(_calendarService);
         CalendarPanel.Visibility = _settings.ShowCalendar ? Visibility.Visible : Visibility.Collapsed;

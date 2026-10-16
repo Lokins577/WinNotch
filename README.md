@@ -23,6 +23,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Built-in media controls and audio visualizer
 - Persistent focus cycles, countdown timer, and stopwatch with compact live activity
 - Download-folder live activity with browser temporary-file detection
+- Permission-gated Windows notification inbox (packaged builds)
 - Volume and brightness HUDs
 - Calendar, battery, file shelf, and webcam mirror
 - Light, dark, and auto theme support

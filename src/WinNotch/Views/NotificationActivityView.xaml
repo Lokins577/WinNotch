@@ -1,0 +1,19 @@
+<UserControl x:Class="WinNotch.Views.NotificationActivityView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border Background="{DynamicResource SegmentedBgBrush}" CornerRadius="10"
+            Padding="10" Margin="0,4,0,0">
+        <StackPanel>
+            <Grid>
+                <TextBlock Text="Notifications" FontSize="12" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <Button x:Name="AccessButton" Content="Allow" Click="OnRequestAccess"
+                        HorizontalAlignment="Right" Padding="7,2" FontSize="10"
+                        Visibility="Collapsed"/>
+            </Grid>
+            <TextBlock x:Name="StatusText" Margin="0,5,0,0" FontSize="10"
+                       TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}"/>
+            <StackPanel x:Name="NotificationHost" Margin="0,4,0,0"/>
+        </StackPanel>
+    </Border>
+</UserControl>

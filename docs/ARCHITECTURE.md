@@ -72,6 +72,11 @@ owns `FileSystemWatcher`, stability polling, and temporary-extension handling.
 The selected folder is explicit user state, and disabling the feature disposes
 both the watcher and poller through Feature Runtime.
 
+Notification models are platform-neutral. The Windows listener backend is
+isolated behind `INotificationListenerBackend`, so consent, revocation, delta
+refresh, dismissal, and unsupported package identity can be tested without
+reading the real user's notifications.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New
