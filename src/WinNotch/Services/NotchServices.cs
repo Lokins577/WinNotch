@@ -10,6 +10,7 @@ using WinNotch.Platform.Windows.CommandBar;
 using WinNotch.CommandBar;
 using WinNotch.Platform.Windows.Scratchpad;
 using WinNotch.Platform.Windows.SystemMonitoring;
+using WinNotch.Platform.Windows.AudioControl;
 
 namespace WinNotch.Services;
 
@@ -43,6 +44,7 @@ public sealed class NotchServices : IDisposable
     public RadialMenuFeatureService? RadialMenu { get; private set; }
     public WindowManagementFeatureService? WindowManager { get; private set; }
     public SystemMonitorFeatureService? SystemMonitor { get; private set; }
+    public AudioMixerFeatureService? AudioMixer { get; private set; }
     public FeatureRuntime FeatureRuntime { get; }
 
     private readonly AppSettings _settings;
@@ -77,6 +79,7 @@ public sealed class NotchServices : IDisposable
         FeatureRuntime.Register(BuiltInFeatures.RadialMenu.Id, CreateRadialMenuModule);
         FeatureRuntime.Register(BuiltInFeatures.WindowManagement.Id, CreateWindowManagementModule);
         FeatureRuntime.Register(BuiltInFeatures.SystemMonitor.Id, CreateSystemMonitorModule);
+        FeatureRuntime.Register(BuiltInFeatures.AudioMixer.Id, CreateAudioMixerModule);
     }
 
     /// <summary>
@@ -91,6 +94,10 @@ public sealed class NotchServices : IDisposable
     private async Task InitializeAsync(AppSettings settings)
     {
         await Media.InitializeAsync();
+        _settings.AudioControlPreferences.Normalize();
+        AudioCapture.SetOutputDevicePreferences(
+            _settings.AudioControlPreferences.PreferredVisualizerOutputId,
+            _settings.AudioControlPreferences.OutputDevicePriority);
         AudioCapture.Start();
         Volume.Initialize();
         Brightness.Initialize();
@@ -132,6 +139,9 @@ public sealed class NotchServices : IDisposable
         await FeatureRuntime.SetEnabledAsync(
             BuiltInFeatures.SystemMonitor.Id,
             _settings.IsFeatureAvailable(BuiltInFeatures.SystemMonitor));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.AudioMixer.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.AudioMixer));
     }
 
     public void Dispose()
@@ -241,6 +251,12 @@ public sealed class NotchServices : IDisposable
             new WindowsSystemMetricsCollector(),
             _settings.SystemMonitorPreferences);
         return SystemMonitor;
+    }
+
+    private IFeatureModule CreateAudioMixerModule()
+    {
+        AudioMixer = new AudioMixerFeatureService(new WindowsAudioControlBackend());
+        return AudioMixer;
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule

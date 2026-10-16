@@ -132,6 +132,12 @@ enumeration. Each metric reports capability confidence instead of substituting
 zero when a provider is absent. The sampling loop belongs to a lifecycle module
 and is cancelled when the feature is disabled.
 
+Audio endpoint/session models and device-priority policy live in Core. The
+Windows adapter owns NAudio Core Audio enumeration and controls plus the public
+process-loopback activation contract. Process analysis emits transient FFT
+bands only, never recorded samples. System default-device and application-route
+changes are handed to Windows Settings rather than private policy interfaces.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New
@@ -160,6 +166,7 @@ new work does not return to a single multi-thousand-line file:
 - `NotchWindow.RadialMenu.cs`: radial action dispatch and settings.
 - `NotchWindow.WindowManagement.cs`: window switcher lifecycle.
 - `NotchWindow.SystemMonitor.cs`: monitor dashboard and alert dispatch.
+- `NotchWindow.AudioMixer.cs`: audio control surface lifecycle.
 
 ## Dependency rules
 

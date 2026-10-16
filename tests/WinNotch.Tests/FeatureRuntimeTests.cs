@@ -63,7 +63,7 @@ public sealed class FeatureRuntimeTests
         var runtime = new FeatureRuntime(BuiltInFeatures.Catalog);
 
         Assert.Throws<InvalidOperationException>(() =>
-            runtime.Register(BuiltInFeatures.AudioMixer.Id, () => new FakeModule(BuiltInFeatures.AudioMixer.Id)));
+            runtime.Register(BuiltInFeatures.Capture.Id, () => new FakeModule(BuiltInFeatures.Capture.Id)));
     }
 
     [Fact]

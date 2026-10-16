@@ -60,6 +60,8 @@ public sealed class JsonAppSettingsStoreTests
         expected.SystemMonitorPreferences.SampleIntervalSeconds = 5;
         expected.SystemMonitorPreferences.SustainedSeconds = 30;
         expected.SystemMonitorPreferences.CpuAlertPercent = 85;
+        expected.AudioControlPreferences.PreferredVisualizerOutputId = "output-a";
+        expected.AudioControlPreferences.OutputDevicePriority.AddRange(["output-a", "output-b"]);
 
         store.Save(expected);
         var actual = store.Load();
@@ -90,6 +92,8 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal(5, actual.SystemMonitorPreferences.SampleIntervalSeconds);
         Assert.Equal(30, actual.SystemMonitorPreferences.SustainedSeconds);
         Assert.Equal(85, actual.SystemMonitorPreferences.CpuAlertPercent);
+        Assert.Equal("output-a", actual.AudioControlPreferences.PreferredVisualizerOutputId);
+        Assert.Equal(["output-a", "output-b"], actual.AudioControlPreferences.OutputDevicePriority);
     }
 
     [Fact]

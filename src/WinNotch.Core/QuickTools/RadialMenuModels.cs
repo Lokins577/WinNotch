@@ -15,7 +15,8 @@ public enum RadialActionKind
     File = 7,
     Url = 8,
     WindowSwitcher = 9,
-    SystemMonitor = 10
+    SystemMonitor = 10,
+    AudioMixer = 11
 }
 
 public sealed class RadialMenuItem

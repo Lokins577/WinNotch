@@ -107,9 +107,11 @@ public static class BuiltInFeatures
         EnabledByDefault: false,
         Maturity: FeatureMaturity.Available);
 
-    public static readonly FeatureDescriptor AudioMixer = Planned(
+    public static readonly FeatureDescriptor AudioMixer = new(
         "sound.mixer", "Per-app audio", FeatureGroup.Sound,
-        "Session volume, process capture, devices, microphone, and routing.");
+        "Session volume, process analysis, devices, microphone, and supported routing handoff.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Available);
 
     public static readonly FeatureDescriptor Capture = Planned(
         "tools.capture", "Capture and OCR", FeatureGroup.Tools,

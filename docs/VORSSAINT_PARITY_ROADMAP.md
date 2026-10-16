@@ -91,7 +91,8 @@ top/vertical/compact island surfaces. Media sessions can be enumerated and a
 preferred source persisted. Opt-in LRCLIB lookup, synchronized/plain parsing,
 cancellation, caching, and current-line display are implemented. Queue has a
 source-adapter contract because GSMTC exposes no universal queue; provider
-adapters and per-process equalizer work remain.
+adapters remain. Per-process equalizer input is now supplied by module 9's
+no-file process-loopback spectrum analyzer.
 
 ### 5. Clipboard and file workflow
 
@@ -160,6 +161,15 @@ explicitly withheld without a supported ETW/driver or sensor provider.
 Implement per-session volume, process loopback, device switching and priority,
 microphone controls, and routing only through supported APIs. Any APO or driver
 work is a separately approved submodule.
+
+Status: implemented. The optional `Ctrl+Alt+A` mixer enumerates active output
+and microphone endpoints, controls per-session and capture-endpoint volume/mute,
+shows session peaks, persists a WinNotch visualizer-output priority list, and
+uses the public Windows 10 build 20348+ process-loopback API for transient
+per-process FFT analysis. No audio is saved. System default-device and per-app
+routing changes open Windows-owned settings because WinNotch intentionally does
+not depend on private `IPolicyConfig` interfaces. Driver/APO routing remains a
+separately approved hardware submodule rather than an implied capability.
 
 ### 10. Screenshot, OCR, and color capture
 

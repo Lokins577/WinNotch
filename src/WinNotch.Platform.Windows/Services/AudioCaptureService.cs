@@ -12,6 +12,10 @@ namespace WinNotch.Services;
 public class AudioCaptureService : IDisposable
 {
     private WasapiLoopbackCapture? _capture;
+    private MMDeviceEnumerator? _deviceEnumerator;
+    private MMDevice? _captureDevice;
+    private string? _preferredOutputDeviceId;
+    private IReadOnlyList<string> _outputDevicePriority = [];
     private readonly float[] _fftBuffer;
     private readonly int _fftSize;
     private int _fftPos;
@@ -29,6 +33,7 @@ public class AudioCaptureService : IDisposable
     public int BandCount { get; }
 
     public event Action? SpectrumUpdated;
+    public string? ActiveOutputDeviceId { get; private set; }
 
     public AudioCaptureService(int bandCount = 12, int fftSize = 2048)
     {
@@ -46,7 +51,13 @@ public class AudioCaptureService : IDisposable
 
             try
             {
-                _capture = new WasapiLoopbackCapture();
+                DisposeCaptureLocked();
+                _deviceEnumerator = new MMDeviceEnumerator();
+                _captureDevice = ResolveOutputDevice(_deviceEnumerator);
+                _capture = _captureDevice == null
+                    ? new WasapiLoopbackCapture()
+                    : new WasapiLoopbackCapture(_captureDevice);
+                ActiveOutputDeviceId = _captureDevice?.ID;
                 _capture.DataAvailable += OnDataAvailable;
                 _capture.RecordingStopped += OnRecordingStopped;
                 _capture.StartRecording();
@@ -57,6 +68,29 @@ public class AudioCaptureService : IDisposable
                 System.Diagnostics.Debug.WriteLine($"AudioCapture start failed: {ex.Message}");
             }
         }
+    }
+
+    public void SetOutputDevicePreferences(string? preferredDeviceId, IReadOnlyList<string>? priority)
+    {
+        preferredDeviceId = string.IsNullOrWhiteSpace(preferredDeviceId) ? null : preferredDeviceId.Trim();
+        var normalizedPriority = (priority ?? [])
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Select(id => id.Trim())
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+        bool restart;
+        lock (_captureLock)
+        {
+            restart = _isCapturing;
+            if (string.Equals(_preferredOutputDeviceId, preferredDeviceId, StringComparison.Ordinal)
+                && _outputDevicePriority.SequenceEqual(normalizedPriority, StringComparer.Ordinal)) return;
+            _preferredOutputDeviceId = preferredDeviceId;
+            _outputDevicePriority = normalizedPriority;
+        }
+        if (!restart) return;
+        Stop();
+        lock (_captureLock) DisposeCaptureLocked();
+        Start();
     }
 
     public void Stop()
@@ -176,10 +210,9 @@ public class AudioCaptureService : IDisposable
                     if (_disposed || _isCapturing) return;
                     try
                     {
-                        _capture?.Dispose();
+                        DisposeCaptureLocked();
                     }
                     catch { }
-                    _capture = null;
                 }
                 Start();
             });
@@ -194,6 +227,41 @@ public class AudioCaptureService : IDisposable
             _disposed = true;
         }
         Stop();
-        _capture?.Dispose();
+        lock (_captureLock) DisposeCaptureLocked();
+    }
+
+    private MMDevice? ResolveOutputDevice(MMDeviceEnumerator enumerator)
+    {
+        IEnumerable<string?> candidates = new[] { _preferredOutputDeviceId }
+            .Concat(_outputDevicePriority);
+        foreach (string id in candidates.Where(id => !string.IsNullOrWhiteSpace(id))!)
+        {
+            try
+            {
+                var device = enumerator.GetDevice(id);
+                if (device.State == DeviceState.Active && device.DataFlow == DataFlow.Render)
+                    return device;
+                device.Dispose();
+            }
+            catch { }
+        }
+        try { return enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia); }
+        catch { return null; }
+    }
+
+    private void DisposeCaptureLocked()
+    {
+        if (_capture != null)
+        {
+            _capture.DataAvailable -= OnDataAvailable;
+            _capture.RecordingStopped -= OnRecordingStopped;
+            _capture.Dispose();
+        }
+        _capture = null;
+        _captureDevice?.Dispose();
+        _captureDevice = null;
+        _deviceEnumerator?.Dispose();
+        _deviceEnumerator = null;
+        ActiveOutputDeviceId = null;
     }
 }

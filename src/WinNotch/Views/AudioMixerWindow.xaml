@@ -1,0 +1,45 @@
+<Window x:Class="WinNotch.Views.AudioMixerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Audio Control" Width="760" Height="640" MinWidth="650" MinHeight="520"
+        WindowStartupLocation="CenterScreen" Background="{DynamicResource WindowBackgroundBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}">
+    <Grid Margin="16">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <Grid>
+            <StackPanel>
+                <TextBlock Text="Audio Control" FontSize="20" FontWeight="SemiBold"/>
+                <TextBlock Text="Ctrl+Alt+A · supported Core Audio controls only" FontSize="10"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Sound settings" Click="OnSoundSettings" Padding="9,4"/>
+                <Button Content="App routing" Click="OnRoutingSettings" Padding="9,4" Margin="6,0,0,0"/>
+            </StackPanel>
+        </Grid>
+        <ScrollViewer Grid.Row="1" Margin="0,14,0,0" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="WINNOTCH VISUALIZER OUTPUT" FontSize="10" FontWeight="SemiBold"/>
+                <ComboBox x:Name="OutputDeviceBox" DisplayMemberPath="Name" Margin="0,5,0,4"
+                          SelectionChanged="OnOutputDeviceSelected"/>
+                <TextBlock Text="This changes WinNotch loopback/visualizer capture only. Windows default-device and per-app routing remain user-owned settings."
+                           TextWrapping="Wrap" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+                <TextBlock Text="APPLICATION SESSIONS" FontSize="10" FontWeight="SemiBold" Margin="0,16,0,5"/>
+                <StackPanel x:Name="SessionHost"/>
+
+                <TextBlock Text="PROCESS LOOPBACK SPECTRUM" FontSize="10" FontWeight="SemiBold" Margin="0,16,0,5"/>
+                <TextBlock x:Name="LoopbackStatus" TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                <UniformGrid x:Name="SpectrumHost" Rows="1" Columns="12" Height="70" Margin="0,6,0,0"/>
+                <Button x:Name="StopAnalysisButton" Content="Stop process analysis" Click="OnStopAnalysis"
+                        HorizontalAlignment="Left" Padding="9,4" Margin="0,6,0,0" Visibility="Collapsed"/>
+
+                <TextBlock Text="MICROPHONE ENDPOINTS" FontSize="10" FontWeight="SemiBold" Margin="0,16,0,5"/>
+                <StackPanel x:Name="InputHost"/>
+            </StackPanel>
+        </ScrollViewer>
+        <TextBlock x:Name="StatusText" Grid.Row="2" Margin="0,10,0,0" TextWrapping="Wrap"
+                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+    </Grid>
+</Window>

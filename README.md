@@ -17,6 +17,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Architecture guide: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Window management guide: [docs/WINDOW_MANAGEMENT.md](docs/WINDOW_MANAGEMENT.md)
 - System monitor guide: [docs/SYSTEM_MONITOR.md](docs/SYSTEM_MONITOR.md)
+- Audio control guide: [docs/AUDIO_CONTROL.md](docs/AUDIO_CONTROL.md)
 
 ## Features
 
@@ -37,6 +38,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Configurable Ctrl+Alt+R radial menu for built-in actions, saved paths, and HTTP(S) links
 - Ctrl+Alt+W window switcher with live previews, layouts, restore, monitor movement, and safe close requests
 - Ctrl+Alt+M system monitor with history, process attribution, provider confidence, and sustained alerts
+- Ctrl+Alt+A per-app audio mixer, microphone controls, visualizer-device priority, and process spectrum analysis
 - Volume and brightness HUDs
 - Calendar, battery, file shelf, and webcam mirror
 - Light, dark, and auto theme support
