@@ -57,6 +57,11 @@ than extending `NotchWindow` or the composition root. A feature should keep its
 model and policy in Core where possible, its operating-system adapter in the
 Windows platform project, and its WPF surface in the application project.
 
+`WinNotch.Core/Features` owns stable feature IDs, descriptors, the built-in
+catalog, persisted availability policy, and the asynchronous lifecycle runtime.
+Planned features may appear in the catalog but cannot register a runtime module
+until their maturity changes to Available or Experimental.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New

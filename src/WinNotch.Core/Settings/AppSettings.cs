@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using WinNotch.Features;
 
 namespace WinNotch.Models;
 
@@ -27,6 +28,8 @@ public enum AppTheme
 /// </summary>
 public class AppSettings
 {
+    public Dictionary<string, bool> FeatureAvailability { get; set; } = new(StringComparer.Ordinal);
+
     // General
     public bool StartOnBoot { get; set; }
     public HoverMode HoverMode { get; set; } = HoverMode.HoverPeekClickOpen;
@@ -91,6 +94,20 @@ public class AppSettings
     public AppTheme GetRequestedTheme()
     {
         return AdaptToWindowsTheme ? AppTheme.Auto : GetManualTheme();
+    }
+
+    public bool IsFeatureAvailable(FeatureDescriptor feature)
+    {
+        ArgumentNullException.ThrowIfNull(feature);
+        return FeatureAvailability.TryGetValue(feature.Id.Value, out var enabled)
+            ? enabled
+            : feature.EnabledByDefault;
+    }
+
+    public void SetFeatureAvailable(FeatureDescriptor feature, bool enabled)
+    {
+        ArgumentNullException.ThrowIfNull(feature);
+        FeatureAvailability[feature.Id.Value] = enabled;
     }
 
 }

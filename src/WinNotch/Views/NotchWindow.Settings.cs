@@ -5,6 +5,18 @@ namespace WinNotch.Views;
 
 public partial class NotchWindow
 {
+    private void OpenFeatureCatalog()
+    {
+        var window = new FeatureCatalogWindow(_settings)
+        {
+            Owner = this,
+            Topmost = true
+        };
+        window.Show();
+        window.Activate();
+        window.Topmost = false;
+    }
+
     public void OpenSettings()
     {
         // First ensure the notch is open

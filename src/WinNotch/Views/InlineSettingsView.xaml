@@ -238,6 +238,17 @@
                               Checked="OnLiquidGlassChanged" Unchecked="OnLiquidGlassChanged"/>
                 </Grid>
 
+                <!-- Features -->
+                <TextBlock Text="FEATURES" Style="{StaticResource SectionHeader}"/>
+
+                <Button Click="OnManageFeaturesClick"
+                        HorizontalAlignment="Left" Cursor="Hand"
+                        Background="Transparent" BorderThickness="0" Padding="0" Margin="0,2,0,4">
+                    <TextBlock Text="View feature catalog"
+                               Foreground="{DynamicResource TextSubtleBrush}" FontSize="11"
+                               TextDecorations="Underline"/>
+                </Button>
+
                 <!-- Plugins -->
                 <TextBlock Text="PLUGINS" Style="{StaticResource SectionHeader}"/>
 

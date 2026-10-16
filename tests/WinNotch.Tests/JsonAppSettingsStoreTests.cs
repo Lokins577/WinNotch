@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text.Json;
 using WinNotch.Models;
+using WinNotch.Features;
 using WinNotch.Platform.Windows.Settings;
 using Xunit;
 
@@ -20,6 +21,7 @@ public sealed class JsonAppSettingsStoreTests
             ShowCalendar = false,
             Theme = AppTheme.Light
         };
+        expected.SetFeatureAvailable(BuiltInFeatures.Media, false);
 
         store.Save(expected);
         var actual = store.Load();
@@ -28,6 +30,7 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal(0, actual.HoverCloseDelayMs);
         Assert.False(actual.ShowCalendar);
         Assert.Equal(AppTheme.Light, actual.Theme);
+        Assert.False(actual.IsFeatureAvailable(BuiltInFeatures.Media));
     }
 
     [Fact]

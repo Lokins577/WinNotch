@@ -44,6 +44,8 @@ public partial class NotchWindow
             await _themeService.ApplyWithTransition(themeSettings, NotchCanvas);
             SettingsUpdatedByUser?.Invoke(themeSettings);
         };
+        InlineSettings.ManageFeaturesRequested += OpenFeatureCatalog;
+        VerticalInlineSettings.ManageFeaturesRequested += OpenFeatureCatalog;
 
         // Toggle clock/live-activity visibility based on music state
         _mediaService.MediaInfo.PropertyChanged += (_, e) =>

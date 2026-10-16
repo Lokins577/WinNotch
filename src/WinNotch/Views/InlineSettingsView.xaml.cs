@@ -26,6 +26,9 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
     /// <summary>Fired when the user wants to manage plugins.</summary>
     public event Action? ManagePluginsRequested;
 
+    /// <summary>Fired when the user wants to inspect built-in feature availability.</summary>
+    public event Action? ManageFeaturesRequested;
+
     public InlineSettingsView()
     {
         InitializeComponent();
@@ -156,6 +159,11 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
     private void OnManagePluginsClick(object sender, RoutedEventArgs e)
     {
         ManagePluginsRequested?.Invoke();
+    }
+
+    private void OnManageFeaturesClick(object sender, RoutedEventArgs e)
+    {
+        ManageFeaturesRequested?.Invoke();
     }
 
     private async void OnCheckUpdateClick(object sender, RoutedEventArgs e)

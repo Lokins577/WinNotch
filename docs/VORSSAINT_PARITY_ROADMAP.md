@@ -51,6 +51,10 @@ Create the stable feature identity catalog, groups, availability state,
 dependency checks, start/stop lifecycle, persisted enable state, and a minimal
 Features settings surface. Existing built-ins remain enabled through migration.
 
+Status: implemented. The catalog currently exposes implemented WinNotch
+capabilities and planned delivery modules; the lifecycle supports idempotent
+start/stop, restart, failure state, persistence overrides, and a Features UI.
+
 ### 2. Timer, focus cycles, stopwatch, and live activities
 
 Add durable timers, focus-cycle rules, alarms, compact indicators, and island
