@@ -134,6 +134,22 @@
                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
                 </Grid>
 
+                <Grid Height="28" Margin="0,2">
+                    <TextBlock Text="Online lyrics" Style="{StaticResource SettingLabel}"/>
+                    <CheckBox x:Name="OnlineLyricsCheck" Style="{StaticResource ToggleSwitch}"
+                              HorizontalAlignment="Right" VerticalAlignment="Center"
+                              Checked="OnOnlineLyricsChanged" Unchecked="OnOnlineLyricsChanged"/>
+                </Grid>
+                <TextBlock Text="Sends the current track title, artist, album and duration to LRCLIB. Off by default."
+                           Foreground="{DynamicResource TextFaintBrush}" FontSize="9" Margin="0,0,0,4"
+                           TextWrapping="Wrap"/>
+                <Button Click="OnMediaQueueSettingsClick" HorizontalAlignment="Left" Cursor="Hand"
+                        Background="Transparent" BorderThickness="0" Padding="0" Margin="0,1,0,6">
+                    <TextBlock Text="Configure Spotify / VLC playback queue"
+                               Foreground="{DynamicResource TextSubtleBrush}"
+                               FontSize="11" TextDecorations="Underline"/>
+                </Button>
+
                 <!-- System HUD -->
                 <TextBlock Text="SYSTEM HUD" Style="{StaticResource SectionHeader}"/>
 
@@ -318,15 +334,6 @@
                               Checked="OnDownloadMonitoringChanged" Unchecked="OnDownloadMonitoringChanged"/>
                 </Grid>
 
-                <Grid Height="28" Margin="0,2">
-                    <TextBlock Text="Online lyrics" Style="{StaticResource SettingLabel}"/>
-                    <CheckBox x:Name="OnlineLyricsCheck" Style="{StaticResource ToggleSwitch}"
-                              HorizontalAlignment="Right" VerticalAlignment="Center"
-                              Checked="OnOnlineLyricsChanged" Unchecked="OnOnlineLyricsChanged"/>
-                </Grid>
-                <TextBlock Text="Sends the current track title, artist, album and duration to LRCLIB. Off by default."
-                           Foreground="{DynamicResource TextFaintBrush}" FontSize="9" Margin="0,0,0,4"
-                           TextWrapping="Wrap"/>
                 <Button Click="OnChooseDownloadsFolder" HorizontalAlignment="Left" Cursor="Hand"
                         Background="Transparent" BorderThickness="0" Padding="0" Margin="0,1,0,2">
                     <TextBlock Text="Choose folder" Foreground="{DynamicResource TextSubtleBrush}"

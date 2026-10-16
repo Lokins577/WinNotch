@@ -12,6 +12,7 @@ using WinNotch.AppManagement;
 using WinNotch.InputEnhancements;
 using WinNotch.DisplayEnergy;
 using WinNotch.ProductHardening;
+using WinNotch.Music;
 
 namespace WinNotch.Models;
 
@@ -47,6 +48,7 @@ public class AppSettings
     public string? DownloadsFolder { get; set; }
     public string? PreferredMediaSourceId { get; set; }
     public bool OnlineLyricsEnabled { get; set; }
+    public MediaQueuePreferences MediaQueuePreferences { get; set; } = new();
     public ClipboardPreferences ClipboardPreferences { get; set; } = new();
     public List<string> CommandBarSearchFolders { get; set; } = [];
     public List<CommandSnippet> CommandSnippets { get; set; } = [];

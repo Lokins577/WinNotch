@@ -11,6 +11,7 @@ using WinNotch.CommandBar;
 using WinNotch.Platform.Windows.Scratchpad;
 using WinNotch.Platform.Windows.SystemMonitoring;
 using WinNotch.Platform.Windows.AudioControl;
+using WinNotch.Music;
 
 namespace WinNotch.Services;
 
@@ -24,6 +25,8 @@ namespace WinNotch.Services;
 public sealed class NotchServices : IDisposable
 {
     public MediaService Media { get; }
+    public MediaQueueService MediaQueue { get; }
+    public IMediaCredentialStore MediaCredentials { get; }
     public LyricsService Lyrics { get; }
     public AudioCaptureService AudioCapture { get; } = new(bandCount: 12);
     public VolumeService Volume { get; } = new();
@@ -66,6 +69,19 @@ public sealed class NotchServices : IDisposable
             settings.PreferredMediaSourceId = sourceId;
             settingsStore.Save(settings);
         });
+        settings.MediaQueuePreferences.Normalize();
+        MediaCredentials = new WindowsCredentialStore();
+        var queueAdapters = new IMediaQueueAdapter[]
+        {
+            new SpotifyMediaQueueAdapter(
+                () => settings.MediaQueuePreferences.SpotifyEnabled,
+                () => MediaCredentials.Read(MediaCredentialKeys.SpotifyAccessToken)),
+            new VlcMediaQueueAdapter(
+                () => settings.MediaQueuePreferences.VlcEnabled,
+                () => settings.MediaQueuePreferences.VlcBaseUrl,
+                () => MediaCredentials.Read(MediaCredentialKeys.VlcPassword))
+        };
+        MediaQueue = new MediaQueueService(Media, queueAdapters, () => settings.MediaQueuePreferences);
         Lyrics = new LyricsService(
             Media,
             new LrclibLyricsProvider($"WinNotch/{AppInfo.Version}"),
@@ -173,6 +189,7 @@ public sealed class NotchServices : IDisposable
     {
         AudioCapture.Dispose();
         Lyrics.Dispose();
+        MediaQueue.Dispose();
         Media.Dispose();
         Volume.Dispose();
         Brightness.Dispose();

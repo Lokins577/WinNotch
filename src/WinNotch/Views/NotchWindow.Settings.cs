@@ -200,6 +200,23 @@ public partial class NotchWindow
         SettingsUpdatedByUser?.Invoke(settings);
     }
 
+    private void OpenMediaQueueSettings()
+    {
+        var window = new MediaQueueSettingsWindow(
+            _settings,
+            _settingsStore,
+            _services.MediaCredentials,
+            _services.MediaQueue,
+            () => SettingsUpdatedByUser?.Invoke(_settings))
+        {
+            Owner = this,
+            Topmost = true
+        };
+        window.Show();
+        window.Activate();
+        window.Topmost = false;
+    }
+
     private void ApplyClipboardSettings(AppSettings settings)
     {
         _settings = settings;

@@ -13,6 +13,7 @@ using WinNotch.DisplayEnergy;
 using WinNotch.ProductHardening;
 using WinNotch.Timers;
 using WinNotch.Clipboard;
+using WinNotch.Music;
 using WinNotch.Platform.Windows.ProductHardening;
 using Windows.ApplicationModel;
 
@@ -131,6 +132,8 @@ public sealed class JsonAppSettingsStore : IAppSettingsStore
             settings.FeatureAvailability = new Dictionary<string, bool>(settings.FeatureAvailability, StringComparer.Ordinal);
         settings.TimerPreferences ??= new TimerPreferences();
         settings.TimerSession ??= new TimerSession();
+        settings.MediaQueuePreferences ??= new MediaQueuePreferences();
+        settings.MediaQueuePreferences.Normalize();
         settings.ClipboardPreferences ??= new ClipboardPreferences();
         settings.CommandBarSearchFolders ??= [];
         settings.CommandSnippets ??= [];

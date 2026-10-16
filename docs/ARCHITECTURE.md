@@ -84,7 +84,11 @@ allowlist of metadata keys, and never moves conversation text into UI models.
 Lyrics parsing and queue contracts live in Core. The Windows layer owns GSMTC
 session enumeration and the consent-gated LRCLIB client. `LyricsService`
 cancels stale lookups on track changes and publishes immutable snapshots; the
-music view only selects a source and renders the current line.
+music view only selects a source and renders the current line. Provider queue
+access is a separate `MediaQueueService`: Spotify and loopback-only VLC
+adapters handle network protocol details while secrets remain in Windows
+Credential Manager (or its current-user DPAPI fallback) rather than the JSON
+settings model.
 
 Clipboard policy and history ordering live in Core. The Windows listener owns
 the hidden message window, STA clipboard conversion, foreground-process lookup,

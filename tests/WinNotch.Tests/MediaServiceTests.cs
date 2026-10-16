@@ -19,6 +19,5 @@ public sealed class MediaServiceTests
 
         service.SelectSource(null);
         Assert.Null(persisted);
-        Assert.Equal(MediaQueueCapability.Unsupported, service.QueueCapability);
     }
 }

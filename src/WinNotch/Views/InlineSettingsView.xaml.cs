@@ -33,6 +33,7 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
 
     public event Action<AppSettings>? DownloadSettingsChanged;
     public event Action<AppSettings>? LyricsSettingsChanged;
+    public event Action? MediaQueueSettingsRequested;
     public event Action<AppSettings>? ClipboardSettingsChanged;
     public event Action? CommandBarSettingsRequested;
     public event Action? RadialMenuSettingsRequested;
@@ -188,6 +189,11 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         _settings.OnlineLyricsEnabled = OnlineLyricsCheck.IsChecked == true;
         _settingsStore.Save(_settings);
         LyricsSettingsChanged?.Invoke(_settings);
+    }
+
+    private void OnMediaQueueSettingsClick(object sender, RoutedEventArgs e)
+    {
+        MediaQueueSettingsRequested?.Invoke();
     }
 
     private void OnManageFeaturesClick(object sender, RoutedEventArgs e)

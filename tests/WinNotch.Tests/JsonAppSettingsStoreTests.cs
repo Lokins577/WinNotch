@@ -31,6 +31,10 @@ public sealed class JsonAppSettingsStoreTests
         expected.DownloadsFolder = @"D:\Downloads";
         expected.PreferredMediaSourceId = "spotify.exe";
         expected.OnlineLyricsEnabled = true;
+        expected.MediaQueuePreferences.SpotifyEnabled = true;
+        expected.MediaQueuePreferences.VlcEnabled = true;
+        expected.MediaQueuePreferences.VlcBaseUrl = "http://localhost:9090";
+        expected.MediaQueuePreferences.RefreshSeconds = 45;
         expected.ClipboardPreferences.MaximumItems = 250;
         expected.ClipboardPreferences.IgnoredApplications.Add("password-manager");
         expected.ClipboardPreferences.AutoClearSeconds = 120;
@@ -85,6 +89,9 @@ public sealed class JsonAppSettingsStoreTests
         expected.ProductHardeningPreferences.PerformanceMonitoringEnabled = false;
 
         store.Save(expected);
+        string persistedJson = File.ReadAllText(Path.Combine(directory.Path, "settings.json"));
+        Assert.DoesNotContain("SpotifyAccessToken", persistedJson, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("VlcPassword", persistedJson, StringComparison.OrdinalIgnoreCase);
         var actual = store.Load();
 
         Assert.False(actual.AdaptToWindowsTheme);
@@ -98,6 +105,10 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal(@"D:\Downloads", actual.DownloadsFolder);
         Assert.Equal("spotify.exe", actual.PreferredMediaSourceId);
         Assert.True(actual.OnlineLyricsEnabled);
+        Assert.True(actual.MediaQueuePreferences.SpotifyEnabled);
+        Assert.True(actual.MediaQueuePreferences.VlcEnabled);
+        Assert.Equal("http://localhost:9090/", actual.MediaQueuePreferences.VlcBaseUrl);
+        Assert.Equal(45, actual.MediaQueuePreferences.RefreshSeconds);
         Assert.Equal(250, actual.ClipboardPreferences.MaximumItems);
         Assert.Contains("password-manager", actual.ClipboardPreferences.IgnoredApplications);
         Assert.Equal(120, actual.ClipboardPreferences.AutoClearSeconds);

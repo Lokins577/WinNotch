@@ -12,7 +12,9 @@ namespace WinNotch.Views;
 public partial class MusicPlayerView : UserControl
 {
     private MediaService? _mediaService;
+    private MediaQueueService? _mediaQueueService;
     private LyricsService? _lyricsService;
+    private MediaQueueWindow? _queueWindow;
     private bool _updatingSources;
 
     public MusicPlayerView()
@@ -20,10 +22,14 @@ public partial class MusicPlayerView : UserControl
         InitializeComponent();
     }
 
-    public void Bind(MediaService mediaService, LyricsService lyricsService)
+    public void Bind(
+        MediaService mediaService,
+        LyricsService lyricsService,
+        MediaQueueService mediaQueueService)
     {
         _mediaService = mediaService;
         _lyricsService = lyricsService;
+        _mediaQueueService = mediaQueueService;
         var info = mediaService.MediaInfo;
 
         info.PropertyChanged += (_, e) =>
@@ -37,10 +43,12 @@ public partial class MusicPlayerView : UserControl
         };
         mediaService.SourcesChanged += () => Dispatcher.Invoke(UpdateSources);
         lyricsService.Updated += snapshot => Dispatcher.Invoke(() => UpdateLyrics(snapshot));
+        mediaQueueService.Updated += snapshot => Dispatcher.Invoke(() => UpdateQueue(snapshot));
 
         UpdateAll(info);
         UpdateSources();
         UpdateLyrics(lyricsService.Snapshot);
+        UpdateQueue(mediaQueueService.Snapshot);
     }
 
     private void UpdateAll(MediaInfo info)
@@ -103,6 +111,33 @@ public partial class MusicPlayerView : UserControl
             accentBrush.Freeze();
             ProgressFill.Background = accentBrush;
         }
+    }
+
+    private void UpdateQueue(MediaQueueSnapshot snapshot)
+    {
+        QueueButton.Visibility = snapshot.Capability == MediaQueueCapability.Unsupported
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+        QueueButton.ToolTip = snapshot.Message
+                              ?? $"{snapshot.Provider} queue ({snapshot.Queue.Count} item(s))";
+    }
+
+    private void OnQueueClick(object sender, RoutedEventArgs e)
+    {
+        if (_mediaQueueService == null) return;
+        if (_queueWindow is { IsVisible: true })
+        {
+            _queueWindow.Activate();
+            return;
+        }
+        _queueWindow = new MediaQueueWindow(_mediaQueueService)
+        {
+            Owner = Window.GetWindow(this),
+            Topmost = true
+        };
+        _queueWindow.Closed += (_, _) => _queueWindow = null;
+        _queueWindow.Show();
+        _queueWindow.Topmost = false;
     }
 
     private void UpdateSources()

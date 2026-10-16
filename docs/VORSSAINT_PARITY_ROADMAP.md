@@ -51,8 +51,8 @@ Create the stable feature identity catalog, groups, availability state,
 dependency checks, start/stop lifecycle, persisted enable state, and a minimal
 Features settings surface. Existing built-ins remain enabled through migration.
 
-Status: implemented. The catalog currently exposes implemented WinNotch
-capabilities and planned delivery modules; the lifecycle supports idempotent
+Status: implemented. The catalog exposes WinNotch capabilities and delivery
+modules; the lifecycle supports idempotent
 start/stop, restart, failure state, persistence overrides, and a Features UI.
 
 ### 2. Timer, focus cycles, stopwatch, and live activities
@@ -76,8 +76,9 @@ selection, browser temporary-file recognition, stable-file completion,
 top/vertical/compact island surfaces, persistence, and live lifecycle toggling.
 The notification half uses `UserNotificationListener`, explicit consent,
 foreground synchronization, per-item dismissal, revocation checks, island
-surfaces, and a clear unsupported state. The current Inno build cannot receive
-that Windows capability; MSIX identity and signing remain module 15 work.
+surfaces, and a clear unsupported state. The Inno build cannot receive that
+Windows capability; module 15 supplies the required MSIX identity, capability,
+packaging, and signing automation.
 
 ### 4. Music expansion and AI agent activity
 
@@ -85,14 +86,15 @@ Add lyric providers with consent, playback queue adapters, source selection,
 per-process equalizer input, and local agent activity for Codex, Claude,
 OpenCode, and Copilot. Never upload local session logs.
 
-Status: in progress. Local agent discovery and bounded metadata parsing are
+Status: implemented. Local agent discovery and bounded metadata parsing are
 implemented for all four providers, with coarse lifecycle state and
 top/vertical/compact island surfaces. Media sessions can be enumerated and a
 preferred source persisted. Opt-in LRCLIB lookup, synchronized/plain parsing,
-cancellation, caching, and current-line display are implemented. Queue has a
-source-adapter contract because GSMTC exposes no universal queue; provider
-adapters remain. Per-process equalizer input is now supplied by module 9's
-no-file process-loopback spectrum analyzer.
+cancellation, caching, and current-line display are implemented. Because GSMTC
+has no universal queue, explicit Spotify Web API and loopback-only VLC Web
+interface adapters provide queue snapshots, bounded refresh, clear failure
+states, and Windows user-bound credential storage. Per-process equalizer input
+is supplied by module 9's no-file process-loopback spectrum analyzer.
 
 ### 5. Clipboard and file workflow
 
@@ -257,15 +259,19 @@ automation signs the app, Inno installer, and capability-bearing MSIX via Azure
 Trusted Signing; MakeAppx validation, StartupTask handling, legacy installer
 migration, and a supported-hardware matrix are included.
 
-## Current coverage and estimate
+## Current coverage and remaining boundaries
 
-WinNotch already covers the island shell, multi-monitor placement, media
-transport, basic visualizer, master volume and brightness HUDs, battery,
-Outlook calendar, transient Shelf, camera preview, themes, updates, and plugin
-loading. Several are partial implementations rather than parity-complete
-modules.
+All 15 planned Windows-equivalent modules are implemented against the frozen
+Vorssaint baseline. That means the catalog behavior is represented either by a
+working Windows implementation or by an explicit, tested capability boundary;
+it does not mean every Mac-only mechanism or every hardware model can be made
+universal on Windows.
 
-After the architecture split, remaining Windows-equivalent parity is estimated
-at roughly 48-78 engineer-months. A literal 100% cross-hardware clone is not a
-valid promise; the deliverable is a tested Windows feature set with explicit
-capability and hardware fallbacks.
+The deliberate boundaries are: no undocumented virtual-desktop or audio-routing
+interfaces, no anti-cheat/elevation bypass, no generic embedded-controller fan
+writer, no fabricated GSMTC queue, and no claim of universal DDC, thermal, OCR,
+notification, or process-loopback availability. Signed release execution still
+depends on the repository's Azure Trusted Signing credentials, and hardware
+providers require validation on the matrix documented in
+`SUPPORTED_HARDWARE.md`. Later Vorssaint commits are new scope under the frozen
+baseline rule above.

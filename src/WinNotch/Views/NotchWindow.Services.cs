@@ -26,7 +26,7 @@ public partial class NotchWindow
         AttachDisplayEnergy();
 
         // Bind views to services
-        MusicPlayer.Bind(_mediaService, _services.Lyrics);
+        MusicPlayer.Bind(_mediaService, _services.Lyrics, _services.MediaQueue);
         LiveActivity.Bind(_mediaService, _audioCaptureService);
 
         // Inline settings
@@ -62,6 +62,8 @@ public partial class NotchWindow
         VerticalInlineSettings.DownloadSettingsChanged += ApplyDownloadSettingsAsync;
         InlineSettings.LyricsSettingsChanged += ApplyLyricsSettings;
         VerticalInlineSettings.LyricsSettingsChanged += ApplyLyricsSettings;
+        InlineSettings.MediaQueueSettingsRequested += OpenMediaQueueSettings;
+        VerticalInlineSettings.MediaQueueSettingsRequested += OpenMediaQueueSettings;
         InlineSettings.ClipboardSettingsChanged += ApplyClipboardSettings;
         VerticalInlineSettings.ClipboardSettingsChanged += ApplyClipboardSettings;
         InlineSettings.CommandBarSettingsRequested += OpenCommandBarSettings;

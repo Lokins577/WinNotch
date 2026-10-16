@@ -23,7 +23,6 @@ public class MediaService : IDisposable
 
     public MediaInfo MediaInfo { get; } = new();
     public IReadOnlyList<MediaSourceInfo> Sources { get; private set; } = [];
-    public MediaQueueCapability QueueCapability => MediaQueueCapability.Unsupported;
 
     public event Action? SessionChanged;
     public event Action? SourcesChanged;

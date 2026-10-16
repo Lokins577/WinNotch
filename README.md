@@ -24,6 +24,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Input enhancements guide: [docs/INPUT_ENHANCEMENTS.md](docs/INPUT_ENHANCEMENTS.md)
 - Display and hardware guide: [docs/DISPLAY_ENERGY_HARDWARE.md](docs/DISPLAY_ENERGY_HARDWARE.md)
 - Product hardening guide: [docs/PRODUCT_HARDENING.md](docs/PRODUCT_HARDENING.md)
+- Music, lyrics, and provider queues: [docs/MUSIC.md](docs/MUSIC.md)
 - Supported hardware matrix: [docs/SUPPORTED_HARDWARE.md](docs/SUPPORTED_HARDWARE.md)
 
 ## Features
@@ -31,7 +32,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Dynamic notch with hover, click, drag, and scroll interactions
 - Multi-monitor support: drag the island to any screen and dock it there; optional island on every screen with synchronized (or independent) open state
 - Built-in media controls and audio visualizer
-- Selectable Windows media sessions and opt-in synchronized lyrics
+- Selectable Windows media sessions, opt-in synchronized lyrics, and consented Spotify/VLC playback queues
 - Persistent focus cycles, countdown timer, and stopwatch with compact live activity
 - Download-folder live activity with browser temporary-file detection
 - Permission-gated Windows notification inbox (packaged builds)
