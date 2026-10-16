@@ -58,6 +58,13 @@ public sealed class FeatureRuntimeTests
     }
 
     [Fact]
+    public void BuiltInCatalog_HasNoPlannedOrUnsupportedEntries()
+    {
+        Assert.DoesNotContain(BuiltInFeatures.Catalog.Features,
+            feature => feature.Maturity is FeatureMaturity.Planned or FeatureMaturity.Unsupported);
+    }
+
+    [Fact]
     public void Runtime_RejectsPlannedFeatureRegistration()
     {
         var planned = new FeatureDescriptor(

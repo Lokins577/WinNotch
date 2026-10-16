@@ -165,15 +165,4 @@ public static class BuiltInFeatures
             Dependencies: dependencies);
     }
 
-    private static FeatureDescriptor Planned(
-        string id,
-        string name,
-        FeatureGroup group,
-        string description)
-    {
-        return new FeatureDescriptor(
-            id, name, group, description,
-            EnabledByDefault: false,
-            Maturity: FeatureMaturity.Planned);
-    }
 }
