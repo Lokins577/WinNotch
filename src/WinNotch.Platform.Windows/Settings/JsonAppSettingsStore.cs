@@ -5,6 +5,7 @@ using WinNotch.Settings;
 using WinNotch.QuickTools;
 using WinNotch.SystemMonitoring;
 using WinNotch.AudioControl;
+using WinNotch.Capture;
 
 namespace WinNotch.Platform.Windows.Settings;
 
@@ -62,6 +63,8 @@ public sealed class JsonAppSettingsStore : IAppSettingsStore
             settings.SystemMonitorPreferences.Normalize();
             settings.AudioControlPreferences ??= new AudioControlPreferences();
             settings.AudioControlPreferences.Normalize();
+            settings.CapturePreferences ??= new CapturePreferences();
+            settings.CapturePreferences.Normalize();
 
             return settings;
         }

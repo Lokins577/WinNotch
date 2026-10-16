@@ -138,6 +138,12 @@ process-loopback activation contract. Process analysis emits transient FFT
 bands only, never recorded samples. System default-device and application-route
 changes are handed to Windows Settings rather than private policy interfaces.
 
+Capture preferences, color conversion, and recognition result models live in
+Core. The Windows adapter owns pixel acquisition, background `PrintWindow`,
+bounded UI Automation scrolling, system OCR, and local QR decoding. The WPF
+editor owns explicit crop/draw/redact/copy/save/pin interactions and never
+persists an image merely because it was captured.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New
@@ -167,6 +173,7 @@ new work does not return to a single multi-thousand-line file:
 - `NotchWindow.WindowManagement.cs`: window switcher lifecycle.
 - `NotchWindow.SystemMonitor.cs`: monitor dashboard and alert dispatch.
 - `NotchWindow.AudioMixer.cs`: audio control surface lifecycle.
+- `NotchWindow.Capture.cs`: capture launcher lifecycle.
 
 ## Dependency rules
 

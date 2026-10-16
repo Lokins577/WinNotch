@@ -58,6 +58,7 @@ public partial class NotchWindow
             case RadialActionKind.WindowSwitcher: OpenWindowSwitcher(); break;
             case RadialActionKind.SystemMonitor: OpenSystemMonitor(); break;
             case RadialActionKind.AudioMixer: OpenAudioMixer(); break;
+            case RadialActionKind.Capture: OpenCaptureTool(); break;
             case RadialActionKind.ToggleMute: _volumeService.ToggleMute(); break;
             case RadialActionKind.ToggleTheme: ToggleQuickTheme(); break;
             case RadialActionKind.Lock: SystemActions.LockWorkstation(); break;

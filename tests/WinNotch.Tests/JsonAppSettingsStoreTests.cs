@@ -62,6 +62,9 @@ public sealed class JsonAppSettingsStoreTests
         expected.SystemMonitorPreferences.CpuAlertPercent = 85;
         expected.AudioControlPreferences.PreferredVisualizerOutputId = "output-a";
         expected.AudioControlPreferences.OutputDevicePriority.AddRange(["output-a", "output-b"]);
+        expected.CapturePreferences.Format = WinNotch.Capture.CaptureImageFormat.Jpeg;
+        expected.CapturePreferences.JpegQuality = 81;
+        expected.CapturePreferences.CopyAfterCapture = false;
 
         store.Save(expected);
         var actual = store.Load();
@@ -94,6 +97,9 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal(85, actual.SystemMonitorPreferences.CpuAlertPercent);
         Assert.Equal("output-a", actual.AudioControlPreferences.PreferredVisualizerOutputId);
         Assert.Equal(["output-a", "output-b"], actual.AudioControlPreferences.OutputDevicePriority);
+        Assert.Equal(WinNotch.Capture.CaptureImageFormat.Jpeg, actual.CapturePreferences.Format);
+        Assert.Equal(81, actual.CapturePreferences.JpegQuality);
+        Assert.False(actual.CapturePreferences.CopyAfterCapture);
     }
 
     [Fact]

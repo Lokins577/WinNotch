@@ -45,6 +45,7 @@ public sealed class NotchServices : IDisposable
     public WindowManagementFeatureService? WindowManager { get; private set; }
     public SystemMonitorFeatureService? SystemMonitor { get; private set; }
     public AudioMixerFeatureService? AudioMixer { get; private set; }
+    public CaptureFeatureService? Capture { get; private set; }
     public FeatureRuntime FeatureRuntime { get; }
 
     private readonly AppSettings _settings;
@@ -80,6 +81,7 @@ public sealed class NotchServices : IDisposable
         FeatureRuntime.Register(BuiltInFeatures.WindowManagement.Id, CreateWindowManagementModule);
         FeatureRuntime.Register(BuiltInFeatures.SystemMonitor.Id, CreateSystemMonitorModule);
         FeatureRuntime.Register(BuiltInFeatures.AudioMixer.Id, CreateAudioMixerModule);
+        FeatureRuntime.Register(BuiltInFeatures.Capture.Id, CreateCaptureModule);
     }
 
     /// <summary>
@@ -142,6 +144,9 @@ public sealed class NotchServices : IDisposable
         await FeatureRuntime.SetEnabledAsync(
             BuiltInFeatures.AudioMixer.Id,
             _settings.IsFeatureAvailable(BuiltInFeatures.AudioMixer));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.Capture.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.Capture));
     }
 
     public void Dispose()
@@ -257,6 +262,12 @@ public sealed class NotchServices : IDisposable
     {
         AudioMixer = new AudioMixerFeatureService(new WindowsAudioControlBackend());
         return AudioMixer;
+    }
+
+    private IFeatureModule CreateCaptureModule()
+    {
+        Capture = new CaptureFeatureService();
+        return Capture;
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule

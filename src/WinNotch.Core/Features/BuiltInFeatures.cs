@@ -113,9 +113,11 @@ public static class BuiltInFeatures
         EnabledByDefault: false,
         Maturity: FeatureMaturity.Available);
 
-    public static readonly FeatureDescriptor Capture = Planned(
+    public static readonly FeatureDescriptor Capture = new(
         "tools.capture", "Capture and OCR", FeatureGroup.Tools,
-        "Screenshots, recording, offline OCR, QR, and color capture.");
+        "Screenshots, annotation, redaction, pinning, offline OCR, QR, and color capture.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Available);
 
     public static readonly FeatureDescriptor AppManagement = Planned(
         "tools.app-management", "Application management", FeatureGroup.Tools,

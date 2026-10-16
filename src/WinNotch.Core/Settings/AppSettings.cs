@@ -6,6 +6,7 @@ using WinNotch.CommandBar;
 using WinNotch.QuickTools;
 using WinNotch.SystemMonitoring;
 using WinNotch.AudioControl;
+using WinNotch.Capture;
 
 namespace WinNotch.Models;
 
@@ -47,6 +48,7 @@ public class AppSettings
     public RadialMenuConfiguration RadialMenu { get; set; } = RadialMenuConfiguration.CreateDefault();
     public SystemMonitorPreferences SystemMonitorPreferences { get; set; } = new();
     public AudioControlPreferences AudioControlPreferences { get; set; } = new();
+    public CapturePreferences CapturePreferences { get; set; } = new();
 
     // General
     public bool StartOnBoot { get; set; }

@@ -23,7 +23,8 @@ public partial class NotchWindow
                 BuiltInFeatures.RadialMenu.Id,
                 BuiltInFeatures.WindowManagement.Id,
                 BuiltInFeatures.SystemMonitor.Id,
-                BuiltInFeatures.AudioMixer.Id
+                BuiltInFeatures.AudioMixer.Id,
+                BuiltInFeatures.Capture.Id
             },
             SetFeatureAvailabilityAsync)
         {
@@ -48,7 +49,8 @@ public partial class NotchWindow
             && feature.Id != BuiltInFeatures.RadialMenu.Id
             && feature.Id != BuiltInFeatures.WindowManagement.Id
             && feature.Id != BuiltInFeatures.SystemMonitor.Id
-            && feature.Id != BuiltInFeatures.AudioMixer.Id)
+            && feature.Id != BuiltInFeatures.AudioMixer.Id
+            && feature.Id != BuiltInFeatures.Capture.Id)
             throw new InvalidOperationException($"Feature {feature.Id} is not live-toggleable yet.");
 
         bool previous = _settings.IsFeatureAvailable(feature);
@@ -133,6 +135,11 @@ public partial class NotchWindow
         {
             if (enabled) AttachAudioMixer();
             else DetachAudioMixer();
+        }
+        else if (feature.Id == BuiltInFeatures.Capture.Id)
+        {
+            if (enabled) AttachCaptureTool();
+            else DetachCaptureTool();
         }
 
         RefreshPluginHostLayout();

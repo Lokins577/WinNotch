@@ -176,6 +176,15 @@ separately approved hardware submodule rather than an implied capability.
 Implement area/window/display capture, scrolling capture where reliable,
 annotation, crop, redaction, pinning, offline OCR/QR, and color formats.
 
+Status: implemented. The optional `Ctrl+Alt+S` launcher captures a region,
+display, selected window, or UI Automation scroll surface. The editor provides
+crop, drawing, permanent black-box redaction, reset, clipboard copy,
+PNG/JPEG/BMP export, and independent topmost image pins. Windows OCR uses
+installed offline language packs; QR decoding is local; pixel sampling produces
+HEX, RGB, HSL, and HSV. Scrolling capture is bounded and enabled only for
+controls exposing `ScrollPattern`; protected or custom-rendered content is not
+bypassed.
+
 ### 11. Recording and media tools
 
 Implement screen recording with system and microphone tracks, trim/cut/zoom,

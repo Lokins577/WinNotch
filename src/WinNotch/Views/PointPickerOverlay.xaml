@@ -1,0 +1,10 @@
+<Window x:Class="WinNotch.Views.PointPickerOverlay"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None" AllowsTransparency="True" Background="#11000000"
+        ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize" Cursor="Cross"
+        MouseLeftButtonDown="OnPick" PreviewKeyDown="OnKeyDown">
+    <TextBlock Text="Click a pixel · Esc to cancel" Foreground="White"
+               Background="#99000000" Padding="10,6" Margin="18"
+               HorizontalAlignment="Left" VerticalAlignment="Top"/>
+</Window>
