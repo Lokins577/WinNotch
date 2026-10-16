@@ -12,11 +12,12 @@ Windows requires both:
 Microsoft documents those requirements in
 [Notification listener: Access all notifications](https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/notification-listener).
 
-The current Inno Setup build has no package identity, so the feature reports
-`Unsupported` and explains that the packaged build is required. The listener,
-consent flow, inbox synchronization, foreground change events, per-notification
-dismissal, and revocation handling are already implemented. Product hardening
-module 15 owns MSIX identity, signing, migration, and distribution.
+The signed MSIX release declares `uap3:userNotificationListener` and
+`runFullTrust`, so it can request user consent and use the implemented inbox.
+The Inno/standalone build remains available but has no package identity and
+therefore reports `Requires package identity`. The listener, consent flow,
+inbox synchronization, foreground change events, per-notification dismissal,
+and revocation handling are shared by both distributions.
 
 Denied access is not retried silently. The feature shows the denied state and
 leaves the rest of WinNotch operational. Access is checked again before every

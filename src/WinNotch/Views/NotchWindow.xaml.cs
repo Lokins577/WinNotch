@@ -73,6 +73,7 @@ public partial class NotchWindow : Window
 
     /// <summary>Raised after the user changed settings from this island's inline panel.</summary>
     public event Action<AppSettings>? SettingsUpdatedByUser;
+    public event Action? ProductHardeningRequested;
 
     /// <summary>Device name of the screen currently hosting this island.</summary>
     public string? ScreenDevice => _screenDevice;

@@ -68,6 +68,8 @@ public partial class NotchWindow
         VerticalInlineSettings.CommandBarSettingsRequested += OpenCommandBarSettings;
         InlineSettings.RadialMenuSettingsRequested += OpenRadialMenuSettings;
         VerticalInlineSettings.RadialMenuSettingsRequested += OpenRadialMenuSettings;
+        InlineSettings.ProductHardeningRequested += () => ProductHardeningRequested?.Invoke();
+        VerticalInlineSettings.ProductHardeningRequested += () => ProductHardeningRequested?.Invoke();
 
         // Toggle clock/live-activity visibility based on music state
         _mediaService.MediaInfo.PropertyChanged += (_, e) =>

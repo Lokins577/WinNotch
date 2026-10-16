@@ -168,6 +168,13 @@ permission/state, and a dedicated Keep Awake execution-state thread. WPF owns
 capture-excluded click-through dimming overlays. Hardware writes require both
 provider capability and explicit user validation.
 
+Product-hardening models and performance-budget evaluation live in Core. The
+Windows layer owns package identity, settings transfer, permissions, installer
+migration, and local crash persistence. The WPF application owns dispatcher
+latency sampling, accessibility focus resources, localization traversal, and
+the permission/backup/diagnostics surface. Release packaging is reproducible
+through MakeAppx and requires Trusted Signing before assets are published.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New

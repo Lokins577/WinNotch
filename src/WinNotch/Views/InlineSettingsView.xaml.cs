@@ -36,6 +36,7 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
     public event Action<AppSettings>? ClipboardSettingsChanged;
     public event Action? CommandBarSettingsRequested;
     public event Action? RadialMenuSettingsRequested;
+    public event Action? ProductHardeningRequested;
 
     public InlineSettingsView()
     {
@@ -202,6 +203,11 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
     private void OnRadialMenuSettingsClick(object sender, RoutedEventArgs e)
     {
         RadialMenuSettingsRequested?.Invoke();
+    }
+
+    private void OnProductHardeningClick(object sender, RoutedEventArgs e)
+    {
+        ProductHardeningRequested?.Invoke();
     }
 
     private void OnDownloadMonitoringChanged(object sender, RoutedEventArgs e)

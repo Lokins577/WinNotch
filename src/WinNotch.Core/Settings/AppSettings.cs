@@ -11,6 +11,7 @@ using WinNotch.MediaTools;
 using WinNotch.AppManagement;
 using WinNotch.InputEnhancements;
 using WinNotch.DisplayEnergy;
+using WinNotch.ProductHardening;
 
 namespace WinNotch.Models;
 
@@ -39,6 +40,7 @@ public enum AppTheme
 /// </summary>
 public class AppSettings
 {
+    public int SettingsSchemaVersion { get; set; } = 1;
     public Dictionary<string, bool> FeatureAvailability { get; set; } = new(StringComparer.Ordinal);
     public TimerPreferences TimerPreferences { get; set; } = new();
     public TimerSession TimerSession { get; set; } = new();
@@ -57,6 +59,7 @@ public class AppSettings
     public AppManagementPreferences AppManagementPreferences { get; set; } = new();
     public InputEnhancementPreferences InputEnhancementPreferences { get; set; } = new();
     public DisplayEnergyPreferences DisplayEnergyPreferences { get; set; } = new();
+    public ProductHardeningPreferences ProductHardeningPreferences { get; set; } = new();
 
     // General
     public bool StartOnBoot { get; set; }

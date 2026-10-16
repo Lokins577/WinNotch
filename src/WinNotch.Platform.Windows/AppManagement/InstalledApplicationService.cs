@@ -24,12 +24,18 @@ public sealed class InstalledApplicationService
         ArgumentNullException.ThrowIfNull(application);
         if (string.IsNullOrWhiteSpace(application.UninstallCommand))
             throw new InvalidOperationException("This application exposes no uninstall command.");
-        string[] arguments = SplitCommandLine(application.UninstallCommand);
+        return StartRegisteredCommand(application.UninstallCommand);
+    }
+
+    public static Process StartRegisteredCommand(string command)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(command);
+        string[] arguments = SplitCommandLine(command);
         if (arguments.Length == 0 || string.IsNullOrWhiteSpace(arguments[0]))
             throw new InvalidOperationException("The uninstall command is invalid.");
         var start = new ProcessStartInfo(Environment.ExpandEnvironmentVariables(arguments[0])) { UseShellExecute = true };
         foreach (string argument in arguments.Skip(1)) start.ArgumentList.Add(argument);
-        return Process.Start(start) ?? throw new InvalidOperationException("The uninstaller did not start.");
+        return Process.Start(start) ?? throw new InvalidOperationException("The registered command did not start.");
     }
 
     public Process StartInstaller(string path)

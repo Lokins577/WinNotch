@@ -178,7 +178,7 @@
                                 Style="{StaticResource IconButton}"
                                 Width="24" Height="24"
                                 VerticalAlignment="Top" Margin="4,0,0,0"
-                                ToolTip="Settings">
+                                ToolTip="Settings" AutomationProperties.Name="Settings">
                             <TextBlock Text="⚙" FontSize="13" Foreground="{DynamicResource TextSubtleBrush}"/>
                         </Button>
                     </Grid>
@@ -357,6 +357,7 @@
                                 Style="{StaticResource IconButton}"
                                 Width="24" Height="24"
                                 HorizontalAlignment="Center" ToolTip="Settings"
+                                AutomationProperties.Name="Settings"
                                 Margin="0,0,0,8">
                             <TextBlock Text="⚙" FontSize="13"
                                        Foreground="{DynamicResource TextSubtleBrush}"/>

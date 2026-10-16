@@ -7,6 +7,6 @@
     <Grid>
         <Image x:Name="PinnedImage" Stretch="Uniform"/>
         <Button Content="×" Width="28" Height="28" HorizontalAlignment="Right"
-                VerticalAlignment="Top" Margin="6" Click="OnClose"/>
+                VerticalAlignment="Top" Margin="6" Click="OnClose" AutomationProperties.Name="Close pinned capture"/>
     </Grid>
 </Window>

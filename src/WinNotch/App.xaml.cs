@@ -10,6 +10,8 @@ using WinNotch.Services;
 using WinNotch.Settings;
 using WinNotch.Views;
 using WinNotch.SystemMonitoring;
+using WinNotch.Platform.Windows.ProductHardening;
+using WinNotch.ProductHardening;
 using Forms = System.Windows.Forms;
 using DrawColor = System.Drawing.Color;
 
@@ -27,18 +29,38 @@ public partial class App : Application
     private IAppSettingsStore _settingsStore = null!;
     private ThemeService _themeService = null!;
     private NotchServices _services = null!;
+    private CrashReporter _crashReporter = null!;
+    private PermissionHubService _permissionHub = null!;
+    private PerformanceBudgetMonitor _performanceMonitor = null!;
+    private LocalizationService _localization = null!;
+    private ProductHardeningWindow? _productHardeningWindow;
 
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
 
-        // Global exception handler for diagnostics
+        _crashReporter = new CrashReporter(() =>
+            _settings?.ProductHardeningPreferences.LocalCrashReportsEnabled != false);
+
+        // Cover UI, background-task, and fatal process exceptions with local diagnostics.
         DispatcherUnhandledException += (_, args) =>
         {
-            LogCrash(args.Exception);
-            System.Windows.MessageBox.Show(args.Exception.ToString(), "WinNotch Error",
+            _crashReporter.Report(args.Exception, "WPF dispatcher", fatal: false);
+            System.Windows.MessageBox.Show(
+                $"{args.Exception.Message}\n\nA local crash report was saved when diagnostics are enabled.",
+                "WinNotch Error",
                 MessageBoxButton.OK, MessageBoxImage.Error);
             args.Handled = true;
+        };
+        AppDomain.CurrentDomain.UnhandledException += (_, args) =>
+        {
+            if (args.ExceptionObject is Exception exception)
+                _crashReporter.Report(exception, "AppDomain", args.IsTerminating);
+        };
+        TaskScheduler.UnobservedTaskException += (_, args) =>
+        {
+            _crashReporter.Report(args.Exception, "Unobserved task", fatal: false);
+            args.SetObserved();
         };
 
         // Single instance enforcement
@@ -80,6 +102,9 @@ public partial class App : Application
         // Load settings
         _settingsStore = new JsonAppSettingsStore();
         _settings = _settingsStore.Load();
+        _localization = new LocalizationService();
+        _localization.Apply(_settings.ProductHardeningPreferences.Language);
+        _permissionHub = new PermissionHubService();
 
         // Initialize theme
         _themeService = new ThemeService();
@@ -92,6 +117,22 @@ public partial class App : Application
 
         // Shared system services — one set for every island window
         _services = new NotchServices(_settings, _settingsStore);
+        _performanceMonitor = new PerformanceBudgetMonitor(() =>
+            _settings.ProductHardeningPreferences.PerformanceMonitoringEnabled);
+        _performanceMonitor.SustainedViolation += violation => Dispatcher.BeginInvoke(() =>
+        {
+            _trayIcon?.ShowBalloonTip(
+                5000,
+                "WinNotch performance budget",
+                $"{violation.Budget}: {violation.Actual:0.#} {violation.Unit} (budget {violation.Limit:0.#})",
+                Forms.ToolTipIcon.Warning);
+        });
+        _performanceMonitor.Start();
+        Activated += (_, _) =>
+        {
+            foreach (Window active in Windows.OfType<Window>().Where(window => window.IsActive))
+                _localization.TranslateWindow(active);
+        };
 
         // Launch the primary island (on its remembered screen)
         _notchWindow = new NotchWindow(_settings, _settingsStore, _themeService, _services,
@@ -121,6 +162,7 @@ public partial class App : Application
 
     private void WireIslandEvents(NotchWindow window)
     {
+        window.ProductHardeningRequested += () => Dispatcher.BeginInvoke(() => OpenProductHardening(window));
         window.SystemMonitorAlertRaised += alert => Dispatcher.BeginInvoke(() => ShowSystemMonitorAlert(alert));
         // Settings changed on one island → apply everywhere + re-evaluate islands
         window.SettingsUpdatedByUser += settings =>
@@ -146,6 +188,22 @@ public partial class App : Application
                     other.ApplySyncedState(state);
             }
         };
+    }
+
+    private void OpenProductHardening(Window? owner = null)
+    {
+        if (_productHardeningWindow is { IsVisible: true })
+        {
+            _productHardeningWindow.Activate();
+            return;
+        }
+        _productHardeningWindow = new ProductHardeningWindow(
+            _settings, _settingsStore, _permissionHub, _crashReporter, _performanceMonitor);
+        if (owner?.IsVisible == true) _productHardeningWindow.Owner = owner;
+        _productHardeningWindow.Closed += (_, _) => _productHardeningWindow = null;
+        _productHardeningWindow.Show();
+        _localization.TranslateWindow(_productHardeningWindow);
+        _productHardeningWindow.Activate();
     }
 
     private void ShowSystemMonitorAlert(SystemMetricAlert alert)
@@ -238,24 +296,6 @@ public partial class App : Application
         }
     }
 
-    private static void LogCrash(Exception exception)
-    {
-        try
-        {
-            var logDir = System.IO.Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "WinNotch", "Logs");
-            System.IO.Directory.CreateDirectory(logDir);
-            System.IO.File.AppendAllText(
-                System.IO.Path.Combine(logDir, "crash.log"),
-                $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {exception}{Environment.NewLine}{Environment.NewLine}");
-        }
-        catch
-        {
-            // Diagnostics must never crash the handler.
-        }
-    }
-
     private void SetupTrayIcon()
     {
         _trayIcon = new Forms.NotifyIcon
@@ -274,21 +314,28 @@ public partial class App : Application
             Font = new Font("Segoe UI", 9.5f)
         };
 
-        var settingsItem = new Forms.ToolStripMenuItem("Settings")
+        var settingsItem = new Forms.ToolStripMenuItem(_localization.Translate("Settings"))
         {
             Padding = new Forms.Padding(12, 6, 20, 6)
         };
         settingsItem.Click += (_, _) => OpenSettings();
 
+        var permissionsItem = new Forms.ToolStripMenuItem(_localization.Translate("Permissions & diagnostics"))
+        {
+            Padding = new Forms.Padding(12, 6, 20, 6)
+        };
+        permissionsItem.Click += (_, _) => OpenProductHardening(_notchWindow);
+
         var separator = new Forms.ToolStripSeparator();
 
-        var quitItem = new Forms.ToolStripMenuItem("Quit")
+        var quitItem = new Forms.ToolStripMenuItem(_localization.Translate("Quit"))
         {
             Padding = new Forms.Padding(12, 6, 20, 6)
         };
         quitItem.Click += (_, _) => QuitApp();
 
         _trayMenu.Items.Add(settingsItem);
+        _trayMenu.Items.Add(permissionsItem);
         _trayMenu.Items.Add(separator);
         _trayMenu.Items.Add(quitItem);
 
@@ -328,6 +375,7 @@ public partial class App : Application
         Microsoft.Win32.SystemEvents.DisplaySettingsChanged -= OnDisplaySettingsChanged;
         if (_themeService != null)
             _themeService.ThemeChanged -= ApplyTrayTheme;
+        _performanceMonitor?.Dispose();
         _trayIcon?.Dispose();
         _services?.Dispose();
         if (_ownsMutex && _mutex != null)

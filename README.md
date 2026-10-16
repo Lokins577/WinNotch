@@ -23,6 +23,8 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Application management guide: [docs/APP_MANAGEMENT.md](docs/APP_MANAGEMENT.md)
 - Input enhancements guide: [docs/INPUT_ENHANCEMENTS.md](docs/INPUT_ENHANCEMENTS.md)
 - Display and hardware guide: [docs/DISPLAY_ENERGY_HARDWARE.md](docs/DISPLAY_ENERGY_HARDWARE.md)
+- Product hardening guide: [docs/PRODUCT_HARDENING.md](docs/PRODUCT_HARDENING.md)
+- Supported hardware matrix: [docs/SUPPORTED_HARDWARE.md](docs/SUPPORTED_HARDWARE.md)
 
 ## Features
 
@@ -49,6 +51,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Ctrl+Alt+G reviewed WinGet upgrades, installer/uninstaller handoff, recoverable cleanup, port inspection, and safe process actions
 - Opt-in scroll/focus/mouse/button/Super-key/text-expansion policies with password and app exclusions
 - Keep Awake, internal/DDC brightness, capture-safe software dimming, Bluetooth sleep policy, and explicit hardware-provider boundaries
+- Permission hub, settings backup/import, local crash isolation, performance budgets, accessibility/localization, and signed MSIX releases
 - Volume and brightness HUDs
 - Calendar, battery, file shelf, and webcam mirror
 - Light, dark, and auto theme support

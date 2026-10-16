@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap3 uap5 rescap">
+  <Identity Name="N3uralCreativity.WinNotch" Publisher="__PUBLISHER__"
+            Version="__VERSION__" ProcessorArchitecture="x64" />
+  <Properties>
+    <DisplayName>WinNotch</DisplayName>
+    <PublisherDisplayName>N3uralCreativity</PublisherDisplayName>
+    <Description>Dynamic Island-inspired productivity tools for Windows.</Description>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Resources>
+    <Resource Language="en-us" />
+    <Resource Language="zh-cn" />
+  </Resources>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+  <Applications>
+    <Application Id="App" Executable="WinNotch.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="WinNotch"
+        Description="Dynamic Island-inspired productivity tools for Windows."
+        BackgroundColor="#151517"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <uap5:Extension Category="windows.startupTask" Executable="WinNotch.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap5:StartupTask TaskId="WinNotchStartup" Enabled="false" DisplayName="WinNotch" />
+        </uap5:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <uap3:Capability Name="userNotificationListener" />
+    <rescap:Capability Name="runFullTrust" />
+    <DeviceCapability Name="webcam" />
+    <DeviceCapability Name="microphone" />
+  </Capabilities>
+</Package>

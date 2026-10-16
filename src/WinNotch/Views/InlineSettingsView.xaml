@@ -38,7 +38,7 @@
                 <Button x:Name="BackButton" Click="OnBackClick"
                         Style="{StaticResource IconButton}"
                         Width="24" Height="24"
-                        VerticalAlignment="Center" ToolTip="Back">
+                        VerticalAlignment="Center" ToolTip="Back" AutomationProperties.Name="Back">
                     <TextBlock Text="←" FontSize="14" Foreground="{DynamicResource TextMutedBrush}"/>
                 </Button>
                 <TextBlock Text="Settings" Foreground="{DynamicResource TextPrimaryBrush}"
@@ -259,6 +259,14 @@
                         HorizontalAlignment="Left" Cursor="Hand"
                         Background="Transparent" BorderThickness="0" Padding="0" Margin="0,2,0,4">
                     <TextBlock Text="Configure Radial Menu"
+                               Foreground="{DynamicResource TextSubtleBrush}" FontSize="11"
+                               TextDecorations="Underline"/>
+                </Button>
+                <Button Click="OnProductHardeningClick"
+                        HorizontalAlignment="Left" Cursor="Hand"
+                        Background="Transparent" BorderThickness="0" Padding="0" Margin="0,2,0,4"
+                        AutomationProperties.Name="Permissions, backup, and diagnostics">
+                    <TextBlock Text="Permissions, backup &amp; diagnostics"
                                Foreground="{DynamicResource TextSubtleBrush}" FontSize="11"
                                TextDecorations="Underline"/>
                 </Button>

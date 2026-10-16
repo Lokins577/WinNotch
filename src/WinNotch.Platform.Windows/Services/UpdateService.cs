@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
+using WinNotch.Platform.Windows.ProductHardening;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,8 +25,8 @@ public enum UpdateCheckResult
 }
 
 /// <summary>
-/// Self-update service. Detects new releases on GitHub and performs a reliable,
-/// fully logged, silent in-place update via the WinNotch installer.
+    /// Self-update service. Detects new releases on GitHub and stays within the
+    /// installed channel: signed MSIX via App Installer or signed Inno in-place update.
 /// </summary>
 public sealed class UpdateService
 {
@@ -65,6 +66,7 @@ public sealed class UpdateService
     public string CurrentVersion { get; }
     public string? LatestVersion { get; private set; }
     public string? InstallerDownloadUrl { get; private set; }
+    public bool UsesMsixUpdate => PackageIdentityService.HasIdentity;
 
     public bool IsUpdateAvailable => LatestVersion != null
         && Version.TryParse(LatestVersion, out var remote)
@@ -98,19 +100,15 @@ public sealed class UpdateService
             // Strip leading 'v' from the tag (e.g. "v0.7.0" -> "0.7.0").
             LatestVersion = release.TagName.TrimStart('v', 'V');
 
-            // Find the installer asset (matches the installer's OutputBaseFilename: *-Setup.exe).
+            // Packaged builds stay in the MSIX update path; unpackaged builds use Inno.
             InstallerDownloadUrl = null;
             if (release.Assets != null)
             {
-                foreach (var asset in release.Assets)
-                {
-                    if (asset.Name != null &&
-                        asset.Name.EndsWith("-Setup.exe", StringComparison.OrdinalIgnoreCase))
-                    {
-                        InstallerDownloadUrl = asset.BrowserDownloadUrl;
-                        break;
-                    }
-                }
+                string? selectedName = SelectAssetName(
+                    release.Assets.Where(asset => asset.Name != null).Select(asset => asset.Name!),
+                    UsesMsixUpdate);
+                InstallerDownloadUrl = release.Assets.FirstOrDefault(asset =>
+                    string.Equals(asset.Name, selectedName, StringComparison.OrdinalIgnoreCase))?.BrowserDownloadUrl;
             }
 
             Log($"Latest release: v{LatestVersion}; installer asset: {InstallerDownloadUrl ?? "<none>"}.");
@@ -122,7 +120,7 @@ public sealed class UpdateService
             {
                 // A newer version exists but the release has no installer attached —
                 // treat as a failure so the user isn't offered a broken update.
-                Log("A newer version exists but no -Setup.exe asset is attached to the release.");
+                Log("A newer version exists but no compatible installer asset is attached to the release.");
                 return UpdateCheckResult.CheckFailed;
             }
 
@@ -151,7 +149,10 @@ public sealed class UpdateService
             return (false, "No installer found for this release.");
         }
 
-        var finalPath = Path.Combine(UpdatesDir, $"WinNotch-{LatestVersion}-Setup.exe");
+        string fileName = UsesMsixUpdate
+            ? $"WinNotch-{LatestVersion}-x64.msix"
+            : $"WinNotch-{LatestVersion}-Setup.exe";
+        var finalPath = Path.Combine(UpdatesDir, fileName);
         var partPath = finalPath + ".part";
 
         try
@@ -199,8 +200,15 @@ public sealed class UpdateService
             // Atomically move the completed download into place (same volume).
             File.Move(partPath, finalPath, overwrite: true);
 
-            // Remove the Mark-of-the-Web so SmartScreen doesn't block the silent launch.
+            // Remove the download-zone marker; release assets are independently signed.
             TryRemoveMarkOfTheWeb(finalPath);
+
+            if (UsesMsixUpdate)
+            {
+                Process.Start(new ProcessStartInfo(finalPath) { UseShellExecute = true });
+                Log("Signed MSIX handed to Windows App Installer; current app remains open for user review.");
+                return (true, null);
+            }
 
             // Launch the installer in silent update mode. /UPDATE=1 tells the installer
             // to overwrite the app in place (no menus) and relaunch it afterwards.
@@ -258,6 +266,12 @@ public sealed class UpdateService
             TryDelete(partPath);
             return (false, "Update failed — see update.log.");
         }
+    }
+
+    public static string? SelectAssetName(IEnumerable<string> names, bool packaged)
+    {
+        string suffix = packaged ? "-x64.msix" : "-Setup.exe";
+        return names.FirstOrDefault(name => name.EndsWith(suffix, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>

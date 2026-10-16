@@ -248,6 +248,15 @@ Complete accessibility, localization, settings export/import, permission hub,
 crash isolation, performance budgets, installer migration, signed release
 automation, and supported-hardware documentation.
 
+Status: implemented. Visible keyboard focus and automation names cover shared
+and icon-only controls; automatic/English/Simplified-Chinese localization uses
+an explicit catalog with English fallback. The permission hub includes
+versioned atomic settings export/import, identity/privacy status and actions,
+bounded local crash reports, and sustained performance budgets. Release
+automation signs the app, Inno installer, and capability-bearing MSIX via Azure
+Trusted Signing; MakeAppx validation, StartupTask handling, legacy installer
+migration, and a supported-hardware matrix are included.
+
 ## Current coverage and estimate
 
 WinNotch already covers the island shell, multi-monitor placement, media

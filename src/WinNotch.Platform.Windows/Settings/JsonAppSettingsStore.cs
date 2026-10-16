@@ -10,6 +10,11 @@ using WinNotch.MediaTools;
 using WinNotch.AppManagement;
 using WinNotch.InputEnhancements;
 using WinNotch.DisplayEnergy;
+using WinNotch.ProductHardening;
+using WinNotch.Timers;
+using WinNotch.Clipboard;
+using WinNotch.Platform.Windows.ProductHardening;
+using Windows.ApplicationModel;
 
 namespace WinNotch.Platform.Windows.Settings;
 
@@ -47,7 +52,7 @@ public sealed class JsonAppSettingsStore : IAppSettingsStore
         try
         {
             if (!File.Exists(_settingsPath))
-                return new AppSettings();
+                return Normalize(new AppSettings());
 
             var json = File.ReadAllText(_settingsPath);
             var settings = JsonSerializer.Deserialize<AppSettings>(json, JsonOptions) ?? new AppSettings();
@@ -61,24 +66,7 @@ public sealed class JsonAppSettingsStore : IAppSettingsStore
             if (settings.Theme == AppTheme.Auto)
                 settings.Theme = AppTheme.Dark;
 
-            settings.RadialMenu ??= RadialMenuConfiguration.CreateDefault();
-            settings.RadialMenu.Normalize();
-            settings.SystemMonitorPreferences ??= new SystemMonitorPreferences();
-            settings.SystemMonitorPreferences.Normalize();
-            settings.AudioControlPreferences ??= new AudioControlPreferences();
-            settings.AudioControlPreferences.Normalize();
-            settings.CapturePreferences ??= new CapturePreferences();
-            settings.CapturePreferences.Normalize();
-            settings.RecordingPreferences ??= new RecordingPreferences();
-            settings.RecordingPreferences.Normalize();
-            settings.AppManagementPreferences ??= new AppManagementPreferences();
-            settings.AppManagementPreferences.Normalize();
-            settings.InputEnhancementPreferences ??= new InputEnhancementPreferences();
-            settings.InputEnhancementPreferences.Normalize();
-            settings.DisplayEnergyPreferences ??= new DisplayEnergyPreferences();
-            settings.DisplayEnergyPreferences.Normalize();
-
-            return settings;
+            return Normalize(settings);
         }
         catch
         {
@@ -90,6 +78,7 @@ public sealed class JsonAppSettingsStore : IAppSettingsStore
     {
         ArgumentNullException.ThrowIfNull(settings);
 
+        Normalize(settings);
         Directory.CreateDirectory(_settingsDirectory);
         var json = JsonSerializer.Serialize(settings, JsonOptions);
         var tempPath = _settingsPath + ".tmp";
@@ -102,6 +91,17 @@ public sealed class JsonAppSettingsStore : IAppSettingsStore
     {
         try
         {
+            if (PackageIdentityService.HasIdentity)
+            {
+                var task = StartupTask.GetAsync("WinNotchStartup").AsTask().GetAwaiter().GetResult();
+                if (enabled)
+                {
+                    if (task.State != StartupTaskState.Enabled)
+                        task.RequestEnableAsync().AsTask().GetAwaiter().GetResult();
+                }
+                else task.Disable();
+                return;
+            }
             using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(StartupKeyPath, true);
             if (key == null) return;
 
@@ -120,5 +120,38 @@ public sealed class JsonAppSettingsStore : IAppSettingsStore
         {
             // Startup registration is best effort; settings still remain saved.
         }
+    }
+
+    public static AppSettings Normalize(AppSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+        settings.SettingsSchemaVersion = 1;
+        settings.FeatureAvailability ??= new Dictionary<string, bool>(StringComparer.Ordinal);
+        if (settings.FeatureAvailability.Comparer != StringComparer.Ordinal)
+            settings.FeatureAvailability = new Dictionary<string, bool>(settings.FeatureAvailability, StringComparer.Ordinal);
+        settings.TimerPreferences ??= new TimerPreferences();
+        settings.TimerSession ??= new TimerSession();
+        settings.ClipboardPreferences ??= new ClipboardPreferences();
+        settings.CommandBarSearchFolders ??= [];
+        settings.CommandSnippets ??= [];
+        settings.CommandScripts ??= [];
+        settings.RadialMenu ??= RadialMenuConfiguration.CreateDefault();
+        settings.RadialMenu.Normalize();
+        settings.SystemMonitorPreferences ??= new SystemMonitorPreferences();
+        settings.SystemMonitorPreferences.Normalize();
+        settings.AudioControlPreferences ??= new AudioControlPreferences();
+        settings.AudioControlPreferences.Normalize();
+        settings.CapturePreferences ??= new CapturePreferences();
+        settings.CapturePreferences.Normalize();
+        settings.RecordingPreferences ??= new RecordingPreferences();
+        settings.RecordingPreferences.Normalize();
+        settings.AppManagementPreferences ??= new AppManagementPreferences();
+        settings.AppManagementPreferences.Normalize();
+        settings.InputEnhancementPreferences ??= new InputEnhancementPreferences();
+        settings.InputEnhancementPreferences.Normalize();
+        settings.DisplayEnergyPreferences ??= new DisplayEnergyPreferences();
+        settings.DisplayEnergyPreferences.Normalize();
+        settings.ProductHardeningPreferences ??= new ProductHardeningPreferences();
+        return settings;
     }
 }

@@ -81,6 +81,8 @@ public sealed class JsonAppSettingsStoreTests
         expected.DisplayEnergyPreferences.KeepAwake = WinNotch.DisplayEnergy.KeepAwakeMode.System;
         expected.DisplayEnergyPreferences.SoftwareDimmingOpacity = 0.25;
         expected.DisplayEnergyPreferences.ValidatedDdcMonitorIds.Add("monitor-a");
+        expected.ProductHardeningPreferences.Language = WinNotch.ProductHardening.AppLanguage.SimplifiedChinese;
+        expected.ProductHardeningPreferences.PerformanceMonitoringEnabled = false;
 
         store.Save(expected);
         var actual = store.Load();
@@ -128,6 +130,8 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal(WinNotch.DisplayEnergy.KeepAwakeMode.System, actual.DisplayEnergyPreferences.KeepAwake);
         Assert.Equal(0.25, actual.DisplayEnergyPreferences.SoftwareDimmingOpacity);
         Assert.Contains("monitor-a", actual.DisplayEnergyPreferences.ValidatedDdcMonitorIds);
+        Assert.Equal(WinNotch.ProductHardening.AppLanguage.SimplifiedChinese, actual.ProductHardeningPreferences.Language);
+        Assert.False(actual.ProductHardeningPreferences.PerformanceMonitoringEnabled);
     }
 
     [Fact]

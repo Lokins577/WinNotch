@@ -47,6 +47,7 @@ CloseApplicationsFilter=WinNotch.exe
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
+Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
@@ -68,10 +69,6 @@ Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: 
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent; Check: not IsUpdateMode
 ; Silent self-update: relaunch the app automatically once the new files are in place.
 Filename: "{app}\{#MyAppExeName}"; Flags: nowait runasoriginaluser; Check: IsUpdateMode
-
-[UninstallDelete]
-Type: files; Name: "{localappdata}\WinNotch\*"
-Type: dirifempty; Name: "{localappdata}\WinNotch"
 
 [Code]
 
