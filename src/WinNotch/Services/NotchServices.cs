@@ -49,6 +49,7 @@ public sealed class NotchServices : IDisposable
     public MediaToolsFeatureService? MediaTools { get; private set; }
     public AppManagementFeatureService? AppManagement { get; private set; }
     public InputEnhancementFeatureService? InputEnhancements { get; private set; }
+    public DisplayEnergyFeatureService? DisplayEnergy { get; private set; }
     public FeatureRuntime FeatureRuntime { get; }
 
     private readonly AppSettings _settings;
@@ -88,6 +89,7 @@ public sealed class NotchServices : IDisposable
         FeatureRuntime.Register(BuiltInFeatures.MediaTools.Id, CreateMediaToolsModule);
         FeatureRuntime.Register(BuiltInFeatures.AppManagement.Id, CreateAppManagementModule);
         FeatureRuntime.Register(BuiltInFeatures.InputEnhancements.Id, CreateInputEnhancementsModule);
+        FeatureRuntime.Register(BuiltInFeatures.DisplayAndEnergy.Id, CreateDisplayEnergyModule);
     }
 
     /// <summary>
@@ -162,6 +164,9 @@ public sealed class NotchServices : IDisposable
         await FeatureRuntime.SetEnabledAsync(
             BuiltInFeatures.InputEnhancements.Id,
             _settings.IsFeatureAvailable(BuiltInFeatures.InputEnhancements));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.DisplayAndEnergy.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.DisplayAndEnergy));
     }
 
     public void Dispose()
@@ -301,6 +306,16 @@ public sealed class NotchServices : IDisposable
     {
         InputEnhancements = new InputEnhancementFeatureService(_settings.InputEnhancementPreferences);
         return InputEnhancements;
+    }
+
+    private IFeatureModule CreateDisplayEnergyModule()
+    {
+        DisplayEnergy = new DisplayEnergyFeatureService(
+            _settings.DisplayEnergyPreferences,
+            Brightness,
+            () => Fullscreen.IsFullscreen,
+            () => MediaTools?.Recorder.IsRecording == true);
+        return DisplayEnergy;
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule

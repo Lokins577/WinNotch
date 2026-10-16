@@ -27,7 +27,8 @@ public partial class NotchWindow
                 BuiltInFeatures.Capture.Id,
                 BuiltInFeatures.MediaTools.Id,
                 BuiltInFeatures.AppManagement.Id,
-                BuiltInFeatures.InputEnhancements.Id
+                BuiltInFeatures.InputEnhancements.Id,
+                BuiltInFeatures.DisplayAndEnergy.Id
             },
             SetFeatureAvailabilityAsync)
         {
@@ -56,7 +57,8 @@ public partial class NotchWindow
             && feature.Id != BuiltInFeatures.Capture.Id
             && feature.Id != BuiltInFeatures.MediaTools.Id
             && feature.Id != BuiltInFeatures.AppManagement.Id
-            && feature.Id != BuiltInFeatures.InputEnhancements.Id)
+            && feature.Id != BuiltInFeatures.InputEnhancements.Id
+            && feature.Id != BuiltInFeatures.DisplayAndEnergy.Id)
             throw new InvalidOperationException($"Feature {feature.Id} is not live-toggleable yet.");
 
         bool previous = _settings.IsFeatureAvailable(feature);
@@ -161,6 +163,11 @@ public partial class NotchWindow
         {
             if (enabled) AttachInputEnhancements();
             else DetachInputEnhancements();
+        }
+        else if (feature.Id == BuiltInFeatures.DisplayAndEnergy.Id)
+        {
+            if (enabled) AttachDisplayEnergy();
+            else DetachDisplayEnergy();
         }
 
         RefreshPluginHostLayout();

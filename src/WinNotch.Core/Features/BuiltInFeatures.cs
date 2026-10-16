@@ -137,9 +137,11 @@ public static class BuiltInFeatures
         EnabledByDefault: false,
         Maturity: FeatureMaturity.Experimental);
 
-    public static readonly FeatureDescriptor DisplayAndEnergy = Planned(
+    public static readonly FeatureDescriptor DisplayAndEnergy = new(
         "energy.display", "Display and energy", FeatureGroup.EnergyAndDisplay,
-        "Keep Awake, external displays, dimming, sleep policy, and hardware providers.");
+        "Keep Awake, external displays, dimming, sleep policy, and hardware providers.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Experimental);
 
     public static FeatureCatalog Catalog { get; } = new(new[]
     {

@@ -78,6 +78,9 @@ public sealed class JsonAppSettingsStoreTests
             Trigger = ":sig",
             Replacement = "Regards"
         });
+        expected.DisplayEnergyPreferences.KeepAwake = WinNotch.DisplayEnergy.KeepAwakeMode.System;
+        expected.DisplayEnergyPreferences.SoftwareDimmingOpacity = 0.25;
+        expected.DisplayEnergyPreferences.ValidatedDdcMonitorIds.Add("monitor-a");
 
         store.Save(expected);
         var actual = store.Load();
@@ -122,6 +125,9 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal(WinNotch.InputEnhancements.SideButtonAction.MiddleClick, actual.InputEnhancementPreferences.XButton1Action);
         Assert.Contains("game", actual.InputEnhancementPreferences.ExcludedApplications);
         Assert.Equal(":sig", Assert.Single(actual.InputEnhancementPreferences.TextExpansions).Trigger);
+        Assert.Equal(WinNotch.DisplayEnergy.KeepAwakeMode.System, actual.DisplayEnergyPreferences.KeepAwake);
+        Assert.Equal(0.25, actual.DisplayEnergyPreferences.SoftwareDimmingOpacity);
+        Assert.Contains("monitor-a", actual.DisplayEnergyPreferences.ValidatedDdcMonitorIds);
     }
 
     [Fact]

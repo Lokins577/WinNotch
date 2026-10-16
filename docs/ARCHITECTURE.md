@@ -162,6 +162,12 @@ hook thread, `SendInput`, foreground/password context, and reversible
 `SystemParametersInfo` overrides. The application service maps typed input
 actions to WinNotch surfaces without giving the hook layer UI dependencies.
 
+Display/energy preferences and fan-provider validation contracts live in Core.
+The Windows adapter owns DDC/CI capability probing, ACPI temperatures, radio
+permission/state, and a dedicated Keep Awake execution-state thread. WPF owns
+capture-excluded click-through dimming overlays. Hardware writes require both
+provider capability and explicit user validation.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New
@@ -195,6 +201,7 @@ new work does not return to a single multi-thousand-line file:
 - `NotchWindow.MediaTools.cs`: recording and media-tool lifecycle.
 - `NotchWindow.AppManagement.cs`: reviewed package and process tooling.
 - `NotchWindow.InputEnhancements.cs`: input settings and typed action dispatch.
+- `NotchWindow.DisplayEnergy.cs`: display, energy, and hardware settings lifecycle.
 
 ## Dependency rules
 

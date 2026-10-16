@@ -233,6 +233,15 @@ Add Keep Awake rules, external-display DDC/CI, brightness steps, software
 dimming, sleep Bluetooth policy, temperature providers, and opt-in fan control
 for validated hardware only.
 
+Status: implemented with explicit hardware boundaries. Keep Awake supports
+manual/fullscreen/recording rules and clears its execution request on stop.
+Internal brightness, user-validated capability-gated DDC/CI brightness, step
+controls, capture-excluded per-display software dimming, permission-based
+Bluetooth suspend/restore policy, and ACPI temperature capability reporting are
+included. Fan control exposes a double-allowlisted provider contract but ships
+no generic EC writer; without an exact validated provider it reports
+Unsupported and remains read-only.
+
 ### 15. Product hardening
 
 Complete accessibility, localization, settings export/import, permission hub,

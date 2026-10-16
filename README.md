@@ -22,6 +22,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Recording and media tools guide: [docs/RECORDING_MEDIA_TOOLS.md](docs/RECORDING_MEDIA_TOOLS.md)
 - Application management guide: [docs/APP_MANAGEMENT.md](docs/APP_MANAGEMENT.md)
 - Input enhancements guide: [docs/INPUT_ENHANCEMENTS.md](docs/INPUT_ENHANCEMENTS.md)
+- Display and hardware guide: [docs/DISPLAY_ENERGY_HARDWARE.md](docs/DISPLAY_ENERGY_HARDWARE.md)
 
 ## Features
 
@@ -47,6 +48,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Ctrl+Alt+V screen recording with separate system/mic tracks, non-destructive edits, GIF/MP4 export, and batch image tools
 - Ctrl+Alt+G reviewed WinGet upgrades, installer/uninstaller handoff, recoverable cleanup, port inspection, and safe process actions
 - Opt-in scroll/focus/mouse/button/Super-key/text-expansion policies with password and app exclusions
+- Keep Awake, internal/DDC brightness, capture-safe software dimming, Bluetooth sleep policy, and explicit hardware-provider boundaries
 - Volume and brightness HUDs
 - Calendar, battery, file shelf, and webcam mirror
 - Light, dark, and auto theme support

@@ -10,6 +10,7 @@ using WinNotch.Capture;
 using WinNotch.MediaTools;
 using WinNotch.AppManagement;
 using WinNotch.InputEnhancements;
+using WinNotch.DisplayEnergy;
 
 namespace WinNotch.Models;
 
@@ -55,6 +56,7 @@ public class AppSettings
     public RecordingPreferences RecordingPreferences { get; set; } = new();
     public AppManagementPreferences AppManagementPreferences { get; set; } = new();
     public InputEnhancementPreferences InputEnhancementPreferences { get; set; } = new();
+    public DisplayEnergyPreferences DisplayEnergyPreferences { get; set; } = new();
 
     // General
     public bool StartOnBoot { get; set; }

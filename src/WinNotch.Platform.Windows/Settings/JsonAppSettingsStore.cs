@@ -9,6 +9,7 @@ using WinNotch.Capture;
 using WinNotch.MediaTools;
 using WinNotch.AppManagement;
 using WinNotch.InputEnhancements;
+using WinNotch.DisplayEnergy;
 
 namespace WinNotch.Platform.Windows.Settings;
 
@@ -74,6 +75,8 @@ public sealed class JsonAppSettingsStore : IAppSettingsStore
             settings.AppManagementPreferences.Normalize();
             settings.InputEnhancementPreferences ??= new InputEnhancementPreferences();
             settings.InputEnhancementPreferences.Normalize();
+            settings.DisplayEnergyPreferences ??= new DisplayEnergyPreferences();
+            settings.DisplayEnergyPreferences.Normalize();
 
             return settings;
         }

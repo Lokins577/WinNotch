@@ -60,10 +60,14 @@ public sealed class FeatureRuntimeTests
     [Fact]
     public void Runtime_RejectsPlannedFeatureRegistration()
     {
-        var runtime = new FeatureRuntime(BuiltInFeatures.Catalog);
+        var planned = new FeatureDescriptor(
+            "test.planned", "Planned", FeatureGroup.Tools, "Planned test feature",
+            EnabledByDefault: false,
+            Maturity: FeatureMaturity.Planned);
+        var runtime = new FeatureRuntime(new FeatureCatalog([planned]));
 
         Assert.Throws<InvalidOperationException>(() =>
-            runtime.Register(BuiltInFeatures.DisplayAndEnergy.Id, () => new FakeModule(BuiltInFeatures.DisplayAndEnergy.Id)));
+            runtime.Register(planned.Id, () => new FakeModule(planned.Id)));
     }
 
     [Fact]

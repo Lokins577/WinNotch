@@ -20,7 +20,8 @@ public enum RadialActionKind
     Capture = 12,
     MediaTools = 13,
     AppManagement = 14,
-    InputSettings = 15
+    InputSettings = 15,
+    DisplayEnergy = 16
 }
 
 public sealed class RadialMenuItem
