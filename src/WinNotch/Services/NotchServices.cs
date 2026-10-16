@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using WinNotch.Models;
+using WinNotch.Features;
+using WinNotch.Settings;
 
 namespace WinNotch.Services;
 
@@ -22,8 +24,23 @@ public sealed class NotchServices : IDisposable
     public ShelfService Shelf { get; } = new();
     public FullscreenService Fullscreen { get; } = new();
     public WebcamService Webcam { get; } = new();
+    public TimerFeatureService? Timer { get; private set; }
+    public FeatureRuntime FeatureRuntime { get; }
+
+    private readonly AppSettings _settings;
+    private readonly IAppSettingsStore _settingsStore;
 
     private Task? _initTask;
+
+    public NotchServices(AppSettings settings, IAppSettingsStore settingsStore)
+    {
+        _settings = settings;
+        _settingsStore = settingsStore;
+        FeatureRuntime = new FeatureRuntime(BuiltInFeatures.Catalog);
+        FeatureRuntime.Register(BuiltInFeatures.Island.Id,
+            () => new NoOpFeatureModule(BuiltInFeatures.Island.Id));
+        FeatureRuntime.Register(BuiltInFeatures.Timers.Id, CreateTimerModule);
+    }
 
     /// <summary>
     /// One-time global initialization; safe to await from every window
@@ -44,6 +61,10 @@ public sealed class NotchServices : IDisposable
         Calendar.Initialize();
         Webcam.SetTargetFps(settings.WebcamFps);
         Fullscreen.Start();
+        await FeatureRuntime.SetEnabledAsync(BuiltInFeatures.Island.Id, true);
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.Timers.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.Timers));
     }
 
     public void Dispose()
@@ -56,5 +77,21 @@ public sealed class NotchServices : IDisposable
         Calendar.Dispose();
         Fullscreen.Dispose();
         Webcam.Dispose();
+        FeatureRuntime.DisposeAsync().AsTask().GetAwaiter().GetResult();
+    }
+
+    private IFeatureModule CreateTimerModule()
+    {
+        Timer = new TimerFeatureService(_settings, _settingsStore);
+        return Timer;
+    }
+
+    private sealed class NoOpFeatureModule : IFeatureModule
+    {
+        public NoOpFeatureModule(FeatureId id) => Id = id;
+        public FeatureId Id { get; }
+        public ValueTask StartAsync(CancellationToken cancellationToken) => ValueTask.CompletedTask;
+        public ValueTask StopAsync(CancellationToken cancellationToken) => ValueTask.CompletedTask;
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }

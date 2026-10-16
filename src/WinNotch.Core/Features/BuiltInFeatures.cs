@@ -35,9 +35,12 @@ public static class BuiltInFeatures
         "platform.plugins", "Plugins", FeatureGroup.Platform,
         "Third-party plugin discovery, lifecycle, and UI hosting.", dependencies: new[] { Island.Id });
 
-    public static readonly FeatureDescriptor Timers = Planned(
+    public static readonly FeatureDescriptor Timers = new(
         "island.timers", "Timers and stopwatch", FeatureGroup.Island,
-        "Timers, focus cycles, stopwatch, alarms, and live indicators.");
+        "Timers, focus cycles, stopwatch, alarms, and live indicators.",
+        EnabledByDefault: true,
+        Maturity: FeatureMaturity.Available,
+        Dependencies: new[] { Island.Id });
 
     public static readonly FeatureDescriptor Notifications = Planned(
         "island.notifications", "Notification activities", FeatureGroup.Island,

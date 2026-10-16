@@ -2,6 +2,7 @@ using System.IO;
 using System.Text.Json;
 using WinNotch.Models;
 using WinNotch.Features;
+using WinNotch.Timers;
 using WinNotch.Platform.Windows.Settings;
 using Xunit;
 
@@ -22,6 +23,10 @@ public sealed class JsonAppSettingsStoreTests
             Theme = AppTheme.Light
         };
         expected.SetFeatureAvailable(BuiltInFeatures.Media, false);
+        expected.TimerPreferences.FocusMinutes = 42;
+        expected.TimerSession.Initialized = true;
+        expected.TimerSession.Phase = TimerPhase.Stopwatch;
+        expected.TimerSession.StoredValue = TimeSpan.FromSeconds(90);
 
         store.Save(expected);
         var actual = store.Load();
@@ -31,6 +36,9 @@ public sealed class JsonAppSettingsStoreTests
         Assert.False(actual.ShowCalendar);
         Assert.Equal(AppTheme.Light, actual.Theme);
         Assert.False(actual.IsFeatureAvailable(BuiltInFeatures.Media));
+        Assert.Equal(42, actual.TimerPreferences.FocusMinutes);
+        Assert.Equal(TimerPhase.Stopwatch, actual.TimerSession.Phase);
+        Assert.Equal(TimeSpan.FromSeconds(90), actual.TimerSession.StoredValue);
     }
 
     [Fact]

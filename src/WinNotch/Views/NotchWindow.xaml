@@ -98,9 +98,12 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Plugin closed content -->
-                    <StackPanel x:Name="PluginClosedPanel" Grid.Column="0" Orientation="Horizontal"
-                                VerticalAlignment="Center" Margin="6,0,0,0"/>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <views:TimerCompactView x:Name="TimerCompact"/>
+                        <!-- Plugin closed content -->
+                        <StackPanel x:Name="PluginClosedPanel" Orientation="Horizontal"
+                                    VerticalAlignment="Center" Margin="6,0,0,0"/>
+                    </StackPanel>
 
                     <views:MusicLiveActivity x:Name="LiveActivity"
                                              Grid.Column="1"
@@ -124,6 +127,7 @@
                 <!-- Open state content -->
                 <Grid x:Name="OpenContent" Opacity="0" Margin="12,6,12,10">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -177,13 +181,17 @@
                                      Visibility="Collapsed"
                                      Margin="0,4,0,0"/>
 
+                    <!-- Timer / focus live activity -->
+                    <views:TimerView x:Name="TimerOpenView" Grid.Row="2"
+                                     Visibility="Collapsed"/>
+
                     <!-- Plugin open content -->
-                    <StackPanel x:Name="PluginOpenPanel" Grid.Row="2"
+                    <StackPanel x:Name="PluginOpenPanel" Grid.Row="3"
                                 Margin="0,4,0,0"/>
 
                     <!-- Inline settings (hidden by default, shown when gear clicked) - slides down in top mode -->
                     <views:InlineSettingsView x:Name="InlineSettings"
-                                              Grid.Row="3"
+                                              Grid.Row="4"
                                               Visibility="Collapsed"
                                               Margin="0,6,0,0"/>
                 </Grid>
@@ -302,6 +310,9 @@
                                 </Button>
                             </StackPanel>
                         </StackPanel>
+
+                        <views:TimerView x:Name="VerticalTimerView"
+                                         Visibility="Collapsed" Margin="4,10,4,0"/>
 
                         <StackPanel x:Name="VerticalPluginOpenPanel"
                                     Margin="0,14,0,0"/>

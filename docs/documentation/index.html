@@ -406,7 +406,7 @@ dotnet run --project src/WinNotch/WinNotch.csproj</code></pre>
 
                     <div class="doc-callout doc-callout--note">
                         <strong>Examples in this repository</strong>
-                        <p><code>Todo Peek</code>, <code>ChatGPT Add-on</code>, and <code>Focus Timer</code> all use the configurable-plugin flow and store their values inside their own plugin folders under <code>%AppData%\WinNotch\Plugins</code>.</p>
+                        <p><code>Todo Peek</code>, <code>ChatGPT Add-on</code>, and <code>Weather</code> use the configurable-plugin flow and store their values inside their own plugin folders under <code>%AppData%\WinNotch\Plugins</code>.</p>
                     </div>
                 </section>
 
@@ -582,7 +582,7 @@ dotnet add package WinNotch.PluginSdk --version 0.6.2 --source github-winnotch</
 
                     <div class="doc-callout doc-callout--tip">
                         <strong>Practical layout rule</strong>
-                        <p>If your plugin adds visible content in the expanded notch, always think about both top and vertical placements. The built-in examples like Weather, Todo Peek, Clipboard Stack, and Focus Timer all adapt their layouts rather than assuming a single horizontal card.</p>
+                        <p>If your plugin adds visible content in the expanded notch, always think about both top and vertical placements. The examples like Weather, Todo Peek, Clipboard Stack, and Downloads Watcher adapt their layouts rather than assuming a single horizontal card.</p>
                     </div>
 
                     <h3 class="doc-subheading">Theme-aware UI</h3>

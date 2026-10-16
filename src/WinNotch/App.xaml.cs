@@ -90,7 +90,7 @@ public partial class App : Application
         SetupTrayIcon();
 
         // Shared system services — one set for every island window
-        _services = new NotchServices();
+        _services = new NotchServices(_settings, _settingsStore);
 
         // Launch the primary island (on its remembered screen)
         _notchWindow = new NotchWindow(_settings, _settingsStore, _themeService, _services,

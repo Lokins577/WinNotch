@@ -1,4 +1,5 @@
 using System.Windows;
+using WinNotch.Features;
 using WinNotch.Models;
 
 namespace WinNotch.Views;
@@ -7,7 +8,10 @@ public partial class NotchWindow
 {
     private void OpenFeatureCatalog()
     {
-        var window = new FeatureCatalogWindow(_settings)
+        var window = new FeatureCatalogWindow(
+            _settings,
+            new[] { BuiltInFeatures.Timers.Id },
+            SetFeatureAvailabilityAsync)
         {
             Owner = this,
             Topmost = true
@@ -15,6 +19,44 @@ public partial class NotchWindow
         window.Show();
         window.Activate();
         window.Topmost = false;
+    }
+
+    private async Task SetFeatureAvailabilityAsync(FeatureDescriptor feature, bool enabled)
+    {
+        if (feature.Id != BuiltInFeatures.Timers.Id)
+            throw new InvalidOperationException($"Feature {feature.Id} is not live-toggleable yet.");
+
+        bool previous = _settings.IsFeatureAvailable(feature);
+        try
+        {
+            await _services.FeatureRuntime.SetEnabledAsync(feature.Id, enabled);
+            _settings.SetFeatureAvailable(feature, enabled);
+            _settingsStore.Save(_settings);
+        }
+        catch
+        {
+            if (previous != enabled)
+            {
+                try { await _services.FeatureRuntime.SetEnabledAsync(feature.Id, previous); }
+                catch { }
+            }
+            throw;
+        }
+
+        TimerOpenView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        VerticalTimerView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        if (enabled && _services.Timer is { } timer)
+        {
+            TimerOpenView.Bind(timer);
+            VerticalTimerView.Bind(timer, compact: true);
+            TimerCompact.Bind(timer);
+        }
+        else
+        {
+            TimerCompact.Visibility = Visibility.Collapsed;
+        }
+
+        RefreshPluginHostLayout();
     }
 
     public void OpenSettings()

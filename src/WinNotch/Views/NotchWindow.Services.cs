@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Threading;
 using WinNotch.Helpers;
+using WinNotch.Features;
 using WinNotch.Models;
 
 namespace WinNotch.Views;
@@ -63,6 +64,17 @@ public partial class NotchWindow
 
         // Battery
         BatteryIndicator.Bind(_batteryService);
+
+        // Timers, focus cycles, and stopwatch
+        bool timersAvailable = _settings.IsFeatureAvailable(BuiltInFeatures.Timers);
+        TimerOpenView.Visibility = timersAvailable ? Visibility.Visible : Visibility.Collapsed;
+        VerticalTimerView.Visibility = timersAvailable ? Visibility.Visible : Visibility.Collapsed;
+        if (timersAvailable && _services.Timer is { } timer)
+        {
+            TimerOpenView.Bind(timer);
+            VerticalTimerView.Bind(timer, compact: true);
+            TimerCompact.Bind(timer);
+        }
 
         // Calendar
         CalendarPanel_View.Bind(_calendarService);

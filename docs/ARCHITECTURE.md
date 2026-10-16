@@ -62,6 +62,11 @@ catalog, persisted availability policy, and the asynchronous lifecycle runtime.
 Planned features may appear in the catalog but cannot register a runtime module
 until their maturity changes to Available or Experimental.
 
+Timer policy lives in `WinNotch.Core/Timers`; the WPF timer service supplies the
+dispatcher heartbeat, persistence, and alarm, while views only render snapshots
+and send commands. Running sessions persist a UTC anchor so sleep and app
+restarts do not introduce one-tick-per-second drift.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New

@@ -9,9 +9,17 @@ namespace WinNotch.Views;
 
 public sealed class FeatureCatalogWindow : Window
 {
-    public FeatureCatalogWindow(AppSettings settings)
+    private readonly HashSet<FeatureId> _toggleableFeatures;
+    private readonly Func<FeatureDescriptor, bool, Task>? _setAvailability;
+
+    public FeatureCatalogWindow(
+        AppSettings settings,
+        IEnumerable<FeatureId>? toggleableFeatures = null,
+        Func<FeatureDescriptor, bool, Task>? setAvailability = null)
     {
         ArgumentNullException.ThrowIfNull(settings);
+        _toggleableFeatures = toggleableFeatures?.ToHashSet() ?? new HashSet<FeatureId>();
+        _setAvailability = setAvailability;
 
         Title = "WinNotch Features";
         Width = 640;
@@ -84,7 +92,33 @@ public sealed class FeatureCatalogWindow : Window
             FontSize = 11,
             Foreground = GetBrush("TextSecondaryBrush", Color.FromRgb(190, 190, 196))
         };
-        var badge = new Border
+        FrameworkElement status = _toggleableFeatures.Contains(feature.Id) && _setAvailability != null
+            ? CreateAvailabilityToggle(feature, settings)
+            : CreateStatusBadge(feature, settings);
+
+        var grid = new Grid();
+        grid.ColumnDefinitions.Add(new ColumnDefinition());
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        var text = new StackPanel();
+        text.Children.Add(title);
+        text.Children.Add(description);
+        grid.Children.Add(text);
+        Grid.SetColumn(status, 1);
+        grid.Children.Add(status);
+
+        return new Border
+        {
+            Margin = new Thickness(0, 0, 0, 8),
+            Padding = new Thickness(14, 12, 14, 12),
+            CornerRadius = new CornerRadius(10),
+            Background = GetBrush("SurfaceRaisedBrush", Color.FromRgb(31, 31, 34)),
+            Child = grid
+        };
+    }
+
+    private FrameworkElement CreateStatusBadge(FeatureDescriptor feature, AppSettings settings)
+    {
+        return new Border
         {
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(8, 3, 8, 3),
@@ -104,25 +138,47 @@ public sealed class FeatureCatalogWindow : Window
                     : GetBrush("TextSubtleBrush", Color.FromRgb(160, 160, 166))
             }
         };
+    }
 
-        var grid = new Grid();
-        grid.ColumnDefinitions.Add(new ColumnDefinition());
-        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        var text = new StackPanel();
-        text.Children.Add(title);
-        text.Children.Add(description);
-        grid.Children.Add(text);
-        Grid.SetColumn(badge, 1);
-        grid.Children.Add(badge);
-
-        return new Border
+    private FrameworkElement CreateAvailabilityToggle(FeatureDescriptor feature, AppSettings settings)
+    {
+        var toggle = new CheckBox
         {
-            Margin = new Thickness(0, 0, 0, 8),
-            Padding = new Thickness(14, 12, 14, 12),
-            CornerRadius = new CornerRadius(10),
-            Background = GetBrush("SurfaceRaisedBrush", Color.FromRgb(31, 31, 34)),
-            Child = grid
+            Content = settings.IsFeatureAvailable(feature) ? "On" : "Off",
+            IsChecked = settings.IsFeatureAvailable(feature),
+            VerticalAlignment = VerticalAlignment.Top,
+            Foreground = GetBrush("TextSecondaryBrush", Color.FromRgb(190, 190, 196))
         };
+        bool updating = false;
+
+        async void Apply(object sender, RoutedEventArgs args)
+        {
+            if (updating || _setAvailability == null) return;
+            bool enabled = toggle.IsChecked == true;
+            toggle.IsEnabled = false;
+            try
+            {
+                await _setAvailability(feature, enabled);
+                toggle.Content = enabled ? "On" : "Off";
+            }
+            catch (Exception exception)
+            {
+                updating = true;
+                toggle.IsChecked = !enabled;
+                toggle.Content = !enabled ? "On" : "Off";
+                updating = false;
+                MessageBox.Show(exception.Message, "Feature change failed",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                toggle.IsEnabled = true;
+            }
+        }
+
+        toggle.Checked += Apply;
+        toggle.Unchecked += Apply;
+        return toggle;
     }
 
     private static string FormatGroup(FeatureGroup group)

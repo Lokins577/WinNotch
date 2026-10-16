@@ -365,7 +365,10 @@ public partial class NotchWindow : Window
             ? NotchConstants.OpenHeightWithShelf
             : NotchConstants.OpenHeight;
 
-        return baseHeight + GetMeasuredPanelHeight(PluginOpenPanel, Math.Max(220, GetOpenWidth() - 48));
+        double availableWidth = Math.Max(220, GetOpenWidth() - 48);
+        return baseHeight
+            + GetMeasuredElementHeight(TimerOpenView, availableWidth)
+            + GetMeasuredPanelHeight(PluginOpenPanel, availableWidth);
     }
 
     private double GetTopSettingsHeight()
@@ -374,12 +377,17 @@ public partial class NotchWindow : Window
             ? NotchConstants.OpenSettingsHeightWithShelf
             : NotchConstants.OpenSettingsHeight;
 
-        return baseHeight + GetMeasuredPanelHeight(PluginOpenPanel, Math.Max(220, GetOpenWidth() - 48));
+        double availableWidth = Math.Max(220, GetOpenWidth() - 48);
+        return baseHeight
+            + GetMeasuredElementHeight(TimerOpenView, availableWidth)
+            + GetMeasuredPanelHeight(PluginOpenPanel, availableWidth);
     }
 
     private double GetSideOpenHeight()
     {
-        return NotchConstants.SideOpenHeight + GetMeasuredPanelHeight(VerticalPluginOpenPanel, 136);
+        return NotchConstants.SideOpenHeight
+            + GetMeasuredElementHeight(VerticalTimerView, 136)
+            + GetMeasuredPanelHeight(VerticalPluginOpenPanel, 136);
     }
 
     private static double GetMeasuredPanelHeight(System.Windows.Controls.Panel panel, double availableWidth)
@@ -398,6 +406,15 @@ public partial class NotchWindow : Window
 
         panel.Measure(new Size(double.PositiveInfinity, availableHeight));
         return Math.Ceiling(panel.DesiredSize.Width);
+    }
+
+    private static double GetMeasuredElementHeight(FrameworkElement element, double availableWidth)
+    {
+        if (element.Visibility != Visibility.Visible)
+            return 0;
+
+        element.Measure(new Size(availableWidth, double.PositiveInfinity));
+        return Math.Ceiling(element.DesiredSize.Height);
     }
 
     #region Animation Loop

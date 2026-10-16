@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using WinNotch.Features;
+using WinNotch.Timers;
 
 namespace WinNotch.Models;
 
@@ -29,6 +30,8 @@ public enum AppTheme
 public class AppSettings
 {
     public Dictionary<string, bool> FeatureAvailability { get; set; } = new(StringComparer.Ordinal);
+    public TimerPreferences TimerPreferences { get; set; } = new();
+    public TimerSession TimerSession { get; set; } = new();
 
     // General
     public bool StartOnBoot { get; set; }

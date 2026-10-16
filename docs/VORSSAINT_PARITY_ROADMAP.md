@@ -60,6 +60,11 @@ start/stop, restart, failure state, persistence overrides, and a Features UI.
 Add durable timers, focus-cycle rules, alarms, compact indicators, and island
 activity selection. Timer policy belongs in Core and must be clock-testable.
 
+Status: implemented. Focus/short-break/long-break cycles, configurable countdown
+duration, stopwatch, UTC-anchored restore, daily completion counts, alarms,
+compact closed-island status, top and vertical controls, persistence, and live
+feature enable/disable are included.
+
 ### 3. Download and notification activities
 
 Monitor user-selected download folders and integrate Windows notification

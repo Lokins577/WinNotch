@@ -48,13 +48,13 @@ public sealed class FeatureRuntimeTests
         var settings = new AppSettings();
 
         Assert.True(settings.IsFeatureAvailable(BuiltInFeatures.Media));
-        Assert.False(settings.IsFeatureAvailable(BuiltInFeatures.Timers));
+        Assert.False(settings.IsFeatureAvailable(BuiltInFeatures.Notifications));
 
         settings.SetFeatureAvailable(BuiltInFeatures.Media, false);
-        settings.SetFeatureAvailable(BuiltInFeatures.Timers, true);
+        settings.SetFeatureAvailable(BuiltInFeatures.Notifications, true);
 
         Assert.False(settings.IsFeatureAvailable(BuiltInFeatures.Media));
-        Assert.True(settings.IsFeatureAvailable(BuiltInFeatures.Timers));
+        Assert.True(settings.IsFeatureAvailable(BuiltInFeatures.Notifications));
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public sealed class FeatureRuntimeTests
         var runtime = new FeatureRuntime(BuiltInFeatures.Catalog);
 
         Assert.Throws<InvalidOperationException>(() =>
-            runtime.Register(BuiltInFeatures.Timers.Id, () => new FakeModule(BuiltInFeatures.Timers.Id)));
+            runtime.Register(BuiltInFeatures.Notifications.Id, () => new FakeModule(BuiltInFeatures.Notifications.Id)));
     }
 
     [Fact]
