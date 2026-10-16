@@ -29,6 +29,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Persistent, searchable clipboard history with image/file support and app exclusions
 - Optional clipboard auto-clear, tracking-URL cleanup, and Ctrl+Shift+V plain-text paste
 - Shelf pinning that persists selected files and folders across restarts
+- Ctrl+Alt+Space Command Bar for apps, windows, clipboard, math, units, and Emoji
 - Volume and brightness HUDs
 - Calendar, battery, file shelf, and webcam mirror
 - Light, dark, and auto theme support

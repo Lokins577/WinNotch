@@ -100,6 +100,11 @@ Shelf persistence stores only explicit pins. Shell icons and path availability
 remain Windows adapter concerns; the JSON record contains stable path, kind,
 timestamp, and ID, and missing pinned paths are retained for user review.
 
+Command Bar provider contracts, scoring, math grammar, units, and Emoji live in
+Core. Windows providers own Start Menu indexing, top-level window enumeration,
+foreground activation, clipboard execution, and the global hotkey. Search
+isolates provider failures and cancellation before merging ranked results.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New

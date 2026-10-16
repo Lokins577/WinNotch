@@ -16,7 +16,8 @@ public partial class NotchWindow
                 BuiltInFeatures.Downloads.Id,
                 BuiltInFeatures.Notifications.Id,
                 BuiltInFeatures.AgentActivity.Id,
-                BuiltInFeatures.Clipboard.Id
+                BuiltInFeatures.Clipboard.Id,
+                BuiltInFeatures.CommandBar.Id
             },
             SetFeatureAvailabilityAsync)
         {
@@ -34,7 +35,8 @@ public partial class NotchWindow
             && feature.Id != BuiltInFeatures.Downloads.Id
             && feature.Id != BuiltInFeatures.Notifications.Id
             && feature.Id != BuiltInFeatures.AgentActivity.Id
-            && feature.Id != BuiltInFeatures.Clipboard.Id)
+            && feature.Id != BuiltInFeatures.Clipboard.Id
+            && feature.Id != BuiltInFeatures.CommandBar.Id)
             throw new InvalidOperationException($"Feature {feature.Id} is not live-toggleable yet.");
 
         bool previous = _settings.IsFeatureAvailable(feature);
@@ -84,6 +86,11 @@ public partial class NotchWindow
         else if (feature.Id == BuiltInFeatures.Clipboard.Id)
         {
             BindClipboardViews(enabled);
+        }
+        else if (feature.Id == BuiltInFeatures.CommandBar.Id)
+        {
+            if (enabled) AttachCommandBar();
+            else DetachCommandBar();
         }
 
         RefreshPluginHostLayout();

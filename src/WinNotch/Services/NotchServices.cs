@@ -5,6 +5,8 @@ using WinNotch.Features;
 using WinNotch.Helpers;
 using WinNotch.Settings;
 using WinNotch.Platform.Windows.Clipboard;
+using WinNotch.Platform.Windows.CommandBar;
+using WinNotch.CommandBar;
 
 namespace WinNotch.Services;
 
@@ -32,6 +34,7 @@ public sealed class NotchServices : IDisposable
     public NotificationListenerService? Notifications { get; private set; }
     public AgentActivityService? Agents { get; private set; }
     public ClipboardHistoryService? ClipboardHistory { get; private set; }
+    public CommandBarFeatureService? CommandBar { get; private set; }
     public FeatureRuntime FeatureRuntime { get; }
 
     private readonly AppSettings _settings;
@@ -60,6 +63,7 @@ public sealed class NotchServices : IDisposable
         FeatureRuntime.Register(BuiltInFeatures.Notifications.Id, CreateNotificationsModule);
         FeatureRuntime.Register(BuiltInFeatures.AgentActivity.Id, CreateAgentsModule);
         FeatureRuntime.Register(BuiltInFeatures.Clipboard.Id, CreateClipboardModule);
+        FeatureRuntime.Register(BuiltInFeatures.CommandBar.Id, CreateCommandBarModule);
     }
 
     /// <summary>
@@ -97,6 +101,9 @@ public sealed class NotchServices : IDisposable
         await FeatureRuntime.SetEnabledAsync(
             BuiltInFeatures.Clipboard.Id,
             _settings.IsFeatureAvailable(BuiltInFeatures.Clipboard));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.CommandBar.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.CommandBar));
     }
 
     public void Dispose()
@@ -143,6 +150,21 @@ public sealed class NotchServices : IDisposable
             _settings.ClipboardPreferences,
             new JsonClipboardHistoryStore());
         return ClipboardHistory;
+    }
+
+    private IFeatureModule CreateCommandBarModule()
+    {
+        var engine = new CommandBarEngine(new ICommandProvider[]
+        {
+            new CalculatorCommandProvider(),
+            new UnitCommandProvider(),
+            new EmojiCommandProvider(),
+            new ApplicationCommandProvider(),
+            new WindowCommandProvider(),
+            new ClipboardCommandProvider(() => ClipboardHistory)
+        });
+        CommandBar = new CommandBarFeatureService(engine);
+        return CommandBar;
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule

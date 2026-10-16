@@ -104,6 +104,12 @@ ignored applications require explicit policy.
 Add app/window/file search, calculations, unit conversion, emoji, snippets,
 scripts, quick toggles, quick panel, radial menu, and scratchpad.
 
+Status: in progress. The Command Bar shell, global hotkey, provider isolation,
+Start Menu applications, visible windows, clipboard history, safe scientific
+calculator, unit conversion, Emoji, keyboard navigation, and execution are
+implemented. File search, snippets, scripts, Quick Panel, radial menu, and
+Scratchpad remain.
+
 ### 7. Window and taskbar management
 
 Implement window switching with previews, layouts, restore, multi-monitor

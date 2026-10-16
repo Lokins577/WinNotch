@@ -1301,6 +1301,7 @@ public partial class NotchWindow : Window
         _hoverCloseTimer?.Stop();
         _appBar.Dispose();
         _pluginManager?.Dispose();
+        DetachCommandBar();
         _globalHotkey?.Dispose();
         base.OnClosed(e);
     }

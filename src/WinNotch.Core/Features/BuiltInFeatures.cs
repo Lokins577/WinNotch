@@ -70,9 +70,12 @@ public static class BuiltInFeatures
         Maturity: FeatureMaturity.Available,
         Dependencies: new[] { Island.Id });
 
-    public static readonly FeatureDescriptor CommandBar = Planned(
+    public static readonly FeatureDescriptor CommandBar = new(
         "tools.command-bar", "Command bar", FeatureGroup.Tools,
-        "Unified local search, calculations, commands, and snippets.");
+        "Unified local search, calculations, commands, and snippets.",
+        EnabledByDefault: true,
+        Maturity: FeatureMaturity.Available,
+        Dependencies: new[] { Island.Id });
 
     public static readonly FeatureDescriptor WindowManagement = Planned(
         "windows.management", "Window management", FeatureGroup.Windows,

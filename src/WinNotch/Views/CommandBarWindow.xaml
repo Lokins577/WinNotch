@@ -1,0 +1,48 @@
+<Window x:Class="WinNotch.Views.CommandBarWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Width="620" SizeToContent="Height" MaxHeight="560"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True"
+        WindowStartupLocation="CenterScreen" Deactivated="OnDeactivated">
+    <Border Background="{DynamicResource NotchFillBrush}" CornerRadius="14"
+            BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1"
+            Padding="12">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="22" ShadowDepth="4" Opacity="0.45"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBox x:Name="QueryBox" Height="38" FontSize="16" Padding="10,6"
+                     TextChanged="OnQueryChanged" PreviewKeyDown="OnPreviewKeyDown"/>
+            <ListBox x:Name="ResultsList" Grid.Row="1" Margin="0,8,0,0"
+                     MaxHeight="440" BorderThickness="0" Background="Transparent"
+                     MouseDoubleClick="OnResultDoubleClick">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="6,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextPrimaryBrush}"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding Subtitle}" FontSize="10"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                            <TextBlock Grid.Column="1" Text="{Binding Kind}" FontSize="9"
+                                       VerticalAlignment="Center" Margin="12,0,0,0"
+                                       Foreground="{DynamicResource TextDimBrush}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Border>
+</Window>
