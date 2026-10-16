@@ -109,7 +109,10 @@ Start Menu applications, visible windows, clipboard history, safe scientific
 calculator, unit conversion, Emoji, keyboard navigation, and execution are
 implemented. Bounded local file indexing with configurable roots, reusable
 snippets, and explicitly saved `>` scripts with a management UI are
-implemented. Quick Panel, radial menu, and Scratchpad remain.
+implemented. `Ctrl+Alt+Q` Quick Panel provides Command Bar, Scratchpad,
+Features, mute, theme, and lock actions. Persistent multi-tab Scratchpad,
+autosave, lightweight Markdown preview, and export are implemented. Radial menu
+remains.
 
 ### 7. Window and taskbar management
 

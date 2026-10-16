@@ -34,5 +34,7 @@ Saved scripts must use an absolute path that exists when saved and when queried.
 Command Bar never treats arbitrary query text as a shell command. A script is
 visible only after entering `>` and selecting the saved result.
 
-Quick Panel, radial menu, and Scratchpad are delivered in the remaining module
-6 commits.
+Quick Panel is available with `Ctrl+Alt+Q` and opens Command Bar, Scratchpad,
+Features, mute, theme, and lock actions. Scratchpad stores multiple local tabs,
+autosaves atomically, renders lightweight Markdown headings and lists, and can
+export Markdown. The radial menu remains in the final module 6 commit.

@@ -77,6 +77,18 @@ public static class BuiltInFeatures
         Maturity: FeatureMaturity.Available,
         Dependencies: new[] { Island.Id });
 
+    public static readonly FeatureDescriptor QuickPanel = new(
+        "tools.quick-panel", "Quick Panel", FeatureGroup.Tools,
+        "A compact launcher for WinNotch surfaces and safe system actions.",
+        EnabledByDefault: true,
+        Maturity: FeatureMaturity.Available);
+
+    public static readonly FeatureDescriptor Scratchpad = new(
+        "tools.scratchpad", "Scratchpad", FeatureGroup.Tools,
+        "Persistent local notes with tabs and lightweight Markdown preview.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Available);
+
     public static readonly FeatureDescriptor WindowManagement = Planned(
         "windows.management", "Window management", FeatureGroup.Windows,
         "Switcher, layouts, previews, restore, and multi-monitor movement.");
@@ -108,7 +120,8 @@ public static class BuiltInFeatures
     public static FeatureCatalog Catalog { get; } = new(new[]
     {
         Island, Media, Calendar, Battery, Shelf, Camera, SystemHud, Plugins,
-        Timers, Notifications, Downloads, AgentActivity, Clipboard, CommandBar, WindowManagement,
+        Timers, Notifications, Downloads, AgentActivity, Clipboard, CommandBar,
+        QuickPanel, Scratchpad, WindowManagement,
         SystemMonitor, AudioMixer, Capture, AppManagement, InputEnhancements,
         DisplayAndEnergy
     });

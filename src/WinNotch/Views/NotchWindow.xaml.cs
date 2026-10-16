@@ -1302,6 +1302,8 @@ public partial class NotchWindow : Window
         _appBar.Dispose();
         _pluginManager?.Dispose();
         DetachCommandBar();
+        DetachQuickPanel();
+        _scratchpadWindow?.Close();
         _globalHotkey?.Dispose();
         base.OnClosed(e);
     }

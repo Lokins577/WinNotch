@@ -110,6 +110,10 @@ skips generated or hidden trees. Snippet and script definitions persist in
 AppSettings; script execution requires a pre-saved absolute path and cannot be
 constructed from arbitrary Command Bar query text.
 
+Scratchpad data has its own atomic store rather than expanding AppSettings with
+large note bodies. Quick Panel is a lifecycle feature with a dedicated hotkey;
+its buttons call typed application actions instead of executing command text.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New

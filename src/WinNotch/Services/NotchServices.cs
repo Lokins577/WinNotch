@@ -8,6 +8,7 @@ using WinNotch.Settings;
 using WinNotch.Platform.Windows.Clipboard;
 using WinNotch.Platform.Windows.CommandBar;
 using WinNotch.CommandBar;
+using WinNotch.Platform.Windows.Scratchpad;
 
 namespace WinNotch.Services;
 
@@ -36,6 +37,8 @@ public sealed class NotchServices : IDisposable
     public AgentActivityService? Agents { get; private set; }
     public ClipboardHistoryService? ClipboardHistory { get; private set; }
     public CommandBarFeatureService? CommandBar { get; private set; }
+    public QuickPanelFeatureService? QuickPanel { get; private set; }
+    public ScratchpadService? Scratchpad { get; private set; }
     public FeatureRuntime FeatureRuntime { get; }
 
     private readonly AppSettings _settings;
@@ -65,6 +68,8 @@ public sealed class NotchServices : IDisposable
         FeatureRuntime.Register(BuiltInFeatures.AgentActivity.Id, CreateAgentsModule);
         FeatureRuntime.Register(BuiltInFeatures.Clipboard.Id, CreateClipboardModule);
         FeatureRuntime.Register(BuiltInFeatures.CommandBar.Id, CreateCommandBarModule);
+        FeatureRuntime.Register(BuiltInFeatures.QuickPanel.Id, CreateQuickPanelModule);
+        FeatureRuntime.Register(BuiltInFeatures.Scratchpad.Id, CreateScratchpadModule);
     }
 
     /// <summary>
@@ -105,6 +110,12 @@ public sealed class NotchServices : IDisposable
         await FeatureRuntime.SetEnabledAsync(
             BuiltInFeatures.CommandBar.Id,
             _settings.IsFeatureAvailable(BuiltInFeatures.CommandBar));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.QuickPanel.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.QuickPanel));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.Scratchpad.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.Scratchpad));
     }
 
     public void Dispose()
@@ -182,6 +193,18 @@ public sealed class NotchServices : IDisposable
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")
         }.Where(Directory.Exists).ToArray();
+    }
+
+    private IFeatureModule CreateQuickPanelModule()
+    {
+        QuickPanel = new QuickPanelFeatureService();
+        return QuickPanel;
+    }
+
+    private IFeatureModule CreateScratchpadModule()
+    {
+        Scratchpad = new ScratchpadService(new JsonScratchpadStore());
+        return Scratchpad;
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule

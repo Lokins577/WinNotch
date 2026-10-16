@@ -14,6 +14,7 @@ public partial class NotchWindow
         // Global one-time init happens once app-wide; every island awaits it
         await _services.EnsureInitializedAsync(_settings);
         AttachCommandBar();
+        AttachQuickPanel();
 
         // Bind views to services
         MusicPlayer.Bind(_mediaService, _services.Lyrics);

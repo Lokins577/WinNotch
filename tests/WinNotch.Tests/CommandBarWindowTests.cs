@@ -2,6 +2,8 @@ using WinNotch.CommandBar;
 using WinNotch.Views;
 using WinNotch.Models;
 using WinNotch.Settings;
+using WinNotch.Scratchpad;
+using WinNotch.Services;
 using Xunit;
 
 namespace WinNotch.Tests;
@@ -60,5 +62,39 @@ public sealed class CommandBarWindowTests
         public AppSettings Load() => new();
         public void Save(AppSettings settings) { }
         public void ApplyStartOnBoot(bool enabled) { }
+    }
+
+    [Fact]
+    public void QuickPanelAndScratchpad_BuildOnStaThread()
+    {
+        Exception? failure = null;
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                var quick = new QuickPanelWindow(new QuickPanelActions(
+                    () => { }, () => { }, () => { }, () => { }, () => { }, () => { }));
+                using var service = new ScratchpadService(new MemoryScratchpadStore());
+                var scratchpad = new ScratchpadWindow(service);
+                Assert.NotNull(quick.Content);
+                Assert.NotNull(scratchpad.Content);
+                quick.Close();
+                scratchpad.Close();
+            }
+            catch (Exception exception)
+            {
+                failure = exception;
+            }
+        });
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        Assert.True(thread.Join(TimeSpan.FromSeconds(10)), "Quick tools UI test timed out.");
+        Assert.Null(failure);
+    }
+
+    private sealed class MemoryScratchpadStore : IScratchpadStore
+    {
+        public IReadOnlyList<ScratchpadDocument> Load() => [];
+        public void Save(IReadOnlyList<ScratchpadDocument> documents) { }
     }
 }

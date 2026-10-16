@@ -17,7 +17,9 @@ public partial class NotchWindow
                 BuiltInFeatures.Notifications.Id,
                 BuiltInFeatures.AgentActivity.Id,
                 BuiltInFeatures.Clipboard.Id,
-                BuiltInFeatures.CommandBar.Id
+                BuiltInFeatures.CommandBar.Id,
+                BuiltInFeatures.QuickPanel.Id,
+                BuiltInFeatures.Scratchpad.Id
             },
             SetFeatureAvailabilityAsync)
         {
@@ -36,7 +38,9 @@ public partial class NotchWindow
             && feature.Id != BuiltInFeatures.Notifications.Id
             && feature.Id != BuiltInFeatures.AgentActivity.Id
             && feature.Id != BuiltInFeatures.Clipboard.Id
-            && feature.Id != BuiltInFeatures.CommandBar.Id)
+            && feature.Id != BuiltInFeatures.CommandBar.Id
+            && feature.Id != BuiltInFeatures.QuickPanel.Id
+            && feature.Id != BuiltInFeatures.Scratchpad.Id)
             throw new InvalidOperationException($"Feature {feature.Id} is not live-toggleable yet.");
 
         bool previous = _settings.IsFeatureAvailable(feature);
@@ -91,6 +95,16 @@ public partial class NotchWindow
         {
             if (enabled) AttachCommandBar();
             else DetachCommandBar();
+        }
+        else if (feature.Id == BuiltInFeatures.QuickPanel.Id)
+        {
+            if (enabled) AttachQuickPanel();
+            else DetachQuickPanel();
+        }
+        else if (feature.Id == BuiltInFeatures.Scratchpad.Id && !enabled)
+        {
+            _scratchpadWindow?.Close();
+            _scratchpadWindow = null;
         }
 
         RefreshPluginHostLayout();
