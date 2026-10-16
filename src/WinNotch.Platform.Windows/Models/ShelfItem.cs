@@ -8,10 +8,14 @@ namespace WinNotch.Models;
 /// </summary>
 public class ShelfItem
 {
+    public Guid Id { get; set; } = Guid.NewGuid();
     public string FilePath { get; set; } = string.Empty;
     public string FileName { get; set; } = string.Empty;
     public string Extension { get; set; } = string.Empty;
     public DateTime AddedAt { get; set; } = DateTime.Now;
     public ImageSource? Icon { get; set; }
     public bool IsFolder { get; set; }
+    public bool IsPinned { get; set; }
+    public bool IsMissing { get; set; }
+    public string PinMarker => IsPinned ? "★" : string.Empty;
 }

@@ -263,6 +263,18 @@
                               HorizontalAlignment="Right" VerticalAlignment="Center"
                               Checked="OnClipboardSettingsChanged" Unchecked="OnClipboardSettingsChanged"/>
                 </Grid>
+                <Grid Height="28" Margin="0,2">
+                    <TextBlock Text="Ctrl+Shift+V pastes plain text" Style="{StaticResource SettingLabel}"/>
+                    <CheckBox x:Name="ClipboardPlainPasteCheck" Style="{StaticResource ToggleSwitch}"
+                              HorizontalAlignment="Right" VerticalAlignment="Center"
+                              Checked="OnClipboardSettingsChanged" Unchecked="OnClipboardSettingsChanged"/>
+                </Grid>
+                <Grid Height="28" Margin="0,2">
+                    <TextBlock Text="Automatically clean tracking URLs" Style="{StaticResource SettingLabel}"/>
+                    <CheckBox x:Name="ClipboardCleanUrlsCheck" Style="{StaticResource ToggleSwitch}"
+                              HorizontalAlignment="Right" VerticalAlignment="Center"
+                              Checked="OnClipboardSettingsChanged" Unchecked="OnClipboardSettingsChanged"/>
+                </Grid>
                 <TextBlock Text="History limit" Style="{StaticResource SettingLabel}" Margin="0,3,0,1"/>
                 <Slider x:Name="ClipboardLimitSlider" Minimum="10" Maximum="500" TickFrequency="10"
                         IsSnapToTickEnabled="True" ValueChanged="OnClipboardSettingsChanged"/>
@@ -270,6 +282,10 @@
                            Margin="0,4,0,1"/>
                 <TextBox x:Name="ClipboardIgnoredAppsText" Height="24" FontSize="10"
                          LostFocus="OnClipboardSettingsChanged"/>
+                <TextBlock Text="Auto-clear seconds (0 = off)" Style="{StaticResource SettingLabel}"
+                           Margin="0,4,0,1"/>
+                <Slider x:Name="ClipboardAutoClearSlider" Minimum="0" Maximum="600" TickFrequency="30"
+                        IsSnapToTickEnabled="True" ValueChanged="OnClipboardSettingsChanged"/>
 
                 <!-- Downloads -->
                 <TextBlock Text="DOWNLOADS" Style="{StaticResource SectionHeader}"/>

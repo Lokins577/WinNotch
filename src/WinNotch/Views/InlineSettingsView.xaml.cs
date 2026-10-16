@@ -33,6 +33,7 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
 
     public event Action<AppSettings>? DownloadSettingsChanged;
     public event Action<AppSettings>? LyricsSettingsChanged;
+    public event Action<AppSettings>? ClipboardSettingsChanged;
 
     public InlineSettingsView()
     {
@@ -71,6 +72,9 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         ClipboardFilesCheck.IsChecked = settings.ClipboardPreferences.CaptureFiles;
         ClipboardLimitSlider.Value = settings.ClipboardPreferences.MaximumItems;
         ClipboardIgnoredAppsText.Text = string.Join(", ", settings.ClipboardPreferences.IgnoredApplications);
+        ClipboardPlainPasteCheck.IsChecked = settings.ClipboardPreferences.PlainTextPasteHotkey;
+        ClipboardCleanUrlsCheck.IsChecked = settings.ClipboardPreferences.AutoCleanUrls;
+        ClipboardAutoClearSlider.Value = settings.ClipboardPreferences.AutoClearSeconds;
 
         if (settings.HoverMode == HoverMode.LongHoverOpen)
             LongHoverRadio.IsChecked = true;
@@ -228,11 +232,15 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         _settings.ClipboardPreferences.CaptureImages = ClipboardImagesCheck.IsChecked == true;
         _settings.ClipboardPreferences.CaptureFiles = ClipboardFilesCheck.IsChecked == true;
         _settings.ClipboardPreferences.MaximumItems = (int)ClipboardLimitSlider.Value;
+        _settings.ClipboardPreferences.PlainTextPasteHotkey = ClipboardPlainPasteCheck.IsChecked == true;
+        _settings.ClipboardPreferences.AutoCleanUrls = ClipboardCleanUrlsCheck.IsChecked == true;
+        _settings.ClipboardPreferences.AutoClearSeconds = (int)ClipboardAutoClearSlider.Value;
         _settings.ClipboardPreferences.IgnoredApplications = ClipboardIgnoredAppsText.Text
             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .ToList();
         _settings.ClipboardPreferences.Normalize();
         _settingsStore.Save(_settings);
+        ClipboardSettingsChanged?.Invoke(_settings);
     }
 
     private async void OnCheckUpdateClick(object sender, RoutedEventArgs e)

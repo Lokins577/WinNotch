@@ -74,6 +74,9 @@ public partial class ClipboardHistoryView : UserControl
 
         var actions = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal };
         actions.Children.Add(ActionButton("Copy", (_, _) => _service?.CopyToClipboard(item)));
+        if (item.Kind == ClipboardItemKind.Text && item.Text != null
+            && !string.Equals(UrlCleaner.Clean(item.Text), item.Text, StringComparison.Ordinal))
+            actions.Children.Add(ActionButton("Clean", (_, _) => _service?.CopyCleanUrl(item)));
         actions.Children.Add(ActionButton(item.IsPinned ? "Unpin" : "Pin",
             (_, _) => _service?.SetPinned(item.Id, !item.IsPinned)));
         actions.Children.Add(ActionButton("×", (_, _) => _service?.Remove(item.Id)));

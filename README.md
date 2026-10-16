@@ -27,6 +27,8 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Permission-gated Windows notification inbox (packaged builds)
 - Local-only Codex, Claude Code, OpenCode, and GitHub Copilot activity
 - Persistent, searchable clipboard history with image/file support and app exclusions
+- Optional clipboard auto-clear, tracking-URL cleanup, and Ctrl+Shift+V plain-text paste
+- Shelf pinning that persists selected files and folders across restarts
 - Volume and brightness HUDs
 - Calendar, battery, file shelf, and webcam mirror
 - Light, dark, and auto theme support

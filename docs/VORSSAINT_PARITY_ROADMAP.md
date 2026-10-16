@@ -139,11 +139,14 @@ uninstaller with review, messaging-download retention, port inspection, and
 safe process termination. Destructive actions require previews and recoverable
 defaults.
 
-Status: in progress. Persistent text/image/file history, SHA-256 deduplication,
+Status: implemented. Persistent text/image/file history, SHA-256 deduplication,
 pinning, search, capacity eviction, atomic metadata/image storage, foreground
 application exclusions, copy-back suppression, top/vertical/compact views, and
-live lifecycle toggling are implemented. Automatic clearing, plain-text paste,
-URL cleanup, and persistent Shelf work remain.
+live lifecycle toggling are implemented. Sequence-safe automatic clearing,
+clipboard-preserving plain-text paste, and manual/automatic URL cleanup are
+implemented. Shelf items remain temporary by default, while explicit pinning,
+atomic persistence, restart restore, missing-path state, and pin-preserving
+clear behavior are implemented.
 
 ### 13. Input enhancements
 

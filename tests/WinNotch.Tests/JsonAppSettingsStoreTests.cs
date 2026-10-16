@@ -32,6 +32,9 @@ public sealed class JsonAppSettingsStoreTests
         expected.OnlineLyricsEnabled = true;
         expected.ClipboardPreferences.MaximumItems = 250;
         expected.ClipboardPreferences.IgnoredApplications.Add("password-manager");
+        expected.ClipboardPreferences.AutoClearSeconds = 120;
+        expected.ClipboardPreferences.PlainTextPasteHotkey = true;
+        expected.ClipboardPreferences.AutoCleanUrls = true;
 
         store.Save(expected);
         var actual = store.Load();
@@ -49,6 +52,9 @@ public sealed class JsonAppSettingsStoreTests
         Assert.True(actual.OnlineLyricsEnabled);
         Assert.Equal(250, actual.ClipboardPreferences.MaximumItems);
         Assert.Contains("password-manager", actual.ClipboardPreferences.IgnoredApplications);
+        Assert.Equal(120, actual.ClipboardPreferences.AutoClearSeconds);
+        Assert.True(actual.ClipboardPreferences.PlainTextPasteHotkey);
+        Assert.True(actual.ClipboardPreferences.AutoCleanUrls);
     }
 
     [Fact]

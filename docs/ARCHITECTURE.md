@@ -91,6 +91,15 @@ the hidden message window, STA clipboard conversion, foreground-process lookup,
 and sequence-number suppression. Persistence writes JSON metadata atomically
 and stores images separately to avoid large base64 settings files.
 
+Clipboard mutation policy uses the native sequence number as a compare-before-
+write guard. Auto-clear and plain-text paste therefore cannot overwrite a newer
+clipboard value created by another application while a timer or paste restore
+is pending. URL cleaning remains a pure Core transformation.
+
+Shelf persistence stores only explicit pins. Shell icons and path availability
+remain Windows adapter concerns; the JSON record contains stable path, kind,
+timestamp, and ID, and missing pinned paths are retained for user review.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New

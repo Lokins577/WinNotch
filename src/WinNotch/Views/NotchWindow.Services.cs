@@ -51,6 +51,8 @@ public partial class NotchWindow
         VerticalInlineSettings.DownloadSettingsChanged += ApplyDownloadSettingsAsync;
         InlineSettings.LyricsSettingsChanged += ApplyLyricsSettings;
         VerticalInlineSettings.LyricsSettingsChanged += ApplyLyricsSettings;
+        InlineSettings.ClipboardSettingsChanged += ApplyClipboardSettings;
+        VerticalInlineSettings.ClipboardSettingsChanged += ApplyClipboardSettings;
 
         // Toggle clock/live-activity visibility based on music state
         _mediaService.MediaInfo.PropertyChanged += (_, e) =>

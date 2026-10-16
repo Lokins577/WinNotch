@@ -116,6 +116,13 @@ public partial class NotchWindow
         SettingsUpdatedByUser?.Invoke(settings);
     }
 
+    private void ApplyClipboardSettings(AppSettings settings)
+    {
+        _settings = settings;
+        _services.ClipboardHistory?.ApplyPreferences();
+        SettingsUpdatedByUser?.Invoke(settings);
+    }
+
     private void BindDownloadViews(bool enabled)
     {
         DownloadOpenView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;

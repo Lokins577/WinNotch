@@ -85,6 +85,9 @@
                                            TextTrimming="CharacterEllipsis"
                                            MaxWidth="58"
                                            Margin="0,3,0,0"/>
+                                <TextBlock Text="{Binding PinMarker}" FontSize="8"
+                                           Foreground="{DynamicResource TextSubtleBrush}"
+                                           HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>

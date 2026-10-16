@@ -36,10 +36,14 @@ public sealed class ClipboardPreferences
     public bool CaptureImages { get; set; } = true;
     public bool CaptureFiles { get; set; } = true;
     public List<string> IgnoredApplications { get; set; } = [];
+    public int AutoClearSeconds { get; set; }
+    public bool PlainTextPasteHotkey { get; set; }
+    public bool AutoCleanUrls { get; set; }
 
     public void Normalize()
     {
         MaximumItems = Math.Clamp(MaximumItems, 10, 500);
+        AutoClearSeconds = AutoClearSeconds == 0 ? 0 : Math.Clamp(AutoClearSeconds, 5, 86_400);
         IgnoredApplications = IgnoredApplications
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .Select(value => value.Trim())

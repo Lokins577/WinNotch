@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Text.Json;
 using WinNotch.Models;
 
 namespace WinNotch.Services;
@@ -16,10 +17,19 @@ namespace WinNotch.Services;
 public class ShelfService
 {
     public ObservableCollection<ShelfItem> Items { get; } = new();
+    private readonly string _storagePath;
 
     public event Action? ShelfChanged;
 
     public bool HasItems => Items.Count > 0;
+
+    public ShelfService(string? storagePath = null)
+    {
+        _storagePath = Path.GetFullPath(storagePath ?? Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "WinNotch", "Shelf", "pinned.json"));
+        LoadPinned();
+    }
 
     public void AddFiles(string[] paths)
     {
@@ -60,14 +70,83 @@ public class ShelfService
     public void Remove(ShelfItem item)
     {
         Items.Remove(item);
+        SavePinned();
+        ShelfChanged?.Invoke();
+    }
+
+    public void SetPinned(ShelfItem item, bool pinned)
+    {
+        int index = Items.IndexOf(item);
+        if (index < 0 || item.IsPinned == pinned) return;
+        item.IsPinned = pinned;
+        Items.RemoveAt(index);
+        Items.Insert(index, item);
+        SavePinned();
         ShelfChanged?.Invoke();
     }
 
     public void Clear()
     {
-        Items.Clear();
+        foreach (var item in Items.Where(item => !item.IsPinned).ToArray())
+            Items.Remove(item);
         ShelfChanged?.Invoke();
     }
+
+    private void LoadPinned()
+    {
+        try
+        {
+            if (!File.Exists(_storagePath)) return;
+            var records = JsonSerializer.Deserialize<List<PinnedRecord>>(File.ReadAllText(_storagePath)) ?? [];
+            foreach (var record in records.Where(record => !string.IsNullOrWhiteSpace(record.Path)))
+            {
+                string path = record.Path;
+                bool isFolder = record.IsFolder || Directory.Exists(path);
+                bool exists = Directory.Exists(path) || File.Exists(path);
+                Items.Add(new ShelfItem
+                {
+                    Id = record.Id == Guid.Empty ? Guid.NewGuid() : record.Id,
+                    FilePath = path,
+                    FileName = isFolder ? new DirectoryInfo(path).Name : Path.GetFileName(path),
+                    Extension = isFolder ? string.Empty : Path.GetExtension(path),
+                    AddedAt = record.AddedAt,
+                    IsFolder = isFolder,
+                    IsPinned = true,
+                    IsMissing = !exists,
+                    Icon = exists ? GetFileIcon(path, isFolder) : null
+                });
+            }
+        }
+        catch
+        {
+            // A corrupt shelf file must not prevent the island from starting.
+        }
+    }
+
+    private void SavePinned()
+    {
+        try
+        {
+            string? directory = Path.GetDirectoryName(_storagePath);
+            if (directory == null) return;
+            Directory.CreateDirectory(directory);
+            var records = Items.Where(item => item.IsPinned)
+                .Select(item => new PinnedRecord(item.Id, item.FilePath, item.AddedAt, item.IsFolder))
+                .ToArray();
+            string temporary = _storagePath + ".tmp";
+            File.WriteAllText(temporary, JsonSerializer.Serialize(records, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            }));
+            File.Move(temporary, _storagePath, overwrite: true);
+        }
+        catch
+        {
+            // Persistence is best effort; live shelf items remain usable.
+        }
+    }
+
+    private sealed record PinnedRecord(Guid Id, string Path, DateTime AddedAt, bool IsFolder);
 
     /// <summary>
     /// Extract the system file icon as an ImageSource.

@@ -113,6 +113,10 @@ public partial class ShelfView : UserControl
             };
             menu.Items.Add(openFolderItem);
 
+            var pinItem = new MenuItem { Header = item.IsPinned ? "Unpin" : "Pin" };
+            pinItem.Click += (_, _) => _service?.SetPinned(item, !item.IsPinned);
+            menu.Items.Add(pinItem);
+
             menu.Items.Add(new Separator());
 
             var removeItem = new MenuItem { Header = "Remove" };
