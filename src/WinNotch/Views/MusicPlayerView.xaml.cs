@@ -5,21 +5,25 @@ using System.Windows.Input;
 using System.Windows.Media;
 using WinNotch.Models;
 using WinNotch.Services;
+using WinNotch.Music;
 
 namespace WinNotch.Views;
 
 public partial class MusicPlayerView : UserControl
 {
     private MediaService? _mediaService;
+    private LyricsService? _lyricsService;
+    private bool _updatingSources;
 
     public MusicPlayerView()
     {
         InitializeComponent();
     }
 
-    public void Bind(MediaService mediaService)
+    public void Bind(MediaService mediaService, LyricsService lyricsService)
     {
         _mediaService = mediaService;
+        _lyricsService = lyricsService;
         var info = mediaService.MediaInfo;
 
         info.PropertyChanged += (_, e) =>
@@ -31,8 +35,12 @@ public partial class MusicPlayerView : UserControl
         {
             Dispatcher.Invoke(() => UpdateAll(info));
         };
+        mediaService.SourcesChanged += () => Dispatcher.Invoke(UpdateSources);
+        lyricsService.Updated += snapshot => Dispatcher.Invoke(() => UpdateLyrics(snapshot));
 
         UpdateAll(info);
+        UpdateSources();
+        UpdateLyrics(lyricsService.Snapshot);
     }
 
     private void UpdateAll(MediaInfo info)
@@ -73,6 +81,7 @@ public partial class MusicPlayerView : UserControl
         {
             ElapsedText.Text = FormatTime(info.Position);
             UpdateProgressBar(info.ProgressPercent);
+            UpdateLyrics(_lyricsService?.Snapshot);
         }
 
         if (propertyName == null || propertyName == nameof(info.Duration))
@@ -94,6 +103,41 @@ public partial class MusicPlayerView : UserControl
             accentBrush.Freeze();
             ProgressFill.Background = accentBrush;
         }
+    }
+
+    private void UpdateSources()
+    {
+        if (_mediaService == null) return;
+        _updatingSources = true;
+        SourceCombo.ItemsSource = _mediaService.Sources;
+        SourceCombo.SelectedValue = _mediaService.MediaInfo.SourceId;
+        SourceCombo.Visibility = _mediaService.Sources.Count > 1
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+        _updatingSources = false;
+    }
+
+    private void UpdateLyrics(LyricsSnapshot? snapshot)
+    {
+        if (snapshot == null || _lyricsService == null)
+        {
+            LyricsText.Text = string.Empty;
+            return;
+        }
+
+        var line = _lyricsService.GetCurrentLine(_mediaService?.MediaInfo.Position ?? TimeSpan.Zero);
+        LyricsText.Text = line?.Text ?? snapshot.Message ?? snapshot.Status switch
+        {
+            LyricsStatus.Loading => "Looking up lyrics…",
+            LyricsStatus.Idle => string.Empty,
+            _ => string.Empty
+        };
+    }
+
+    private void OnSourceSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_updatingSources || _mediaService == null) return;
+        _mediaService.SelectSource(SourceCombo.SelectedValue as string);
     }
 
     private void UpdateProgressBar(double percent)

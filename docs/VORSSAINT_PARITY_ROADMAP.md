@@ -87,8 +87,11 @@ OpenCode, and Copilot. Never upload local session logs.
 
 Status: in progress. Local agent discovery and bounded metadata parsing are
 implemented for all four providers, with coarse lifecycle state and
-top/vertical/compact island surfaces. Lyrics, queue adapters, source selection,
-and per-process equalizer work remain.
+top/vertical/compact island surfaces. Media sessions can be enumerated and a
+preferred source persisted. Opt-in LRCLIB lookup, synchronized/plain parsing,
+cancellation, caching, and current-line display are implemented. Queue has a
+source-adapter contract because GSMTC exposes no universal queue; provider
+adapters and per-process equalizer work remain.
 
 ### 5. Clipboard and file workflow
 

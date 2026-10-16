@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using WinNotch.Models;
 using WinNotch.Features;
+using WinNotch.Helpers;
 using WinNotch.Settings;
 
 namespace WinNotch.Services;
@@ -15,7 +16,8 @@ namespace WinNotch.Services;
 /// </summary>
 public sealed class NotchServices : IDisposable
 {
-    public MediaService Media { get; } = new();
+    public MediaService Media { get; }
+    public LyricsService Lyrics { get; }
     public AudioCaptureService AudioCapture { get; } = new(bandCount: 12);
     public VolumeService Volume { get; } = new();
     public BrightnessService Brightness { get; } = new();
@@ -39,6 +41,15 @@ public sealed class NotchServices : IDisposable
     {
         _settings = settings;
         _settingsStore = settingsStore;
+        Media = new MediaService(settings.PreferredMediaSourceId, sourceId =>
+        {
+            settings.PreferredMediaSourceId = sourceId;
+            settingsStore.Save(settings);
+        });
+        Lyrics = new LyricsService(
+            Media,
+            new LrclibLyricsProvider($"WinNotch/{AppInfo.Version}"),
+            () => settings.OnlineLyricsEnabled);
         FeatureRuntime = new FeatureRuntime(BuiltInFeatures.Catalog);
         FeatureRuntime.Register(BuiltInFeatures.Island.Id,
             () => new NoOpFeatureModule(BuiltInFeatures.Island.Id));
@@ -85,6 +96,7 @@ public sealed class NotchServices : IDisposable
     public void Dispose()
     {
         AudioCapture.Dispose();
+        Lyrics.Dispose();
         Media.Dispose();
         Volume.Dispose();
         Brightness.Dispose();

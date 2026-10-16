@@ -103,6 +103,13 @@ public partial class NotchWindow
         }
     }
 
+    private void ApplyLyricsSettings(AppSettings settings)
+    {
+        _settings = settings;
+        _services.Lyrics.RefreshConsent();
+        SettingsUpdatedByUser?.Invoke(settings);
+    }
+
     private void BindDownloadViews(bool enabled)
     {
         DownloadOpenView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;

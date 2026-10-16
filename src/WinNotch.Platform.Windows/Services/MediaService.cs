@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using Windows.Media.Control;
 using Windows.Storage.Streams;
 using WinNotch.Models;
+using WinNotch.Music;
 
 namespace WinNotch.Services;
 
@@ -17,13 +18,20 @@ public class MediaService : IDisposable
     private readonly DispatcherTimer _positionTimer;
     private DateTime _lastTimelineUpdate = DateTime.MinValue;
     private TimeSpan _basePosition = TimeSpan.Zero;
+    private string? _preferredSourceId;
+    private readonly Action<string?>? _persistPreferredSource;
 
     public MediaInfo MediaInfo { get; } = new();
+    public IReadOnlyList<MediaSourceInfo> Sources { get; private set; } = [];
+    public MediaQueueCapability QueueCapability => MediaQueueCapability.Unsupported;
 
     public event Action? SessionChanged;
+    public event Action? SourcesChanged;
 
-    public MediaService()
+    public MediaService(string? preferredSourceId = null, Action<string?>? persistPreferredSource = null)
     {
+        _preferredSourceId = preferredSourceId;
+        _persistPreferredSource = persistPreferredSource;
         _positionTimer = new DispatcherTimer
         {
             Interval = TimeSpan.FromMilliseconds(200) // Update more frequently for smoother progress
@@ -37,7 +45,8 @@ public class MediaService : IDisposable
         {
             _manager = await GlobalSystemMediaTransportControlsSessionManager.RequestAsync();
             _manager.CurrentSessionChanged += OnCurrentSessionChanged;
-            AttachSession(_manager.GetCurrentSession());
+            _manager.SessionsChanged += OnSessionsChanged;
+            RefreshSourcesAndSession();
         }
         catch (Exception ex)
         {
@@ -50,9 +59,50 @@ public class MediaService : IDisposable
     {
         Application.Current?.Dispatcher.Invoke(() =>
         {
-            AttachSession(sender.GetCurrentSession());
-            SessionChanged?.Invoke();
+            RefreshSourcesAndSession();
         });
+    }
+
+    private void OnSessionsChanged(
+        GlobalSystemMediaTransportControlsSessionManager sender,
+        SessionsChangedEventArgs args)
+    {
+        Application.Current?.Dispatcher.Invoke(RefreshSourcesAndSession);
+    }
+
+    public void SelectSource(string? sourceId)
+    {
+        _preferredSourceId = string.IsNullOrWhiteSpace(sourceId) ? null : sourceId;
+        _persistPreferredSource?.Invoke(_preferredSourceId);
+        RefreshSourcesAndSession();
+    }
+
+    private void RefreshSourcesAndSession()
+    {
+        if (_manager == null) return;
+
+        var sessions = _manager.GetSessions();
+        var target = !string.IsNullOrWhiteSpace(_preferredSourceId)
+            ? sessions.FirstOrDefault(session =>
+                string.Equals(session.SourceAppUserModelId, _preferredSourceId, StringComparison.OrdinalIgnoreCase))
+            : null;
+        target ??= _manager.GetCurrentSession();
+        AttachSession(target);
+
+        string? currentId = target?.SourceAppUserModelId;
+        Sources = sessions
+            .Select(session => session.SourceAppUserModelId)
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Select(id => new MediaSourceInfo(
+                id,
+                GetSourceDisplayName(id),
+                string.Equals(id, currentId, StringComparison.OrdinalIgnoreCase)))
+            .OrderByDescending(source => source.IsCurrent)
+            .ThenBy(source => source.DisplayName, StringComparer.CurrentCultureIgnoreCase)
+            .ToArray();
+        SourcesChanged?.Invoke();
+        SessionChanged?.Invoke();
     }
 
     private void AttachSession(GlobalSystemMediaTransportControlsSession? session)
@@ -74,6 +124,8 @@ public class MediaService : IDisposable
             _session.TimelinePropertiesChanged += OnTimelineChanged;
 
             MediaInfo.HasMedia = true;
+            MediaInfo.SourceId = _session.SourceAppUserModelId ?? string.Empty;
+            MediaInfo.SourceDisplayName = GetSourceDisplayName(MediaInfo.SourceId);
             _ = UpdateMediaPropertiesAsync();
             UpdatePlaybackInfo();
             UpdateTimeline();
@@ -90,8 +142,23 @@ public class MediaService : IDisposable
             MediaInfo.AlbumArt = null;
             MediaInfo.Position = TimeSpan.Zero;
             MediaInfo.Duration = TimeSpan.Zero;
+            MediaInfo.SourceId = string.Empty;
+            MediaInfo.SourceDisplayName = string.Empty;
             _positionTimer.Stop();
         }
+    }
+
+    private static string GetSourceDisplayName(string sourceId)
+    {
+        if (string.IsNullOrWhiteSpace(sourceId)) return "Media";
+        string value = sourceId;
+        int bang = value.LastIndexOf('!');
+        if (bang >= 0 && bang < value.Length - 1)
+            value = value[(bang + 1)..];
+        value = Path.GetFileNameWithoutExtension(value);
+        int underscore = value.IndexOf('_');
+        if (underscore > 0) value = value[..underscore];
+        return string.IsNullOrWhiteSpace(value) ? sourceId : value;
     }
 
     private void OnMediaPropertiesChanged(GlobalSystemMediaTransportControlsSession sender, MediaPropertiesChangedEventArgs args)
@@ -295,6 +362,7 @@ public class MediaService : IDisposable
         if (_manager != null)
         {
             _manager.CurrentSessionChanged -= OnCurrentSessionChanged;
+            _manager.SessionsChanged -= OnSessionsChanged;
         }
     }
 }

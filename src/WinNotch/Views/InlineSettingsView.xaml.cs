@@ -32,6 +32,7 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
     public event Action? ManageFeaturesRequested;
 
     public event Action<AppSettings>? DownloadSettingsChanged;
+    public event Action<AppSettings>? LyricsSettingsChanged;
 
     public InlineSettingsView()
     {
@@ -57,6 +58,7 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         WebcamFpsSlider.Value = settings.WebcamFps;
         WebcamFpsLabel.Text = $"{settings.WebcamFps}";
         LiquidGlassCheck.IsChecked = settings.UseLiquidGlassTheme;
+        OnlineLyricsCheck.IsChecked = settings.OnlineLyricsEnabled;
         AdaptToWindowsThemeCheck.IsChecked = settings.AdaptToWindowsTheme;
         ShowOnAllScreensCheck.IsChecked = settings.ShowOnAllScreens;
         SyncIslandsCheck.IsChecked = settings.SyncIslandsOpenState;
@@ -167,6 +169,14 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
     private void OnManagePluginsClick(object sender, RoutedEventArgs e)
     {
         ManagePluginsRequested?.Invoke();
+    }
+
+    private void OnOnlineLyricsChanged(object sender, RoutedEventArgs e)
+    {
+        if (_isLoading || _settings == null || _settingsStore == null) return;
+        _settings.OnlineLyricsEnabled = OnlineLyricsCheck.IsChecked == true;
+        _settingsStore.Save(_settings);
+        LyricsSettingsChanged?.Invoke(_settings);
     }
 
     private void OnManageFeaturesClick(object sender, RoutedEventArgs e)

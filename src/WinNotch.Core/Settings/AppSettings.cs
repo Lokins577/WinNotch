@@ -33,6 +33,8 @@ public class AppSettings
     public TimerPreferences TimerPreferences { get; set; } = new();
     public TimerSession TimerSession { get; set; } = new();
     public string? DownloadsFolder { get; set; }
+    public string? PreferredMediaSourceId { get; set; }
+    public bool OnlineLyricsEnabled { get; set; }
 
     // General
     public bool StartOnBoot { get; set; }

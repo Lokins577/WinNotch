@@ -21,6 +21,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Dynamic notch with hover, click, drag, and scroll interactions
 - Multi-monitor support: drag the island to any screen and dock it there; optional island on every screen with synchronized (or independent) open state
 - Built-in media controls and audio visualizer
+- Selectable Windows media sessions and opt-in synchronized lyrics
 - Persistent focus cycles, countdown timer, and stopwatch with compact live activity
 - Download-folder live activity with browser temporary-file detection
 - Permission-gated Windows notification inbox (packaged builds)

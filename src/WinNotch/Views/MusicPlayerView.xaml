@@ -79,6 +79,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- Song title (marquee) -->
@@ -188,6 +189,20 @@
                     <TextBlock x:Name="RepeatIcon" Text="🔁" FontSize="13"/>
                 </Button>
             </StackPanel>
+
+            <Grid Grid.Row="4" Margin="0,3,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="SourceCombo" Width="105" Height="22"
+                          FontSize="9" Margin="0,0,8,0"
+                          DisplayMemberPath="DisplayName" SelectedValuePath="Id"
+                          SelectionChanged="OnSourceSelectionChanged"/>
+                <TextBlock x:Name="LyricsText" Grid.Column="1" FontSize="10"
+                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+            </Grid>
         </Grid>
 
         <!-- No media placeholder -->

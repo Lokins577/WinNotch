@@ -38,6 +38,12 @@ public partial class MediaInfo : ObservableObject
     [ObservableProperty]
     private bool _hasMedia;
 
+    [ObservableProperty]
+    private string _sourceId = string.Empty;
+
+    [ObservableProperty]
+    private string _sourceDisplayName = string.Empty;
+
     public double ProgressPercent =>
         Duration.TotalSeconds > 0 ? Position.TotalSeconds / Duration.TotalSeconds : 0;
 

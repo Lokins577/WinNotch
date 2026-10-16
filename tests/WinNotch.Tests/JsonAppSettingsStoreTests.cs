@@ -28,6 +28,8 @@ public sealed class JsonAppSettingsStoreTests
         expected.TimerSession.Phase = TimerPhase.Stopwatch;
         expected.TimerSession.StoredValue = TimeSpan.FromSeconds(90);
         expected.DownloadsFolder = @"D:\Downloads";
+        expected.PreferredMediaSourceId = "spotify.exe";
+        expected.OnlineLyricsEnabled = true;
 
         store.Save(expected);
         var actual = store.Load();
@@ -41,6 +43,8 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal(TimerPhase.Stopwatch, actual.TimerSession.Phase);
         Assert.Equal(TimeSpan.FromSeconds(90), actual.TimerSession.StoredValue);
         Assert.Equal(@"D:\Downloads", actual.DownloadsFolder);
+        Assert.Equal("spotify.exe", actual.PreferredMediaSourceId);
+        Assert.True(actual.OnlineLyricsEnabled);
     }
 
     [Fact]

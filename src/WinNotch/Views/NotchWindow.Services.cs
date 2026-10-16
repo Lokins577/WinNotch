@@ -15,7 +15,7 @@ public partial class NotchWindow
         await _services.EnsureInitializedAsync(_settings);
 
         // Bind views to services
-        MusicPlayer.Bind(_mediaService);
+        MusicPlayer.Bind(_mediaService, _services.Lyrics);
         LiveActivity.Bind(_mediaService, _audioCaptureService);
 
         // Inline settings
@@ -49,6 +49,8 @@ public partial class NotchWindow
         VerticalInlineSettings.ManageFeaturesRequested += OpenFeatureCatalog;
         InlineSettings.DownloadSettingsChanged += ApplyDownloadSettingsAsync;
         VerticalInlineSettings.DownloadSettingsChanged += ApplyDownloadSettingsAsync;
+        InlineSettings.LyricsSettingsChanged += ApplyLyricsSettings;
+        VerticalInlineSettings.LyricsSettingsChanged += ApplyLyricsSettings;
 
         // Toggle clock/live-activity visibility based on music state
         _mediaService.MediaInfo.PropertyChanged += (_, e) =>
