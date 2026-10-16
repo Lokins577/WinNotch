@@ -67,6 +67,10 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         DownloadsFolderText.Text = string.IsNullOrWhiteSpace(settings.DownloadsFolder)
             ? "No folder selected"
             : settings.DownloadsFolder;
+        ClipboardImagesCheck.IsChecked = settings.ClipboardPreferences.CaptureImages;
+        ClipboardFilesCheck.IsChecked = settings.ClipboardPreferences.CaptureFiles;
+        ClipboardLimitSlider.Value = settings.ClipboardPreferences.MaximumItems;
+        ClipboardIgnoredAppsText.Text = string.Join(", ", settings.ClipboardPreferences.IgnoredApplications);
 
         if (settings.HoverMode == HoverMode.LongHoverOpen)
             LongHoverRadio.IsChecked = true;
@@ -216,6 +220,19 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         _isLoading = false;
         _settingsStore.Save(_settings);
         DownloadSettingsChanged?.Invoke(_settings);
+    }
+
+    private void OnClipboardSettingsChanged(object sender, RoutedEventArgs e)
+    {
+        if (_isLoading || _settings == null || _settingsStore == null) return;
+        _settings.ClipboardPreferences.CaptureImages = ClipboardImagesCheck.IsChecked == true;
+        _settings.ClipboardPreferences.CaptureFiles = ClipboardFilesCheck.IsChecked == true;
+        _settings.ClipboardPreferences.MaximumItems = (int)ClipboardLimitSlider.Value;
+        _settings.ClipboardPreferences.IgnoredApplications = ClipboardIgnoredAppsText.Text
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .ToList();
+        _settings.ClipboardPreferences.Normalize();
+        _settingsStore.Save(_settings);
     }
 
     private async void OnCheckUpdateClick(object sender, RoutedEventArgs e)

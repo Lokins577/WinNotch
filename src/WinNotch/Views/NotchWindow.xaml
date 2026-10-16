@@ -103,6 +103,7 @@
                         <views:DownloadCompactView x:Name="DownloadCompact"/>
                         <views:NotificationCompactView x:Name="NotificationCompact"/>
                         <views:AgentCompactView x:Name="AgentCompact"/>
+                        <views:ClipboardCompactView x:Name="ClipboardCompact"/>
                         <!-- Plugin closed content -->
                         <StackPanel x:Name="PluginClosedPanel" Orientation="Horizontal"
                                     VerticalAlignment="Center" Margin="6,0,0,0"/>
@@ -130,6 +131,7 @@
                 <!-- Open state content -->
                 <Grid x:Name="OpenContent" Opacity="0" Margin="12,6,12,10">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -200,13 +202,16 @@
                     <views:AgentActivityView x:Name="AgentOpenView" Grid.Row="5"
                                              Visibility="Collapsed"/>
 
+                    <views:ClipboardHistoryView x:Name="ClipboardOpenView" Grid.Row="6"
+                                                Visibility="Collapsed"/>
+
                     <!-- Plugin open content -->
-                    <StackPanel x:Name="PluginOpenPanel" Grid.Row="6"
+                    <StackPanel x:Name="PluginOpenPanel" Grid.Row="7"
                                 Margin="0,4,0,0"/>
 
                     <!-- Inline settings (hidden by default, shown when gear clicked) - slides down in top mode -->
                     <views:InlineSettingsView x:Name="InlineSettings"
-                                              Grid.Row="7"
+                                              Grid.Row="8"
                                               Visibility="Collapsed"
                                               Margin="0,6,0,0"/>
                 </Grid>
@@ -337,6 +342,9 @@
 
                         <views:AgentActivityView x:Name="VerticalAgentView"
                                                  Visibility="Collapsed" Margin="4,8,4,0"/>
+
+                        <views:ClipboardHistoryView x:Name="VerticalClipboardView"
+                                                    Visibility="Collapsed" Margin="4,8,4,0"/>
 
                         <StackPanel x:Name="VerticalPluginOpenPanel"
                                     Margin="0,14,0,0"/>

@@ -30,6 +30,8 @@ public sealed class JsonAppSettingsStoreTests
         expected.DownloadsFolder = @"D:\Downloads";
         expected.PreferredMediaSourceId = "spotify.exe";
         expected.OnlineLyricsEnabled = true;
+        expected.ClipboardPreferences.MaximumItems = 250;
+        expected.ClipboardPreferences.IgnoredApplications.Add("password-manager");
 
         store.Save(expected);
         var actual = store.Load();
@@ -45,6 +47,8 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal(@"D:\Downloads", actual.DownloadsFolder);
         Assert.Equal("spotify.exe", actual.PreferredMediaSourceId);
         Assert.True(actual.OnlineLyricsEnabled);
+        Assert.Equal(250, actual.ClipboardPreferences.MaximumItems);
+        Assert.Contains("password-manager", actual.ClipboardPreferences.IgnoredApplications);
     }
 
     [Fact]

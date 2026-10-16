@@ -113,6 +113,17 @@ public partial class NotchWindow
             AgentCompact.Bind(agents);
         }
 
+        // Persistent clipboard history
+        bool clipboardAvailable = _settings.IsFeatureAvailable(BuiltInFeatures.Clipboard);
+        ClipboardOpenView.Visibility = clipboardAvailable ? Visibility.Visible : Visibility.Collapsed;
+        VerticalClipboardView.Visibility = clipboardAvailable ? Visibility.Visible : Visibility.Collapsed;
+        if (clipboardAvailable && _services.ClipboardHistory is { } clipboard)
+        {
+            ClipboardOpenView.Bind(clipboard);
+            VerticalClipboardView.Bind(clipboard, compact: true);
+            ClipboardCompact.Bind(clipboard);
+        }
+
         // Calendar
         CalendarPanel_View.Bind(_calendarService);
         CalendarPanel.Visibility = _settings.ShowCalendar ? Visibility.Visible : Visibility.Collapsed;

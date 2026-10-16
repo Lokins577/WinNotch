@@ -15,7 +15,8 @@ public partial class NotchWindow
                 BuiltInFeatures.Timers.Id,
                 BuiltInFeatures.Downloads.Id,
                 BuiltInFeatures.Notifications.Id,
-                BuiltInFeatures.AgentActivity.Id
+                BuiltInFeatures.AgentActivity.Id,
+                BuiltInFeatures.Clipboard.Id
             },
             SetFeatureAvailabilityAsync)
         {
@@ -32,7 +33,8 @@ public partial class NotchWindow
         if (feature.Id != BuiltInFeatures.Timers.Id
             && feature.Id != BuiltInFeatures.Downloads.Id
             && feature.Id != BuiltInFeatures.Notifications.Id
-            && feature.Id != BuiltInFeatures.AgentActivity.Id)
+            && feature.Id != BuiltInFeatures.AgentActivity.Id
+            && feature.Id != BuiltInFeatures.Clipboard.Id)
             throw new InvalidOperationException($"Feature {feature.Id} is not live-toggleable yet.");
 
         bool previous = _settings.IsFeatureAvailable(feature);
@@ -78,6 +80,10 @@ public partial class NotchWindow
         else if (feature.Id == BuiltInFeatures.AgentActivity.Id)
         {
             BindAgentViews(enabled);
+        }
+        else if (feature.Id == BuiltInFeatures.Clipboard.Id)
+        {
+            BindClipboardViews(enabled);
         }
 
         RefreshPluginHostLayout();
@@ -155,6 +161,22 @@ public partial class NotchWindow
         else
         {
             AgentCompact.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void BindClipboardViews(bool enabled)
+    {
+        ClipboardOpenView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        VerticalClipboardView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        if (enabled && _services.ClipboardHistory is { } clipboard)
+        {
+            ClipboardOpenView.Bind(clipboard);
+            VerticalClipboardView.Bind(clipboard, compact: true);
+            ClipboardCompact.Bind(clipboard);
+        }
+        else
+        {
+            ClipboardCompact.Visibility = Visibility.Collapsed;
         }
     }
 

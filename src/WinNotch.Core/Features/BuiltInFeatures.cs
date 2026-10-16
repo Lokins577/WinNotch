@@ -63,9 +63,12 @@ public static class BuiltInFeatures
         Maturity: FeatureMaturity.Experimental,
         Dependencies: new[] { Island.Id });
 
-    public static readonly FeatureDescriptor Clipboard = Planned(
+    public static readonly FeatureDescriptor Clipboard = new(
         "files.clipboard", "Clipboard history", FeatureGroup.ClipboardAndFiles,
-        "Searchable local clipboard history and privacy policy.");
+        "Searchable local clipboard history and privacy policy.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Available,
+        Dependencies: new[] { Island.Id });
 
     public static readonly FeatureDescriptor CommandBar = Planned(
         "tools.command-bar", "Command bar", FeatureGroup.Tools,

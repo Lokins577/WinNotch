@@ -139,6 +139,12 @@ uninstaller with review, messaging-download retention, port inspection, and
 safe process termination. Destructive actions require previews and recoverable
 defaults.
 
+Status: in progress. Persistent text/image/file history, SHA-256 deduplication,
+pinning, search, capacity eviction, atomic metadata/image storage, foreground
+application exclusions, copy-back suppression, top/vertical/compact views, and
+live lifecycle toggling are implemented. Automatic clearing, plain-text paste,
+URL cleanup, and persistent Shelf work remain.
+
 ### 13. Input enhancements
 
 Add scroll direction and shaping, focus-follows-mouse, acceleration controls,

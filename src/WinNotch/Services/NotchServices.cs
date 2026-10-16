@@ -4,6 +4,7 @@ using WinNotch.Models;
 using WinNotch.Features;
 using WinNotch.Helpers;
 using WinNotch.Settings;
+using WinNotch.Platform.Windows.Clipboard;
 
 namespace WinNotch.Services;
 
@@ -30,6 +31,7 @@ public sealed class NotchServices : IDisposable
     public DownloadMonitorService? Downloads { get; private set; }
     public NotificationListenerService? Notifications { get; private set; }
     public AgentActivityService? Agents { get; private set; }
+    public ClipboardHistoryService? ClipboardHistory { get; private set; }
     public FeatureRuntime FeatureRuntime { get; }
 
     private readonly AppSettings _settings;
@@ -57,6 +59,7 @@ public sealed class NotchServices : IDisposable
         FeatureRuntime.Register(BuiltInFeatures.Downloads.Id, CreateDownloadsModule);
         FeatureRuntime.Register(BuiltInFeatures.Notifications.Id, CreateNotificationsModule);
         FeatureRuntime.Register(BuiltInFeatures.AgentActivity.Id, CreateAgentsModule);
+        FeatureRuntime.Register(BuiltInFeatures.Clipboard.Id, CreateClipboardModule);
     }
 
     /// <summary>
@@ -91,6 +94,9 @@ public sealed class NotchServices : IDisposable
         await FeatureRuntime.SetEnabledAsync(
             BuiltInFeatures.AgentActivity.Id,
             _settings.IsFeatureAvailable(BuiltInFeatures.AgentActivity));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.Clipboard.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.Clipboard));
     }
 
     public void Dispose()
@@ -129,6 +135,14 @@ public sealed class NotchServices : IDisposable
     {
         Agents = new AgentActivityService();
         return Agents;
+    }
+
+    private IFeatureModule CreateClipboardModule()
+    {
+        ClipboardHistory = new ClipboardHistoryService(
+            _settings.ClipboardPreferences,
+            new JsonClipboardHistoryStore());
+        return ClipboardHistory;
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule

@@ -86,6 +86,11 @@ session enumeration and the consent-gated LRCLIB client. `LyricsService`
 cancels stale lookups on track changes and publishes immutable snapshots; the
 music view only selects a source and renders the current line.
 
+Clipboard policy and history ordering live in Core. The Windows listener owns
+the hidden message window, STA clipboard conversion, foreground-process lookup,
+and sequence-number suppression. Persistence writes JSON metadata atomically
+and stores images separately to avoid large base64 settings files.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New

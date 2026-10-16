@@ -1,0 +1,10 @@
+<UserControl x:Class="WinNotch.Views.ClipboardCompactView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Visibility="Collapsed" IsHitTestVisible="False">
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5,0,2,0">
+        <TextBlock Text="▣" FontSize="9" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,4,0"/>
+        <TextBlock x:Name="PreviewText" FontSize="9" MaxWidth="80" TextTrimming="CharacterEllipsis"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+    </StackPanel>
+</UserControl>

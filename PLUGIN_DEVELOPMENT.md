@@ -337,7 +337,6 @@ Working examples live under `Examples/Plugins/`, including:
 - `PetWidgetPlugin`
 - `WeatherWidgetPlugin`
 - `TodoPeekPlugin`
-- `ClipboardStackPlugin`
 
 There is also a sample browser manifest file at:
 

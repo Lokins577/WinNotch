@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using WinNotch.Features;
 using WinNotch.Timers;
+using WinNotch.Clipboard;
 
 namespace WinNotch.Models;
 
@@ -35,6 +36,7 @@ public class AppSettings
     public string? DownloadsFolder { get; set; }
     public string? PreferredMediaSourceId { get; set; }
     public bool OnlineLyricsEnabled { get; set; }
+    public ClipboardPreferences ClipboardPreferences { get; set; } = new();
 
     // General
     public bool StartOnBoot { get; set; }

@@ -371,6 +371,7 @@ public partial class NotchWindow : Window
             + GetMeasuredElementHeight(DownloadOpenView, availableWidth)
             + GetMeasuredElementHeight(NotificationOpenView, availableWidth)
             + GetMeasuredElementHeight(AgentOpenView, availableWidth)
+            + GetMeasuredElementHeight(ClipboardOpenView, availableWidth)
             + GetMeasuredPanelHeight(PluginOpenPanel, availableWidth);
     }
 
@@ -386,6 +387,7 @@ public partial class NotchWindow : Window
             + GetMeasuredElementHeight(DownloadOpenView, availableWidth)
             + GetMeasuredElementHeight(NotificationOpenView, availableWidth)
             + GetMeasuredElementHeight(AgentOpenView, availableWidth)
+            + GetMeasuredElementHeight(ClipboardOpenView, availableWidth)
             + GetMeasuredPanelHeight(PluginOpenPanel, availableWidth);
     }
 
@@ -396,6 +398,7 @@ public partial class NotchWindow : Window
             + GetMeasuredElementHeight(VerticalDownloadView, 136)
             + GetMeasuredElementHeight(VerticalNotificationView, 136)
             + GetMeasuredElementHeight(VerticalAgentView, 136)
+            + GetMeasuredElementHeight(VerticalClipboardView, 136)
             + GetMeasuredPanelHeight(VerticalPluginOpenPanel, 136);
     }
 

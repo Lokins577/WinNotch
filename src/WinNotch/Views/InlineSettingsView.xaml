@@ -249,6 +249,28 @@
                                TextDecorations="Underline"/>
                 </Button>
 
+                <!-- Clipboard -->
+                <TextBlock Text="CLIPBOARD" Style="{StaticResource SectionHeader}"/>
+                <Grid Height="28" Margin="0,2">
+                    <TextBlock Text="Capture images" Style="{StaticResource SettingLabel}"/>
+                    <CheckBox x:Name="ClipboardImagesCheck" Style="{StaticResource ToggleSwitch}"
+                              HorizontalAlignment="Right" VerticalAlignment="Center"
+                              Checked="OnClipboardSettingsChanged" Unchecked="OnClipboardSettingsChanged"/>
+                </Grid>
+                <Grid Height="28" Margin="0,2">
+                    <TextBlock Text="Capture files" Style="{StaticResource SettingLabel}"/>
+                    <CheckBox x:Name="ClipboardFilesCheck" Style="{StaticResource ToggleSwitch}"
+                              HorizontalAlignment="Right" VerticalAlignment="Center"
+                              Checked="OnClipboardSettingsChanged" Unchecked="OnClipboardSettingsChanged"/>
+                </Grid>
+                <TextBlock Text="History limit" Style="{StaticResource SettingLabel}" Margin="0,3,0,1"/>
+                <Slider x:Name="ClipboardLimitSlider" Minimum="10" Maximum="500" TickFrequency="10"
+                        IsSnapToTickEnabled="True" ValueChanged="OnClipboardSettingsChanged"/>
+                <TextBlock Text="Ignored process names, separated by commas" Style="{StaticResource SettingLabel}"
+                           Margin="0,4,0,1"/>
+                <TextBox x:Name="ClipboardIgnoredAppsText" Height="24" FontSize="10"
+                         LostFocus="OnClipboardSettingsChanged"/>
+
                 <!-- Downloads -->
                 <TextBlock Text="DOWNLOADS" Style="{StaticResource SectionHeader}"/>
                 <Grid Height="28" Margin="0,2">

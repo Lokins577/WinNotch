@@ -26,6 +26,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Download-folder live activity with browser temporary-file detection
 - Permission-gated Windows notification inbox (packaged builds)
 - Local-only Codex, Claude Code, OpenCode, and GitHub Copilot activity
+- Persistent, searchable clipboard history with image/file support and app exclusions
 - Volume and brightness HUDs
 - Calendar, battery, file shelf, and webcam mirror
 - Light, dark, and auto theme support
