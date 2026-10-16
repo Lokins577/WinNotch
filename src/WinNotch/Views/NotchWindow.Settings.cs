@@ -14,7 +14,8 @@ public partial class NotchWindow
             {
                 BuiltInFeatures.Timers.Id,
                 BuiltInFeatures.Downloads.Id,
-                BuiltInFeatures.Notifications.Id
+                BuiltInFeatures.Notifications.Id,
+                BuiltInFeatures.AgentActivity.Id
             },
             SetFeatureAvailabilityAsync)
         {
@@ -30,7 +31,8 @@ public partial class NotchWindow
     {
         if (feature.Id != BuiltInFeatures.Timers.Id
             && feature.Id != BuiltInFeatures.Downloads.Id
-            && feature.Id != BuiltInFeatures.Notifications.Id)
+            && feature.Id != BuiltInFeatures.Notifications.Id
+            && feature.Id != BuiltInFeatures.AgentActivity.Id)
             throw new InvalidOperationException($"Feature {feature.Id} is not live-toggleable yet.");
 
         bool previous = _settings.IsFeatureAvailable(feature);
@@ -72,6 +74,10 @@ public partial class NotchWindow
         else if (feature.Id == BuiltInFeatures.Notifications.Id)
         {
             BindNotificationViews(enabled);
+        }
+        else if (feature.Id == BuiltInFeatures.AgentActivity.Id)
+        {
+            BindAgentViews(enabled);
         }
 
         RefreshPluginHostLayout();
@@ -126,6 +132,22 @@ public partial class NotchWindow
         else
         {
             NotificationCompact.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void BindAgentViews(bool enabled)
+    {
+        AgentOpenView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        VerticalAgentView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        if (enabled && _services.Agents is { } agents)
+        {
+            AgentOpenView.Bind(agents);
+            VerticalAgentView.Bind(agents, compact: true);
+            AgentCompact.Bind(agents);
+        }
+        else
+        {
+            AgentCompact.Visibility = Visibility.Collapsed;
         }
     }
 

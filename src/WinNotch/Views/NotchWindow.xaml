@@ -102,6 +102,7 @@
                         <views:TimerCompactView x:Name="TimerCompact"/>
                         <views:DownloadCompactView x:Name="DownloadCompact"/>
                         <views:NotificationCompactView x:Name="NotificationCompact"/>
+                        <views:AgentCompactView x:Name="AgentCompact"/>
                         <!-- Plugin closed content -->
                         <StackPanel x:Name="PluginClosedPanel" Orientation="Horizontal"
                                     VerticalAlignment="Center" Margin="6,0,0,0"/>
@@ -129,6 +130,7 @@
                 <!-- Open state content -->
                 <Grid x:Name="OpenContent" Opacity="0" Margin="12,6,12,10">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -195,13 +197,16 @@
                     <views:NotificationActivityView x:Name="NotificationOpenView" Grid.Row="4"
                                                     Visibility="Collapsed"/>
 
+                    <views:AgentActivityView x:Name="AgentOpenView" Grid.Row="5"
+                                             Visibility="Collapsed"/>
+
                     <!-- Plugin open content -->
-                    <StackPanel x:Name="PluginOpenPanel" Grid.Row="5"
+                    <StackPanel x:Name="PluginOpenPanel" Grid.Row="6"
                                 Margin="0,4,0,0"/>
 
                     <!-- Inline settings (hidden by default, shown when gear clicked) - slides down in top mode -->
                     <views:InlineSettingsView x:Name="InlineSettings"
-                                              Grid.Row="6"
+                                              Grid.Row="7"
                                               Visibility="Collapsed"
                                               Margin="0,6,0,0"/>
                 </Grid>
@@ -329,6 +334,9 @@
 
                         <views:NotificationActivityView x:Name="VerticalNotificationView"
                                                         Visibility="Collapsed" Margin="4,8,4,0"/>
+
+                        <views:AgentActivityView x:Name="VerticalAgentView"
+                                                 Visibility="Collapsed" Margin="4,8,4,0"/>
 
                         <StackPanel x:Name="VerticalPluginOpenPanel"
                                     Margin="0,14,0,0"/>

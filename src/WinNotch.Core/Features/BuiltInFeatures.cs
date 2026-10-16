@@ -56,6 +56,13 @@ public static class BuiltInFeatures
         Maturity: FeatureMaturity.Available,
         Dependencies: new[] { Island.Id });
 
+    public static readonly FeatureDescriptor AgentActivity = new(
+        "island.agents", "AI agent activity", FeatureGroup.Island,
+        "Follow local Codex, Claude Code, OpenCode, and GitHub Copilot sessions without uploading logs.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Experimental,
+        Dependencies: new[] { Island.Id });
+
     public static readonly FeatureDescriptor Clipboard = Planned(
         "files.clipboard", "Clipboard history", FeatureGroup.ClipboardAndFiles,
         "Searchable local clipboard history and privacy policy.");
@@ -95,7 +102,7 @@ public static class BuiltInFeatures
     public static FeatureCatalog Catalog { get; } = new(new[]
     {
         Island, Media, Calendar, Battery, Shelf, Camera, SystemHud, Plugins,
-        Timers, Notifications, Downloads, Clipboard, CommandBar, WindowManagement,
+        Timers, Notifications, Downloads, AgentActivity, Clipboard, CommandBar, WindowManagement,
         SystemMonitor, AudioMixer, Capture, AppManagement, InputEnhancements,
         DisplayAndEnergy
     });

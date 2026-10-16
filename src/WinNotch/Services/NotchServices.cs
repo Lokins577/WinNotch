@@ -27,6 +27,7 @@ public sealed class NotchServices : IDisposable
     public TimerFeatureService? Timer { get; private set; }
     public DownloadMonitorService? Downloads { get; private set; }
     public NotificationListenerService? Notifications { get; private set; }
+    public AgentActivityService? Agents { get; private set; }
     public FeatureRuntime FeatureRuntime { get; }
 
     private readonly AppSettings _settings;
@@ -44,6 +45,7 @@ public sealed class NotchServices : IDisposable
         FeatureRuntime.Register(BuiltInFeatures.Timers.Id, CreateTimerModule);
         FeatureRuntime.Register(BuiltInFeatures.Downloads.Id, CreateDownloadsModule);
         FeatureRuntime.Register(BuiltInFeatures.Notifications.Id, CreateNotificationsModule);
+        FeatureRuntime.Register(BuiltInFeatures.AgentActivity.Id, CreateAgentsModule);
     }
 
     /// <summary>
@@ -75,6 +77,9 @@ public sealed class NotchServices : IDisposable
         await FeatureRuntime.SetEnabledAsync(
             BuiltInFeatures.Notifications.Id,
             _settings.IsFeatureAvailable(BuiltInFeatures.Notifications));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.AgentActivity.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.AgentActivity));
     }
 
     public void Dispose()
@@ -106,6 +111,12 @@ public sealed class NotchServices : IDisposable
     {
         Notifications = new NotificationListenerService();
         return Notifications;
+    }
+
+    private IFeatureModule CreateAgentsModule()
+    {
+        Agents = new AgentActivityService();
+        return Agents;
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule

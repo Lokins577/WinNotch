@@ -100,6 +100,17 @@ public partial class NotchWindow
             NotificationCompact.Bind(notifications);
         }
 
+        // Local AI agent activity
+        bool agentsAvailable = _settings.IsFeatureAvailable(BuiltInFeatures.AgentActivity);
+        AgentOpenView.Visibility = agentsAvailable ? Visibility.Visible : Visibility.Collapsed;
+        VerticalAgentView.Visibility = agentsAvailable ? Visibility.Visible : Visibility.Collapsed;
+        if (agentsAvailable && _services.Agents is { } agents)
+        {
+            AgentOpenView.Bind(agents);
+            VerticalAgentView.Bind(agents, compact: true);
+            AgentCompact.Bind(agents);
+        }
+
         // Calendar
         CalendarPanel_View.Bind(_calendarService);
         CalendarPanel.Visibility = _settings.ShowCalendar ? Visibility.Visible : Visibility.Collapsed;

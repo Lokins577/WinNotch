@@ -85,6 +85,11 @@ Add lyric providers with consent, playback queue adapters, source selection,
 per-process equalizer input, and local agent activity for Codex, Claude,
 OpenCode, and Copilot. Never upload local session logs.
 
+Status: in progress. Local agent discovery and bounded metadata parsing are
+implemented for all four providers, with coarse lifecycle state and
+top/vertical/compact island surfaces. Lyrics, queue adapters, source selection,
+and per-process equalizer work remain.
+
 ### 5. Clipboard and file workflow
 
 Implement persistent clipboard history, pin/search/paste, automatic clearing,

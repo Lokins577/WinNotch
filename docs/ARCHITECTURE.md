@@ -77,6 +77,10 @@ isolated behind `INotificationListenerBackend`, so consent, revocation, delta
 refresh, dismissal, and unsupported package identity can be tested without
 reading the real user's notifications.
 
+Agent activity models live in Core. The Windows scanner accepts injectable log
+sources and a clock, reads only bounded first/tail segments, extracts an
+allowlist of metadata keys, and never moves conversation text into UI models.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New
