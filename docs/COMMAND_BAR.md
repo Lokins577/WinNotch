@@ -37,4 +37,10 @@ visible only after entering `>` and selecting the saved result.
 Quick Panel is available with `Ctrl+Alt+Q` and opens Command Bar, Scratchpad,
 Features, mute, theme, and lock actions. Scratchpad stores multiple local tabs,
 autosaves atomically, renders lightweight Markdown headings and lists, and can
-export Markdown. The radial menu remains in the final module 6 commit.
+export Markdown.
+
+The optional radial menu opens at the pointer with `Ctrl+Alt+R`. Its settings
+surface supports up to 12 ordered actions: built-in WinNotch operations, a
+saved application, a saved file or folder, or an HTTP(S) URL. Paths must be
+absolute and exist when saved and when launched. Labels are display-only and
+are never interpreted as commands.

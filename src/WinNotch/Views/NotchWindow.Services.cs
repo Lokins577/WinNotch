@@ -15,6 +15,7 @@ public partial class NotchWindow
         await _services.EnsureInitializedAsync(_settings);
         AttachCommandBar();
         AttachQuickPanel();
+        AttachRadialMenu();
 
         // Bind views to services
         MusicPlayer.Bind(_mediaService, _services.Lyrics);
@@ -57,6 +58,8 @@ public partial class NotchWindow
         VerticalInlineSettings.ClipboardSettingsChanged += ApplyClipboardSettings;
         InlineSettings.CommandBarSettingsRequested += OpenCommandBarSettings;
         VerticalInlineSettings.CommandBarSettingsRequested += OpenCommandBarSettings;
+        InlineSettings.RadialMenuSettingsRequested += OpenRadialMenuSettings;
+        VerticalInlineSettings.RadialMenuSettingsRequested += OpenRadialMenuSettings;
 
         // Toggle clock/live-activity visibility based on music state
         _mediaService.MediaInfo.PropertyChanged += (_, e) =>

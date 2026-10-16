@@ -4,6 +4,7 @@ using WinNotch.Models;
 using WinNotch.Settings;
 using WinNotch.Scratchpad;
 using WinNotch.Services;
+using WinNotch.QuickTools;
 using Xunit;
 
 namespace WinNotch.Tests;
@@ -89,6 +90,33 @@ public sealed class CommandBarWindowTests
         thread.SetApartmentState(ApartmentState.STA);
         thread.Start();
         Assert.True(thread.Join(TimeSpan.FromSeconds(10)), "Quick tools UI test timed out.");
+        Assert.Null(failure);
+    }
+
+    [Fact]
+    public void RadialMenuAndSettings_BuildOnStaThread()
+    {
+        Exception? failure = null;
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                var settings = new AppSettings();
+                var radial = new RadialMenuWindow(settings.RadialMenu.Items, _ => Task.CompletedTask);
+                var editor = new RadialMenuSettingsWindow(settings, new MemoryStore());
+                Assert.NotNull(radial.Content);
+                Assert.NotNull(editor.Content);
+                radial.Close();
+                editor.Close();
+            }
+            catch (Exception exception)
+            {
+                failure = exception;
+            }
+        });
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        Assert.True(thread.Join(TimeSpan.FromSeconds(10)), "Radial menu UI test timed out.");
         Assert.Null(failure);
     }
 

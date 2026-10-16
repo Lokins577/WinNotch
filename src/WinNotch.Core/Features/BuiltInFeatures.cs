@@ -89,6 +89,12 @@ public static class BuiltInFeatures
         EnabledByDefault: false,
         Maturity: FeatureMaturity.Available);
 
+    public static readonly FeatureDescriptor RadialMenu = new(
+        "tools.radial-menu", "Radial menu", FeatureGroup.Tools,
+        "A configurable pointer-centered wheel of typed actions.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Available);
+
     public static readonly FeatureDescriptor WindowManagement = Planned(
         "windows.management", "Window management", FeatureGroup.Windows,
         "Switcher, layouts, previews, restore, and multi-monitor movement.");
@@ -121,7 +127,7 @@ public static class BuiltInFeatures
     {
         Island, Media, Calendar, Battery, Shelf, Camera, SystemHud, Plugins,
         Timers, Notifications, Downloads, AgentActivity, Clipboard, CommandBar,
-        QuickPanel, Scratchpad, WindowManagement,
+        QuickPanel, Scratchpad, RadialMenu, WindowManagement,
         SystemMonitor, AudioMixer, Capture, AppManagement, InputEnhancements,
         DisplayAndEnergy
     });

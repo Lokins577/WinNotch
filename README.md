@@ -32,6 +32,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Ctrl+Alt+Space Command Bar for apps, windows, clipboard, math, units, and Emoji
 - Local file-name search, reusable snippets, and explicitly saved Command Bar scripts
 - Ctrl+Alt+Q Quick Panel and persistent multi-tab Markdown Scratchpad
+- Configurable Ctrl+Alt+R radial menu for built-in actions, saved paths, and HTTP(S) links
 - Volume and brightness HUDs
 - Calendar, battery, file shelf, and webcam mirror
 - Light, dark, and auto theme support

@@ -39,6 +39,7 @@ public sealed class NotchServices : IDisposable
     public CommandBarFeatureService? CommandBar { get; private set; }
     public QuickPanelFeatureService? QuickPanel { get; private set; }
     public ScratchpadService? Scratchpad { get; private set; }
+    public RadialMenuFeatureService? RadialMenu { get; private set; }
     public FeatureRuntime FeatureRuntime { get; }
 
     private readonly AppSettings _settings;
@@ -70,6 +71,7 @@ public sealed class NotchServices : IDisposable
         FeatureRuntime.Register(BuiltInFeatures.CommandBar.Id, CreateCommandBarModule);
         FeatureRuntime.Register(BuiltInFeatures.QuickPanel.Id, CreateQuickPanelModule);
         FeatureRuntime.Register(BuiltInFeatures.Scratchpad.Id, CreateScratchpadModule);
+        FeatureRuntime.Register(BuiltInFeatures.RadialMenu.Id, CreateRadialMenuModule);
     }
 
     /// <summary>
@@ -116,6 +118,9 @@ public sealed class NotchServices : IDisposable
         await FeatureRuntime.SetEnabledAsync(
             BuiltInFeatures.Scratchpad.Id,
             _settings.IsFeatureAvailable(BuiltInFeatures.Scratchpad));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.RadialMenu.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.RadialMenu));
     }
 
     public void Dispose()
@@ -205,6 +210,12 @@ public sealed class NotchServices : IDisposable
     {
         Scratchpad = new ScratchpadService(new JsonScratchpadStore());
         return Scratchpad;
+    }
+
+    private IFeatureModule CreateRadialMenuModule()
+    {
+        RadialMenu = new RadialMenuFeatureService();
+        return RadialMenu;
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule

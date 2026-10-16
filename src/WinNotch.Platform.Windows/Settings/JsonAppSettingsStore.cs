@@ -2,6 +2,7 @@ using System.IO;
 using System.Text.Json;
 using WinNotch.Models;
 using WinNotch.Settings;
+using WinNotch.QuickTools;
 
 namespace WinNotch.Platform.Windows.Settings;
 
@@ -52,6 +53,9 @@ public sealed class JsonAppSettingsStore : IAppSettingsStore
 
             if (settings.Theme == AppTheme.Auto)
                 settings.Theme = AppTheme.Dark;
+
+            settings.RadialMenu ??= RadialMenuConfiguration.CreateDefault();
+            settings.RadialMenu.Normalize();
 
             return settings;
         }

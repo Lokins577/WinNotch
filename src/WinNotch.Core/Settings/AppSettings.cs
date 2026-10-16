@@ -3,6 +3,7 @@ using WinNotch.Features;
 using WinNotch.Timers;
 using WinNotch.Clipboard;
 using WinNotch.CommandBar;
+using WinNotch.QuickTools;
 
 namespace WinNotch.Models;
 
@@ -41,6 +42,7 @@ public class AppSettings
     public List<string> CommandBarSearchFolders { get; set; } = [];
     public List<CommandSnippet> CommandSnippets { get; set; } = [];
     public List<SavedCommandScript> CommandScripts { get; set; } = [];
+    public RadialMenuConfiguration RadialMenu { get; set; } = RadialMenuConfiguration.CreateDefault();
 
     // General
     public bool StartOnBoot { get; set; }

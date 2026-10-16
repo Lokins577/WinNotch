@@ -114,6 +114,11 @@ Scratchpad data has its own atomic store rather than expanding AppSettings with
 large note bodies. Quick Panel is a lifecycle feature with a dedicated hotkey;
 its buttons call typed application actions instead of executing command text.
 
+Radial menu configuration and target policy live in Core. The Windows layer
+owns the `Ctrl+Alt+R` hotkey, while the WPF composition root maps the typed
+actions to application operations. External actions require a persisted,
+existing absolute path or an HTTP(S) URL; menu labels never become shell text.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New

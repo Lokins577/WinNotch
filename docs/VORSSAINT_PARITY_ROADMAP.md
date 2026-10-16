@@ -99,20 +99,31 @@ Implement persistent clipboard history, pin/search/paste, automatic clearing,
 plain-text paste, URL cleanup, and a durable Shelf. Sensitive formats and
 ignored applications require explicit policy.
 
+Status: implemented. Persistent text/image/file history, SHA-256 deduplication,
+pinning, search, capacity eviction, atomic metadata/image storage, foreground
+application exclusions, copy-back suppression, top/vertical/compact views, and
+live lifecycle toggling are implemented. Sequence-safe automatic clearing,
+clipboard-preserving plain-text paste, and manual/automatic URL cleanup are
+implemented. Shelf items remain temporary by default, while explicit pinning,
+atomic persistence, restart restore, missing-path state, and pin-preserving
+clear behavior are implemented.
+
 ### 6. Command bar and quick tools
 
 Add app/window/file search, calculations, unit conversion, emoji, snippets,
 scripts, quick toggles, quick panel, radial menu, and scratchpad.
 
-Status: in progress. The Command Bar shell, global hotkey, provider isolation,
+Status: implemented. The Command Bar shell, global hotkey, provider isolation,
 Start Menu applications, visible windows, clipboard history, safe scientific
 calculator, unit conversion, Emoji, keyboard navigation, and execution are
 implemented. Bounded local file indexing with configurable roots, reusable
 snippets, and explicitly saved `>` scripts with a management UI are
 implemented. `Ctrl+Alt+Q` Quick Panel provides Command Bar, Scratchpad,
 Features, mute, theme, and lock actions. Persistent multi-tab Scratchpad,
-autosave, lightweight Markdown preview, and export are implemented. Radial menu
-remains.
+autosave, lightweight Markdown preview, and export are implemented. The
+configurable `Ctrl+Alt+R` radial menu provides up to 12 ordered typed actions,
+validates persisted application/file/folder/HTTP(S) targets, and never executes
+labels or arbitrary query text.
 
 ### 7. Window and taskbar management
 
@@ -148,15 +159,6 @@ Add app update discovery, winget integration, installer handoff, cleaner,
 uninstaller with review, messaging-download retention, port inspection, and
 safe process termination. Destructive actions require previews and recoverable
 defaults.
-
-Status: implemented. Persistent text/image/file history, SHA-256 deduplication,
-pinning, search, capacity eviction, atomic metadata/image storage, foreground
-application exclusions, copy-back suppression, top/vertical/compact views, and
-live lifecycle toggling are implemented. Sequence-safe automatic clearing,
-clipboard-preserving plain-text paste, and manual/automatic URL cleanup are
-implemented. Shelf items remain temporary by default, while explicit pinning,
-atomic persistence, restart restore, missing-path state, and pin-preserving
-clear behavior are implemented.
 
 ### 13. Input enhancements
 

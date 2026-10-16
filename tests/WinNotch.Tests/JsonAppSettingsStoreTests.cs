@@ -4,6 +4,7 @@ using WinNotch.Models;
 using WinNotch.Features;
 using WinNotch.Timers;
 using WinNotch.Platform.Windows.Settings;
+using WinNotch.QuickTools;
 using Xunit;
 
 namespace WinNotch.Tests;
@@ -47,6 +48,15 @@ public sealed class JsonAppSettingsStoreTests
             Name = "Build",
             Executable = @"C:\Tools\build.cmd"
         });
+        expected.RadialMenu.Items =
+        [
+            new RadialMenuItem
+            {
+                Label = "Docs",
+                Kind = RadialActionKind.Url,
+                Target = "https://example.com/docs"
+            }
+        ];
 
         store.Save(expected);
         var actual = store.Load();
@@ -70,6 +80,10 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Contains(@"D:\Projects", actual.CommandBarSearchFolders);
         Assert.Equal("Greeting", Assert.Single(actual.CommandSnippets).Name);
         Assert.Equal("Build", Assert.Single(actual.CommandScripts).Name);
+        var radial = Assert.Single(actual.RadialMenu.Items);
+        Assert.Equal("Docs", radial.Label);
+        Assert.Equal(RadialActionKind.Url, radial.Kind);
+        Assert.Equal("https://example.com/docs", radial.Target);
     }
 
     [Fact]
@@ -98,6 +112,22 @@ public sealed class JsonAppSettingsStoreTests
 
         Assert.True(settings.AutoCheckForUpdates);
         Assert.Equal(HoverMode.HoverPeekClickOpen, settings.HoverMode);
+    }
+
+    [Fact]
+    public void Load_NullRadialMenu_MigratesToDefaults()
+    {
+        using var directory = new TempSettingsDirectory();
+        Directory.CreateDirectory(directory.Path);
+        File.WriteAllText(
+            System.IO.Path.Combine(directory.Path, "settings.json"),
+            "{\"RadialMenu\":null}");
+
+        var settings = new JsonAppSettingsStore(directory.Path, () => null).Load();
+
+        Assert.Equal(6, settings.RadialMenu.Items.Count);
+        Assert.Contains(settings.RadialMenu.Items,
+            item => item.Kind == RadialActionKind.CommandBar);
     }
 
     private sealed class TempSettingsDirectory : IDisposable
