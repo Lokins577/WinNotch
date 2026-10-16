@@ -18,6 +18,12 @@ public sealed class CommandBarFeatureService : IFeatureModule, IDisposable
     public bool HotkeyAvailable => _hotkey.IsRegistered;
     public event Action? OpenRequested;
 
+    public void InvalidateFileIndex()
+    {
+        foreach (var provider in Engine.Providers.OfType<WinNotch.Platform.Windows.CommandBar.FileCommandProvider>())
+            provider.Invalidate();
+    }
+
     public ValueTask StartAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -35,7 +41,11 @@ public sealed class CommandBarFeatureService : IFeatureModule, IDisposable
 
     private void OnHotkeyPressed() => OpenRequested?.Invoke();
 
-    public void Dispose() => StopAsync(CancellationToken.None).AsTask().GetAwaiter().GetResult();
+    public void Dispose()
+    {
+        StopAsync(CancellationToken.None).AsTask().GetAwaiter().GetResult();
+        Engine.Dispose();
+    }
 
     public ValueTask DisposeAsync()
     {

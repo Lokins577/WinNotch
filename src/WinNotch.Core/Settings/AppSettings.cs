@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using WinNotch.Features;
 using WinNotch.Timers;
 using WinNotch.Clipboard;
+using WinNotch.CommandBar;
 
 namespace WinNotch.Models;
 
@@ -37,6 +38,9 @@ public class AppSettings
     public string? PreferredMediaSourceId { get; set; }
     public bool OnlineLyricsEnabled { get; set; }
     public ClipboardPreferences ClipboardPreferences { get; set; } = new();
+    public List<string> CommandBarSearchFolders { get; set; } = [];
+    public List<CommandSnippet> CommandSnippets { get; set; } = [];
+    public List<SavedCommandScript> CommandScripts { get; set; } = [];
 
     // General
     public bool StartOnBoot { get; set; }

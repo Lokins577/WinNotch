@@ -105,6 +105,11 @@ Core. Windows providers own Start Menu indexing, top-level window enumeration,
 foreground activation, clipboard execution, and the global hotkey. Search
 isolates provider failures and cancellation before merging ranked results.
 
+The file provider owns a bounded, expiring name index over explicit roots and
+skips generated or hidden trees. Snippet and script definitions persist in
+AppSettings; script execution requires a pre-saved absolute path and cannot be
+constructed from arbitrary Command Bar query text.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New

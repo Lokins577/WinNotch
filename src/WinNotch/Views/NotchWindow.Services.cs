@@ -54,6 +54,8 @@ public partial class NotchWindow
         VerticalInlineSettings.LyricsSettingsChanged += ApplyLyricsSettings;
         InlineSettings.ClipboardSettingsChanged += ApplyClipboardSettings;
         VerticalInlineSettings.ClipboardSettingsChanged += ApplyClipboardSettings;
+        InlineSettings.CommandBarSettingsRequested += OpenCommandBarSettings;
+        VerticalInlineSettings.CommandBarSettingsRequested += OpenCommandBarSettings;
 
         // Toggle clock/live-activity visibility based on music state
         _mediaService.MediaInfo.PropertyChanged += (_, e) =>

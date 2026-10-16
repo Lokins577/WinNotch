@@ -49,4 +49,17 @@ public partial class NotchWindow
         _commandBarWindow.Show();
         _commandBarWindow.Activate();
     }
+
+    private void OpenCommandBarSettings()
+    {
+        var window = new CommandBarSettingsWindow(
+            _settings,
+            _settingsStore,
+            () => _services.CommandBar?.InvalidateFileIndex())
+        {
+            Owner = this
+        };
+        window.Show();
+        window.Activate();
+    }
 }

@@ -1,4 +1,6 @@
 using WinNotch.CommandBar;
+using WinNotch.Platform.Windows.CommandBar;
+using System.IO;
 using Xunit;
 
 namespace WinNotch.Tests;
@@ -60,6 +62,49 @@ public sealed class CommandBarCoreTests
         Assert.Equal(["High", "Low"], results.Select(result => result.Title));
     }
 
+    [Fact]
+    public async Task FileProvider_IndexesSelectedRootsAndSkipsExcludedDirectories()
+    {
+        using var directory = new TempCommandDirectory();
+        File.WriteAllText(System.IO.Path.Combine(directory.Path, "report-final.pdf"), "x");
+        string excluded = System.IO.Path.Combine(directory.Path, ".git");
+        Directory.CreateDirectory(excluded);
+        File.WriteAllText(System.IO.Path.Combine(excluded, "report-secret.txt"), "x");
+        using var provider = new FileCommandProvider(() => [directory.Path]);
+
+        var results = await provider.SearchAsync("report", CancellationToken.None);
+
+        Assert.Single(results);
+        Assert.Equal("report-final.pdf", results[0].Title);
+    }
+
+    [Fact]
+    public async Task SnippetAndScriptProviders_UseExplicitSavedDefinitions()
+    {
+        using var directory = new TempCommandDirectory();
+        string executable = System.IO.Path.Combine(directory.Path, "build.cmd");
+        File.WriteAllText(executable, "@echo off");
+        var snippets = new[]
+        {
+            new CommandSnippet { Name = "Signature", Trigger = "sig", Content = "Regards" }
+        };
+        var scripts = new[]
+        {
+            new SavedCommandScript { Name = "Build", Executable = executable }
+        };
+
+        var snippetResults = await new SnippetCommandProvider(() => snippets)
+            .SearchAsync(";sig", CancellationToken.None);
+        var scriptResults = await new ScriptCommandProvider(() => scripts)
+            .SearchAsync(">build", CancellationToken.None);
+        var hiddenScripts = await new ScriptCommandProvider(() => scripts)
+            .SearchAsync("build", CancellationToken.None);
+
+        Assert.Equal("Signature", Assert.Single(snippetResults).Title);
+        Assert.Equal("Build", Assert.Single(scriptResults).Title);
+        Assert.Empty(hiddenScripts);
+    }
+
     private sealed class StaticProvider(string id, IReadOnlyList<CommandResult> results) : ICommandProvider
     {
         public string Id => id;
@@ -72,5 +117,21 @@ public sealed class CommandBarCoreTests
         public string Id => "throwing";
         public ValueTask<IReadOnlyList<CommandResult>> SearchAsync(string query, CancellationToken cancellationToken)
             => ValueTask.FromException<IReadOnlyList<CommandResult>>(new InvalidOperationException("provider failed"));
+    }
+
+    private sealed class TempCommandDirectory : IDisposable
+    {
+        public TempCommandDirectory()
+        {
+            Path = System.IO.Path.Combine(
+                System.IO.Path.GetTempPath(), "winnotch-command-tests", Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(Path);
+        }
+
+        public string Path { get; }
+        public void Dispose()
+        {
+            if (Directory.Exists(Path)) Directory.Delete(Path, recursive: true);
+        }
     }
 }

@@ -107,8 +107,9 @@ scripts, quick toggles, quick panel, radial menu, and scratchpad.
 Status: in progress. The Command Bar shell, global hotkey, provider isolation,
 Start Menu applications, visible windows, clipboard history, safe scientific
 calculator, unit conversion, Emoji, keyboard navigation, and execution are
-implemented. File search, snippets, scripts, Quick Panel, radial menu, and
-Scratchpad remain.
+implemented. Bounded local file indexing with configurable roots, reusable
+snippets, and explicitly saved `>` scripts with a management UI are
+implemented. Quick Panel, radial menu, and Scratchpad remain.
 
 ### 7. Window and taskbar management
 

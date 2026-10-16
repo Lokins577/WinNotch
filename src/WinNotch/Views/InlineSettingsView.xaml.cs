@@ -34,6 +34,7 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
     public event Action<AppSettings>? DownloadSettingsChanged;
     public event Action<AppSettings>? LyricsSettingsChanged;
     public event Action<AppSettings>? ClipboardSettingsChanged;
+    public event Action? CommandBarSettingsRequested;
 
     public InlineSettingsView()
     {
@@ -190,6 +191,11 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
     private void OnManageFeaturesClick(object sender, RoutedEventArgs e)
     {
         ManageFeaturesRequested?.Invoke();
+    }
+
+    private void OnCommandBarSettingsClick(object sender, RoutedEventArgs e)
+    {
+        CommandBarSettingsRequested?.Invoke();
     }
 
     private void OnDownloadMonitoringChanged(object sender, RoutedEventArgs e)

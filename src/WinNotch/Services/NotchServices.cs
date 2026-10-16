@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using System.IO;
 using WinNotch.Models;
 using WinNotch.Features;
 using WinNotch.Helpers;
@@ -161,10 +162,26 @@ public sealed class NotchServices : IDisposable
             new EmojiCommandProvider(),
             new ApplicationCommandProvider(),
             new WindowCommandProvider(),
-            new ClipboardCommandProvider(() => ClipboardHistory)
+            new ClipboardCommandProvider(() => ClipboardHistory),
+            new FileCommandProvider(GetCommandBarSearchFolders),
+            new SnippetCommandProvider(() => _settings.CommandSnippets),
+            new ScriptCommandProvider(() => _settings.CommandScripts)
         });
         CommandBar = new CommandBarFeatureService(engine);
         return CommandBar;
+    }
+
+    private IReadOnlyList<string> GetCommandBarSearchFolders()
+    {
+        if (_settings.CommandBarSearchFolders.Count > 0)
+            return _settings.CommandBarSearchFolders;
+
+        return new[]
+        {
+            Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")
+        }.Where(Directory.Exists).ToArray();
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule

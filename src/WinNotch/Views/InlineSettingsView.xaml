@@ -248,6 +248,13 @@
                                Foreground="{DynamicResource TextSubtleBrush}" FontSize="11"
                                TextDecorations="Underline"/>
                 </Button>
+                <Button Click="OnCommandBarSettingsClick"
+                        HorizontalAlignment="Left" Cursor="Hand"
+                        Background="Transparent" BorderThickness="0" Padding="0" Margin="0,2,0,4">
+                    <TextBlock Text="Configure Command Bar"
+                               Foreground="{DynamicResource TextSubtleBrush}" FontSize="11"
+                               TextDecorations="Underline"/>
+                </Button>
 
                 <!-- Clipboard -->
                 <TextBlock Text="CLIPBOARD" Style="{StaticResource SectionHeader}"/>

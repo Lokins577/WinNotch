@@ -35,6 +35,18 @@ public sealed class JsonAppSettingsStoreTests
         expected.ClipboardPreferences.AutoClearSeconds = 120;
         expected.ClipboardPreferences.PlainTextPasteHotkey = true;
         expected.ClipboardPreferences.AutoCleanUrls = true;
+        expected.CommandBarSearchFolders.Add(@"D:\Projects");
+        expected.CommandSnippets.Add(new WinNotch.CommandBar.CommandSnippet
+        {
+            Name = "Greeting",
+            Trigger = "hi",
+            Content = "Hello"
+        });
+        expected.CommandScripts.Add(new WinNotch.CommandBar.SavedCommandScript
+        {
+            Name = "Build",
+            Executable = @"C:\Tools\build.cmd"
+        });
 
         store.Save(expected);
         var actual = store.Load();
@@ -55,6 +67,9 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal(120, actual.ClipboardPreferences.AutoClearSeconds);
         Assert.True(actual.ClipboardPreferences.PlainTextPasteHotkey);
         Assert.True(actual.ClipboardPreferences.AutoCleanUrls);
+        Assert.Contains(@"D:\Projects", actual.CommandBarSearchFolders);
+        Assert.Equal("Greeting", Assert.Single(actual.CommandSnippets).Name);
+        Assert.Equal("Build", Assert.Single(actual.CommandScripts).Name);
     }
 
     [Fact]

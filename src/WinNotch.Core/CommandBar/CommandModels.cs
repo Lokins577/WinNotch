@@ -30,7 +30,24 @@ public interface ICommandProvider
         CancellationToken cancellationToken);
 }
 
-public sealed class CommandBarEngine
+public sealed class CommandSnippet
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Name { get; set; } = string.Empty;
+    public string Trigger { get; set; } = string.Empty;
+    public string Content { get; set; } = string.Empty;
+}
+
+public sealed class SavedCommandScript
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Name { get; set; } = string.Empty;
+    public string Executable { get; set; } = string.Empty;
+    public string Arguments { get; set; } = string.Empty;
+    public string? WorkingDirectory { get; set; }
+}
+
+public sealed class CommandBarEngine : IDisposable
 {
     private readonly IReadOnlyList<ICommandProvider> _providers;
 
@@ -41,6 +58,8 @@ public sealed class CommandBarEngine
             != _providers.Count)
             throw new ArgumentException("Command provider IDs must be unique.", nameof(providers));
     }
+
+    public IReadOnlyList<ICommandProvider> Providers => _providers;
 
     public async Task<IReadOnlyList<CommandResult>> SearchAsync(
         string? query,
@@ -68,6 +87,11 @@ public sealed class CommandBarEngine
         }
         catch (OperationCanceledException) { throw; }
         catch { return []; }
+    }
+
+    public void Dispose()
+    {
+        foreach (var provider in _providers.OfType<IDisposable>()) provider.Dispose();
     }
 }
 
