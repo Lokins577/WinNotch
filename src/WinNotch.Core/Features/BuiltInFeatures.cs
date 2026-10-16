@@ -119,6 +119,12 @@ public static class BuiltInFeatures
         EnabledByDefault: false,
         Maturity: FeatureMaturity.Available);
 
+    public static readonly FeatureDescriptor MediaTools = new(
+        "tools.media-tools", "Recording and media tools", FeatureGroup.Tools,
+        "Screen recording, local editing, GIF/video export, conversion, compression, and watermarking.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Available);
+
     public static readonly FeatureDescriptor AppManagement = Planned(
         "tools.app-management", "Application management", FeatureGroup.Tools,
         "Updates, packages, cleaner, uninstaller, ports, and process tools.");
@@ -136,7 +142,7 @@ public static class BuiltInFeatures
         Island, Media, Calendar, Battery, Shelf, Camera, SystemHud, Plugins,
         Timers, Notifications, Downloads, AgentActivity, Clipboard, CommandBar,
         QuickPanel, Scratchpad, RadialMenu, WindowManagement,
-        SystemMonitor, AudioMixer, Capture, AppManagement, InputEnhancements,
+        SystemMonitor, AudioMixer, Capture, MediaTools, AppManagement, InputEnhancements,
         DisplayAndEnergy
     });
 

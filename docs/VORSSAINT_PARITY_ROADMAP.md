@@ -190,6 +190,14 @@ bypassed.
 Implement screen recording with system and microphone tracks, trim/cut/zoom,
 blur, GIF/video export, image conversion, compression, and watermarking.
 
+Status: implemented. The optional `Ctrl+Alt+V` recorder captures a display or
+region into timed frames with separate optional WASAPI system and microphone
+WAV tracks. A non-destructive edit plan supports trim, merged cuts, timed zoom,
+timed pixelated blur, and watermarking. GIF export uses WPF imaging and MP4
+export uses Windows `MediaComposition`, including trimmed audio tracks. Batch
+image tools convert, resize, JPEG-compress, and watermark local images. Projects
+are retained for explicit user review rather than silently deleted.
+
 ### 12. Application and package management
 
 Add app update discovery, winget integration, installer handoff, cleaner,

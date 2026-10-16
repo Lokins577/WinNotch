@@ -144,6 +144,12 @@ bounded UI Automation scrolling, system OCR, and local QR decoding. The WPF
 editor owns explicit crop/draw/redact/copy/save/pin interactions and never
 persists an image merely because it was captured.
 
+Recording project and edit-plan models plus trim/cut timeline policy live in
+Core. The Windows layer owns timed frame capture, independent WASAPI system and
+microphone tracks, WPF GIF encoding, Windows `MediaComposition` MP4 rendering,
+and bitmap conversion. Zoom, blur, and watermark effects are rendered from a
+non-destructive plan into generated temporary frames.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New
@@ -174,6 +180,7 @@ new work does not return to a single multi-thousand-line file:
 - `NotchWindow.SystemMonitor.cs`: monitor dashboard and alert dispatch.
 - `NotchWindow.AudioMixer.cs`: audio control surface lifecycle.
 - `NotchWindow.Capture.cs`: capture launcher lifecycle.
+- `NotchWindow.MediaTools.cs`: recording and media-tool lifecycle.
 
 ## Dependency rules
 

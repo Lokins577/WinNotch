@@ -1,0 +1,34 @@
+<Window x:Class="WinNotch.Views.RecordingEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Recording Editor" Width="860" Height="620" MinWidth="740" MinHeight="520"
+        WindowStartupLocation="CenterOwner" Background="{DynamicResource WindowBackgroundBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}">
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="320"/></Grid.ColumnDefinitions>
+        <Border Background="#111" Margin="0,0,14,0"><Image x:Name="PreviewImage" Stretch="Uniform"/></Border>
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="Non-destructive edit plan" FontSize="18" FontWeight="SemiBold"/>
+                <TextBlock x:Name="ProjectInfo" TextWrapping="Wrap" Margin="0,4,0,12"/>
+                <TextBlock Text="Trim start / end (seconds)"/>
+                <UniformGrid Columns="2"><TextBox x:Name="TrimStartText" Margin="0,3,4,8"/><TextBox x:Name="TrimEndText" Margin="4,3,0,8"/></UniformGrid>
+                <TextBlock Text="Cuts (start-end, comma separated)"/><TextBox x:Name="CutsText" Margin="0,3,0,8"/>
+                <CheckBox x:Name="ZoomCheck" Content="Zoom selected interval"/>
+                <UniformGrid Columns="3"><TextBox x:Name="ZoomStartText" Margin="0,3,3,8"/><TextBox x:Name="ZoomEndText" Margin="3,3,3,8"/><TextBox x:Name="ZoomFactorText" Text="1.5" Margin="3,3,0,8"/></UniformGrid>
+                <CheckBox x:Name="BlurCheck" Content="Blur region during interval"/>
+                <UniformGrid Columns="2"><TextBox x:Name="BlurStartText" Margin="0,3,3,4"/><TextBox x:Name="BlurEndText" Margin="3,3,0,4"/></UniformGrid>
+                <TextBlock Text="Blur rect normalized: left,top,width,height" FontSize="10"/>
+                <TextBox x:Name="BlurRectText" Text="0.35,0.35,0.3,0.2" Margin="0,3,0,8"/>
+                <TextBlock Text="Watermark (optional)"/><TextBox x:Name="WatermarkText" Margin="0,3,0,12"/>
+                <WrapPanel>
+                    <Button Content="Export MP4" Click="OnExportMp4" Padding="10,5"/>
+                    <Button Content="Export GIF" Click="OnExportGif" Padding="10,5" Margin="6,0,0,0"/>
+                    <Button Content="Project folder" Click="OnOpenFolder" Padding="10,5" Margin="6,0,0,0"/>
+                </WrapPanel>
+                <ProgressBar x:Name="ExportProgress" Height="8" IsIndeterminate="True" Visibility="Collapsed" Margin="0,14,0,0"/>
+                <TextBlock x:Name="StatusText" TextWrapping="Wrap" Margin="0,10,0,0"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

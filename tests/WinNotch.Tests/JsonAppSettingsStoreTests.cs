@@ -65,6 +65,8 @@ public sealed class JsonAppSettingsStoreTests
         expected.CapturePreferences.Format = WinNotch.Capture.CaptureImageFormat.Jpeg;
         expected.CapturePreferences.JpegQuality = 81;
         expected.CapturePreferences.CopyAfterCapture = false;
+        expected.RecordingPreferences.FramesPerSecond = 12;
+        expected.RecordingPreferences.CaptureMicrophone = true;
 
         store.Save(expected);
         var actual = store.Load();
@@ -100,6 +102,8 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal(WinNotch.Capture.CaptureImageFormat.Jpeg, actual.CapturePreferences.Format);
         Assert.Equal(81, actual.CapturePreferences.JpegQuality);
         Assert.False(actual.CapturePreferences.CopyAfterCapture);
+        Assert.Equal(12, actual.RecordingPreferences.FramesPerSecond);
+        Assert.True(actual.RecordingPreferences.CaptureMicrophone);
     }
 
     [Fact]

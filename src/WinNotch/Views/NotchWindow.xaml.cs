@@ -1308,6 +1308,7 @@ public partial class NotchWindow : Window
         DetachSystemMonitor();
         DetachAudioMixer();
         DetachCaptureTool();
+        DetachMediaTools();
         _scratchpadWindow?.Close();
         _globalHotkey?.Dispose();
         base.OnClosed(e);

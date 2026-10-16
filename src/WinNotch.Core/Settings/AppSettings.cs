@@ -7,6 +7,7 @@ using WinNotch.QuickTools;
 using WinNotch.SystemMonitoring;
 using WinNotch.AudioControl;
 using WinNotch.Capture;
+using WinNotch.MediaTools;
 
 namespace WinNotch.Models;
 
@@ -49,6 +50,7 @@ public class AppSettings
     public SystemMonitorPreferences SystemMonitorPreferences { get; set; } = new();
     public AudioControlPreferences AudioControlPreferences { get; set; } = new();
     public CapturePreferences CapturePreferences { get; set; } = new();
+    public RecordingPreferences RecordingPreferences { get; set; } = new();
 
     // General
     public bool StartOnBoot { get; set; }
