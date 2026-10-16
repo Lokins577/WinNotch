@@ -100,6 +100,7 @@
 
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <views:TimerCompactView x:Name="TimerCompact"/>
+                        <views:DownloadCompactView x:Name="DownloadCompact"/>
                         <!-- Plugin closed content -->
                         <StackPanel x:Name="PluginClosedPanel" Orientation="Horizontal"
                                     VerticalAlignment="Center" Margin="6,0,0,0"/>
@@ -127,6 +128,7 @@
                 <!-- Open state content -->
                 <Grid x:Name="OpenContent" Opacity="0" Margin="12,6,12,10">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -185,13 +187,16 @@
                     <views:TimerView x:Name="TimerOpenView" Grid.Row="2"
                                      Visibility="Collapsed"/>
 
+                    <views:DownloadActivityView x:Name="DownloadOpenView" Grid.Row="3"
+                                                Visibility="Collapsed"/>
+
                     <!-- Plugin open content -->
-                    <StackPanel x:Name="PluginOpenPanel" Grid.Row="3"
+                    <StackPanel x:Name="PluginOpenPanel" Grid.Row="4"
                                 Margin="0,4,0,0"/>
 
                     <!-- Inline settings (hidden by default, shown when gear clicked) - slides down in top mode -->
                     <views:InlineSettingsView x:Name="InlineSettings"
-                                              Grid.Row="4"
+                                              Grid.Row="5"
                                               Visibility="Collapsed"
                                               Margin="0,6,0,0"/>
                 </Grid>
@@ -313,6 +318,9 @@
 
                         <views:TimerView x:Name="VerticalTimerView"
                                          Visibility="Collapsed" Margin="4,10,4,0"/>
+
+                        <views:DownloadActivityView x:Name="VerticalDownloadView"
+                                                    Visibility="Collapsed" Margin="4,8,4,0"/>
 
                         <StackPanel x:Name="VerticalPluginOpenPanel"
                                     Margin="0,14,0,0"/>

@@ -22,6 +22,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Multi-monitor support: drag the island to any screen and dock it there; optional island on every screen with synchronized (or independent) open state
 - Built-in media controls and audio visualizer
 - Persistent focus cycles, countdown timer, and stopwatch with compact live activity
+- Download-folder live activity with browser temporary-file detection
 - Volume and brightness HUDs
 - Calendar, battery, file shelf, and webcam mirror
 - Light, dark, and auto theme support

@@ -46,6 +46,13 @@ public static class BuiltInFeatures
         "island.notifications", "Notification activities", FeatureGroup.Island,
         "Permission-based notification previews and inbox actions.");
 
+    public static readonly FeatureDescriptor Downloads = new(
+        "island.downloads", "Download activities", FeatureGroup.Island,
+        "Monitor a chosen folder and show active or completed downloads in the island.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Available,
+        Dependencies: new[] { Island.Id });
+
     public static readonly FeatureDescriptor Clipboard = Planned(
         "files.clipboard", "Clipboard history", FeatureGroup.ClipboardAndFiles,
         "Searchable local clipboard history and privacy policy.");
@@ -85,7 +92,7 @@ public static class BuiltInFeatures
     public static FeatureCatalog Catalog { get; } = new(new[]
     {
         Island, Media, Calendar, Battery, Shelf, Camera, SystemHud, Plugins,
-        Timers, Notifications, Clipboard, CommandBar, WindowManagement,
+        Timers, Notifications, Downloads, Clipboard, CommandBar, WindowManagement,
         SystemMonitor, AudioMixer, Capture, AppManagement, InputEnhancements,
         DisplayAndEnergy
     });

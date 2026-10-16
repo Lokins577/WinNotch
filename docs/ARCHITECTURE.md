@@ -67,6 +67,11 @@ dispatcher heartbeat, persistence, and alarm, while views only render snapshots
 and send commands. Running sessions persist a UTC anchor so sleep and app
 restarts do not introduce one-tick-per-second drift.
 
+Download activity models live in `WinNotch.Core/Downloads`; the Windows adapter
+owns `FileSystemWatcher`, stability polling, and temporary-extension handling.
+The selected folder is explicit user state, and disabling the feature disposes
+both the watcher and poller through Feature Runtime.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New

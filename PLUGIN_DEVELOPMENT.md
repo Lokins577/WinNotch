@@ -338,7 +338,6 @@ Working examples live under `Examples/Plugins/`, including:
 - `WeatherWidgetPlugin`
 - `TodoPeekPlugin`
 - `ClipboardStackPlugin`
-- `DownloadsWatcherPlugin`
 
 There is also a sample browser manifest file at:
 

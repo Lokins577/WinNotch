@@ -1,9 +1,11 @@
 using System;
 using System.Windows;
 using WinNotch.Helpers;
+using WinNotch.Features;
 using WinNotch.Models;
 using WinNotch.Services;
 using WinNotch.Settings;
+using Forms = System.Windows.Forms;
 
 namespace WinNotch.Views;
 
@@ -28,6 +30,8 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
 
     /// <summary>Fired when the user wants to inspect built-in feature availability.</summary>
     public event Action? ManageFeaturesRequested;
+
+    public event Action<AppSettings>? DownloadSettingsChanged;
 
     public InlineSettingsView()
     {
@@ -57,6 +61,10 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         ShowOnAllScreensCheck.IsChecked = settings.ShowOnAllScreens;
         SyncIslandsCheck.IsChecked = settings.SyncIslandsOpenState;
         ReserveSpaceCheck.IsChecked = settings.ReserveSpaceAtTop;
+        DownloadMonitoringCheck.IsChecked = settings.IsFeatureAvailable(BuiltInFeatures.Downloads);
+        DownloadsFolderText.Text = string.IsNullOrWhiteSpace(settings.DownloadsFolder)
+            ? "No folder selected"
+            : settings.DownloadsFolder;
 
         if (settings.HoverMode == HoverMode.LongHoverOpen)
             LongHoverRadio.IsChecked = true;
@@ -164,6 +172,40 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
     private void OnManageFeaturesClick(object sender, RoutedEventArgs e)
     {
         ManageFeaturesRequested?.Invoke();
+    }
+
+    private void OnDownloadMonitoringChanged(object sender, RoutedEventArgs e)
+    {
+        if (_isLoading || _settings == null || _settingsStore == null) return;
+
+        _settings.SetFeatureAvailable(
+            BuiltInFeatures.Downloads,
+            DownloadMonitoringCheck.IsChecked == true);
+        _settingsStore.Save(_settings);
+        DownloadSettingsChanged?.Invoke(_settings);
+    }
+
+    private void OnChooseDownloadsFolder(object sender, RoutedEventArgs e)
+    {
+        if (_settings == null || _settingsStore == null) return;
+
+        using var dialog = new Forms.FolderBrowserDialog
+        {
+            Description = "Choose the folder WinNotch should monitor for downloads",
+            UseDescriptionForTitle = true,
+            ShowNewFolderButton = false,
+            SelectedPath = _settings.DownloadsFolder ?? string.Empty
+        };
+        if (dialog.ShowDialog() != Forms.DialogResult.OK) return;
+
+        _settings.DownloadsFolder = dialog.SelectedPath;
+        _settings.SetFeatureAvailable(BuiltInFeatures.Downloads, true);
+        _isLoading = true;
+        DownloadMonitoringCheck.IsChecked = true;
+        DownloadsFolderText.Text = dialog.SelectedPath;
+        _isLoading = false;
+        _settingsStore.Save(_settings);
+        DownloadSettingsChanged?.Invoke(_settings);
     }
 
     private async void OnCheckUpdateClick(object sender, RoutedEventArgs e)

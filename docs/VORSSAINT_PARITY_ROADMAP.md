@@ -71,6 +71,12 @@ Monitor user-selected download folders and integrate Windows notification
 listener access. Provide history, dismiss/open behavior where supported, and
 clear consent states.
 
+Status: in progress. Download monitoring is implemented with explicit folder
+selection, browser temporary-file recognition, stable-file completion,
+top/vertical/compact island surfaces, persistence, and live lifecycle toggling.
+Windows notification-listener permission and inbox behavior remain in this
+module.
+
 ### 4. Music expansion and AI agent activity
 
 Add lyric providers with consent, playback queue adapters, source selection,

@@ -27,6 +27,7 @@ public sealed class JsonAppSettingsStoreTests
         expected.TimerSession.Initialized = true;
         expected.TimerSession.Phase = TimerPhase.Stopwatch;
         expected.TimerSession.StoredValue = TimeSpan.FromSeconds(90);
+        expected.DownloadsFolder = @"D:\Downloads";
 
         store.Save(expected);
         var actual = store.Load();
@@ -39,6 +40,7 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal(42, actual.TimerPreferences.FocusMinutes);
         Assert.Equal(TimerPhase.Stopwatch, actual.TimerSession.Phase);
         Assert.Equal(TimeSpan.FromSeconds(90), actual.TimerSession.StoredValue);
+        Assert.Equal(@"D:\Downloads", actual.DownloadsFolder);
     }
 
     [Fact]

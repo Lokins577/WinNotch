@@ -47,6 +47,8 @@ public partial class NotchWindow
         };
         InlineSettings.ManageFeaturesRequested += OpenFeatureCatalog;
         VerticalInlineSettings.ManageFeaturesRequested += OpenFeatureCatalog;
+        InlineSettings.DownloadSettingsChanged += ApplyDownloadSettingsAsync;
+        VerticalInlineSettings.DownloadSettingsChanged += ApplyDownloadSettingsAsync;
 
         // Toggle clock/live-activity visibility based on music state
         _mediaService.MediaInfo.PropertyChanged += (_, e) =>
@@ -74,6 +76,17 @@ public partial class NotchWindow
             TimerOpenView.Bind(timer);
             VerticalTimerView.Bind(timer, compact: true);
             TimerCompact.Bind(timer);
+        }
+
+        // Download folder live activity
+        bool downloadsAvailable = _settings.IsFeatureAvailable(BuiltInFeatures.Downloads);
+        DownloadOpenView.Visibility = downloadsAvailable ? Visibility.Visible : Visibility.Collapsed;
+        VerticalDownloadView.Visibility = downloadsAvailable ? Visibility.Visible : Visibility.Collapsed;
+        if (downloadsAvailable && _services.Downloads is { } downloads)
+        {
+            DownloadOpenView.Bind(downloads);
+            VerticalDownloadView.Bind(downloads, compact: true);
+            DownloadCompact.Bind(downloads);
         }
 
         // Calendar

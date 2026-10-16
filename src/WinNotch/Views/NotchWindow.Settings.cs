@@ -10,7 +10,7 @@ public partial class NotchWindow
     {
         var window = new FeatureCatalogWindow(
             _settings,
-            new[] { BuiltInFeatures.Timers.Id },
+            new[] { BuiltInFeatures.Timers.Id, BuiltInFeatures.Downloads.Id },
             SetFeatureAvailabilityAsync)
         {
             Owner = this,
@@ -23,7 +23,8 @@ public partial class NotchWindow
 
     private async Task SetFeatureAvailabilityAsync(FeatureDescriptor feature, bool enabled)
     {
-        if (feature.Id != BuiltInFeatures.Timers.Id)
+        if (feature.Id != BuiltInFeatures.Timers.Id
+            && feature.Id != BuiltInFeatures.Downloads.Id)
             throw new InvalidOperationException($"Feature {feature.Id} is not live-toggleable yet.");
 
         bool previous = _settings.IsFeatureAvailable(feature);
@@ -43,20 +44,63 @@ public partial class NotchWindow
             throw;
         }
 
-        TimerOpenView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
-        VerticalTimerView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
-        if (enabled && _services.Timer is { } timer)
+        if (feature.Id == BuiltInFeatures.Timers.Id)
         {
-            TimerOpenView.Bind(timer);
-            VerticalTimerView.Bind(timer, compact: true);
-            TimerCompact.Bind(timer);
+            TimerOpenView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+            VerticalTimerView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+            if (enabled && _services.Timer is { } timer)
+            {
+                TimerOpenView.Bind(timer);
+                VerticalTimerView.Bind(timer, compact: true);
+                TimerCompact.Bind(timer);
+            }
+            else
+            {
+                TimerCompact.Visibility = Visibility.Collapsed;
+            }
         }
-        else
+        else if (feature.Id == BuiltInFeatures.Downloads.Id)
         {
-            TimerCompact.Visibility = Visibility.Collapsed;
+            BindDownloadViews(enabled);
         }
 
         RefreshPluginHostLayout();
+    }
+
+    private async void ApplyDownloadSettingsAsync(AppSettings settings)
+    {
+        try
+        {
+            _settings = settings;
+            bool enabled = settings.IsFeatureAvailable(BuiltInFeatures.Downloads);
+            await _services.FeatureRuntime.SetEnabledAsync(BuiltInFeatures.Downloads.Id, enabled);
+            if (enabled && _services.Downloads is { } downloads)
+                downloads.Reconfigure(settings.DownloadsFolder);
+            BindDownloadViews(enabled);
+            RefreshPluginHostLayout();
+            SettingsUpdatedByUser?.Invoke(settings);
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(exception.Message, "Download monitoring failed",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void BindDownloadViews(bool enabled)
+    {
+        DownloadOpenView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        VerticalDownloadView.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        if (enabled && _services.Downloads is { } downloads)
+        {
+            DownloadOpenView.Bind(downloads);
+            VerticalDownloadView.Bind(downloads, compact: true);
+            DownloadCompact.Bind(downloads);
+        }
+        else
+        {
+            DownloadCompact.Visibility = Visibility.Collapsed;
+        }
     }
 
     public void OpenSettings()

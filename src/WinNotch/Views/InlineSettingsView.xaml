@@ -249,6 +249,23 @@
                                TextDecorations="Underline"/>
                 </Button>
 
+                <!-- Downloads -->
+                <TextBlock Text="DOWNLOADS" Style="{StaticResource SectionHeader}"/>
+                <Grid Height="28" Margin="0,2">
+                    <TextBlock Text="Download live activity" Style="{StaticResource SettingLabel}"/>
+                    <CheckBox x:Name="DownloadMonitoringCheck" Style="{StaticResource ToggleSwitch}"
+                              HorizontalAlignment="Right" VerticalAlignment="Center"
+                              Checked="OnDownloadMonitoringChanged" Unchecked="OnDownloadMonitoringChanged"/>
+                </Grid>
+                <Button Click="OnChooseDownloadsFolder" HorizontalAlignment="Left" Cursor="Hand"
+                        Background="Transparent" BorderThickness="0" Padding="0" Margin="0,1,0,2">
+                    <TextBlock Text="Choose folder" Foreground="{DynamicResource TextSubtleBrush}"
+                               FontSize="11" TextDecorations="Underline"/>
+                </Button>
+                <TextBlock x:Name="DownloadsFolderText" Text="No folder selected"
+                           Foreground="{DynamicResource TextFaintBrush}" FontSize="9"
+                           TextTrimming="CharacterEllipsis" Margin="0,0,0,4"/>
+
                 <!-- Plugins -->
                 <TextBlock Text="PLUGINS" Style="{StaticResource SectionHeader}"/>
 

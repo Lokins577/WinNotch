@@ -25,6 +25,7 @@ public sealed class NotchServices : IDisposable
     public FullscreenService Fullscreen { get; } = new();
     public WebcamService Webcam { get; } = new();
     public TimerFeatureService? Timer { get; private set; }
+    public DownloadMonitorService? Downloads { get; private set; }
     public FeatureRuntime FeatureRuntime { get; }
 
     private readonly AppSettings _settings;
@@ -40,6 +41,7 @@ public sealed class NotchServices : IDisposable
         FeatureRuntime.Register(BuiltInFeatures.Island.Id,
             () => new NoOpFeatureModule(BuiltInFeatures.Island.Id));
         FeatureRuntime.Register(BuiltInFeatures.Timers.Id, CreateTimerModule);
+        FeatureRuntime.Register(BuiltInFeatures.Downloads.Id, CreateDownloadsModule);
     }
 
     /// <summary>
@@ -65,6 +67,9 @@ public sealed class NotchServices : IDisposable
         await FeatureRuntime.SetEnabledAsync(
             BuiltInFeatures.Timers.Id,
             _settings.IsFeatureAvailable(BuiltInFeatures.Timers));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.Downloads.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.Downloads));
     }
 
     public void Dispose()
@@ -84,6 +89,12 @@ public sealed class NotchServices : IDisposable
     {
         Timer = new TimerFeatureService(_settings, _settingsStore);
         return Timer;
+    }
+
+    private IFeatureModule CreateDownloadsModule()
+    {
+        Downloads = new DownloadMonitorService(() => _settings.DownloadsFolder);
+        return Downloads;
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule
