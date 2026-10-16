@@ -146,6 +146,15 @@ Add CPU, GPU, memory, network, disk, power, battery health, connected devices,
 history, process attribution, and sustained-condition alerts. Sensor providers
 must report confidence and availability.
 
+Status: implemented. The optional `Ctrl+Alt+M` dashboard samples direct Windows
+CPU/memory APIs, adapter traffic, fixed-drive capacity, Windows disk/GPU
+performance providers, battery state and health, ACPI thermal zones, selected
+connected-device classes, and per-process CPU/memory/I/O. It keeps bounded
+in-memory history and raises persisted-threshold tray alerts only after a
+sustained interval. Each metric exposes Available, Estimated, Unavailable, or
+Unsupported state; network-per-process and CPU-package-temperature claims are
+explicitly withheld without a supported ETW/driver or sensor provider.
+
 ### 9. Audio control
 
 Implement per-session volume, process loopback, device switching and priority,

@@ -1305,6 +1305,7 @@ public partial class NotchWindow : Window
         DetachQuickPanel();
         DetachRadialMenu();
         DetachWindowManagement();
+        DetachSystemMonitor();
         _scratchpadWindow?.Close();
         _globalHotkey?.Dispose();
         base.OnClosed(e);

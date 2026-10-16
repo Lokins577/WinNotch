@@ -4,6 +4,7 @@ using WinNotch.Timers;
 using WinNotch.Clipboard;
 using WinNotch.CommandBar;
 using WinNotch.QuickTools;
+using WinNotch.SystemMonitoring;
 
 namespace WinNotch.Models;
 
@@ -43,6 +44,7 @@ public class AppSettings
     public List<CommandSnippet> CommandSnippets { get; set; } = [];
     public List<SavedCommandScript> CommandScripts { get; set; } = [];
     public RadialMenuConfiguration RadialMenu { get; set; } = RadialMenuConfiguration.CreateDefault();
+    public SystemMonitorPreferences SystemMonitorPreferences { get; set; } = new();
 
     // General
     public bool StartOnBoot { get; set; }

@@ -1,0 +1,95 @@
+<Window x:Class="WinNotch.Views.SystemMonitorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:WinNotch.Views"
+        Title="System Monitor" Width="960" Height="680" MinWidth="820" MinHeight="580"
+        WindowStartupLocation="CenterScreen" Background="{DynamicResource WindowBackgroundBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="170"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <TextBlock Text="System Monitor" FontSize="20" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="Ctrl+Alt+M" VerticalAlignment="Center" Margin="0,0,12,0"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                <Button Content="Alert settings" Click="OnSettings" Padding="10,4"/>
+            </StackPanel>
+        </Grid>
+
+        <UniformGrid Grid.Row="1" Columns="5" Margin="0,12,0,12">
+            <Border Margin="3" Padding="10" Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="8">
+                <StackPanel><TextBlock Text="CPU"/><TextBlock x:Name="CpuText" FontSize="20" FontWeight="SemiBold"/></StackPanel>
+            </Border>
+            <Border Margin="3" Padding="10" Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="8">
+                <StackPanel><TextBlock Text="GPU"/><TextBlock x:Name="GpuText" FontSize="20" FontWeight="SemiBold"/></StackPanel>
+            </Border>
+            <Border Margin="3" Padding="10" Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="8">
+                <StackPanel><TextBlock Text="Memory"/><TextBlock x:Name="MemoryText" FontSize="20" FontWeight="SemiBold"/></StackPanel>
+            </Border>
+            <Border Margin="3" Padding="10" Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="8">
+                <StackPanel><TextBlock Text="Network ↓ / ↑"/><TextBlock x:Name="NetworkText" FontSize="16" FontWeight="SemiBold"/></StackPanel>
+            </Border>
+            <Border Margin="3" Padding="10" Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="8">
+                <StackPanel><TextBlock Text="Disk rate / used"/><TextBlock x:Name="DiskText" FontSize="16" FontWeight="SemiBold"/></StackPanel>
+            </Border>
+            <Border Margin="3" Padding="10" Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="8">
+                <StackPanel><TextBlock Text="Power"/><TextBlock x:Name="PowerText" FontSize="18" FontWeight="SemiBold"/></StackPanel>
+            </Border>
+            <Border Margin="3" Padding="10" Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="8">
+                <StackPanel><TextBlock Text="Battery"/><TextBlock x:Name="BatteryText" FontSize="18" FontWeight="SemiBold"/></StackPanel>
+            </Border>
+            <Border Margin="3" Padding="10" Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="8">
+                <StackPanel><TextBlock Text="Battery health"/><TextBlock x:Name="BatteryHealthText" FontSize="18" FontWeight="SemiBold"/></StackPanel>
+            </Border>
+            <Border Margin="3" Padding="10" Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="8">
+                <StackPanel><TextBlock Text="Temperature"/><TextBlock x:Name="TemperatureText" FontSize="18" FontWeight="SemiBold"/></StackPanel>
+            </Border>
+            <Border Margin="3" Padding="10" Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="8">
+                <StackPanel><TextBlock Text="Device sample"/><TextBlock x:Name="DeviceCountText" FontSize="18" FontWeight="SemiBold"/></StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+            <Border Margin="3" Padding="8" Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="8">
+                <Grid><TextBlock Text="CPU history"/><local:MetricHistoryChart x:Name="CpuChart" Margin="0,24,0,0"/></Grid>
+            </Border>
+            <Border Grid.Column="1" Margin="3" Padding="8" Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="8">
+                <Grid><TextBlock Text="Memory history"/><local:MetricHistoryChart x:Name="MemoryChart" Margin="0,24,0,0"/></Grid>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <GroupBox Header="Process attribution (CPU / memory / process I/O)">
+                <ListView x:Name="ProcessList">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Process" DisplayMemberBinding="{Binding Name}" Width="170"/>
+                            <GridViewColumn Header="CPU" DisplayMemberBinding="{Binding Cpu}" Width="75"/>
+                            <GridViewColumn Header="Memory" DisplayMemberBinding="{Binding Memory}" Width="95"/>
+                            <GridViewColumn Header="I/O" DisplayMemberBinding="{Binding Io}" Width="95"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </GroupBox>
+            <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                <GroupBox Header="Devices" Height="150">
+                    <ListBox x:Name="DeviceList"/>
+                </GroupBox>
+                <Border x:Name="AlertBanner" Margin="0,10,0,0" Padding="10"
+                        Background="#55D94A4A" CornerRadius="8" Visibility="Collapsed">
+                    <TextBlock x:Name="AlertText" TextWrapping="Wrap"/>
+                </Border>
+                <TextBlock x:Name="StatusText" Margin="0,10,0,0" TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

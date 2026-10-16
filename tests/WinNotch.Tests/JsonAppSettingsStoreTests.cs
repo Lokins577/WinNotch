@@ -57,6 +57,9 @@ public sealed class JsonAppSettingsStoreTests
                 Target = "https://example.com/docs"
             }
         ];
+        expected.SystemMonitorPreferences.SampleIntervalSeconds = 5;
+        expected.SystemMonitorPreferences.SustainedSeconds = 30;
+        expected.SystemMonitorPreferences.CpuAlertPercent = 85;
 
         store.Save(expected);
         var actual = store.Load();
@@ -84,6 +87,9 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal("Docs", radial.Label);
         Assert.Equal(RadialActionKind.Url, radial.Kind);
         Assert.Equal("https://example.com/docs", radial.Target);
+        Assert.Equal(5, actual.SystemMonitorPreferences.SampleIntervalSeconds);
+        Assert.Equal(30, actual.SystemMonitorPreferences.SustainedSeconds);
+        Assert.Equal(85, actual.SystemMonitorPreferences.CpuAlertPercent);
     }
 
     [Fact]

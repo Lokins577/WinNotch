@@ -125,6 +125,13 @@ placement restore points, monitor movement, bounded `WM_CLOSE` requests, and
 DWM thumbnail hosting. The WPF switcher depends only on the Core backend
 contract, so construction tests do not inspect or manipulate real windows.
 
+System Monitor history, thresholds, and sustained-alert state machines live in
+Core. The Windows collector isolates direct system APIs, network counters, WMI
+performance providers, firmware sensors, process accounting, and device
+enumeration. Each metric reports capability confidence instead of substituting
+zero when a provider is absent. The sampling loop belongs to a lifecycle module
+and is cancelled when the feature is disabled.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New
@@ -152,6 +159,7 @@ new work does not return to a single multi-thousand-line file:
 - `NotchWindow.QuickPanel.cs`: Quick Panel and Scratchpad launch surfaces.
 - `NotchWindow.RadialMenu.cs`: radial action dispatch and settings.
 - `NotchWindow.WindowManagement.cs`: window switcher lifecycle.
+- `NotchWindow.SystemMonitor.cs`: monitor dashboard and alert dispatch.
 
 ## Dependency rules
 

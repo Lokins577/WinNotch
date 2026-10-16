@@ -9,6 +9,7 @@ using WinNotch.Platform.Windows.Settings;
 using WinNotch.Services;
 using WinNotch.Settings;
 using WinNotch.Views;
+using WinNotch.SystemMonitoring;
 using Forms = System.Windows.Forms;
 using DrawColor = System.Drawing.Color;
 
@@ -120,6 +121,7 @@ public partial class App : Application
 
     private void WireIslandEvents(NotchWindow window)
     {
+        window.SystemMonitorAlertRaised += alert => Dispatcher.BeginInvoke(() => ShowSystemMonitorAlert(alert));
         // Settings changed on one island → apply everywhere + re-evaluate islands
         window.SettingsUpdatedByUser += settings =>
         {
@@ -144,6 +146,23 @@ public partial class App : Application
                     other.ApplySyncedState(state);
             }
         };
+    }
+
+    private void ShowSystemMonitorAlert(SystemMetricAlert alert)
+    {
+        if (_trayIcon == null) return;
+        string name = alert.Kind switch
+        {
+            SystemMetricKind.CpuUsage => "CPU usage",
+            SystemMetricKind.MemoryUsage => "Memory usage",
+            SystemMetricKind.GpuUsage => "GPU usage",
+            _ => alert.Kind.ToString()
+        };
+        _trayIcon.ShowBalloonTip(
+            5000,
+            $"Sustained {name}",
+            $"{alert.Value:0.#}% has remained above {alert.Threshold:0.#}%.",
+            Forms.ToolTipIcon.Warning);
     }
 
     private IEnumerable<NotchWindow> AllIslands()

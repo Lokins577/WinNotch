@@ -21,7 +21,8 @@ public partial class NotchWindow
                 BuiltInFeatures.QuickPanel.Id,
                 BuiltInFeatures.Scratchpad.Id,
                 BuiltInFeatures.RadialMenu.Id,
-                BuiltInFeatures.WindowManagement.Id
+                BuiltInFeatures.WindowManagement.Id,
+                BuiltInFeatures.SystemMonitor.Id
             },
             SetFeatureAvailabilityAsync)
         {
@@ -44,7 +45,8 @@ public partial class NotchWindow
             && feature.Id != BuiltInFeatures.QuickPanel.Id
             && feature.Id != BuiltInFeatures.Scratchpad.Id
             && feature.Id != BuiltInFeatures.RadialMenu.Id
-            && feature.Id != BuiltInFeatures.WindowManagement.Id)
+            && feature.Id != BuiltInFeatures.WindowManagement.Id
+            && feature.Id != BuiltInFeatures.SystemMonitor.Id)
             throw new InvalidOperationException($"Feature {feature.Id} is not live-toggleable yet.");
 
         bool previous = _settings.IsFeatureAvailable(feature);
@@ -119,6 +121,11 @@ public partial class NotchWindow
         {
             if (enabled) AttachWindowManagement();
             else DetachWindowManagement();
+        }
+        else if (feature.Id == BuiltInFeatures.SystemMonitor.Id)
+        {
+            if (enabled) AttachSystemMonitor();
+            else DetachSystemMonitor();
         }
 
         RefreshPluginHostLayout();

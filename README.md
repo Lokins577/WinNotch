@@ -16,6 +16,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Plugin development guide: [PLUGIN_DEVELOPMENT.md](PLUGIN_DEVELOPMENT.md)
 - Architecture guide: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Window management guide: [docs/WINDOW_MANAGEMENT.md](docs/WINDOW_MANAGEMENT.md)
+- System monitor guide: [docs/SYSTEM_MONITOR.md](docs/SYSTEM_MONITOR.md)
 
 ## Features
 
@@ -35,6 +36,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Ctrl+Alt+Q Quick Panel and persistent multi-tab Markdown Scratchpad
 - Configurable Ctrl+Alt+R radial menu for built-in actions, saved paths, and HTTP(S) links
 - Ctrl+Alt+W window switcher with live previews, layouts, restore, monitor movement, and safe close requests
+- Ctrl+Alt+M system monitor with history, process attribution, provider confidence, and sustained alerts
 - Volume and brightness HUDs
 - Calendar, battery, file shelf, and webcam mirror
 - Light, dark, and auto theme support

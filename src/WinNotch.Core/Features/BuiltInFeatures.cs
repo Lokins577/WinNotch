@@ -101,9 +101,11 @@ public static class BuiltInFeatures
         EnabledByDefault: false,
         Maturity: FeatureMaturity.Available);
 
-    public static readonly FeatureDescriptor SystemMonitor = Planned(
+    public static readonly FeatureDescriptor SystemMonitor = new(
         "monitor.system", "System monitor", FeatureGroup.Monitor,
-        "Resource metrics, history, process attribution, sensors, and alerts.");
+        "Resource metrics, history, process attribution, sensors, and sustained alerts.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Available);
 
     public static readonly FeatureDescriptor AudioMixer = Planned(
         "sound.mixer", "Per-app audio", FeatureGroup.Sound,

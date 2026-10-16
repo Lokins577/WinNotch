@@ -3,6 +3,7 @@ using System.Text.Json;
 using WinNotch.Models;
 using WinNotch.Settings;
 using WinNotch.QuickTools;
+using WinNotch.SystemMonitoring;
 
 namespace WinNotch.Platform.Windows.Settings;
 
@@ -56,6 +57,8 @@ public sealed class JsonAppSettingsStore : IAppSettingsStore
 
             settings.RadialMenu ??= RadialMenuConfiguration.CreateDefault();
             settings.RadialMenu.Normalize();
+            settings.SystemMonitorPreferences ??= new SystemMonitorPreferences();
+            settings.SystemMonitorPreferences.Normalize();
 
             return settings;
         }

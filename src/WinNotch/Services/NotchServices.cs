@@ -9,6 +9,7 @@ using WinNotch.Platform.Windows.Clipboard;
 using WinNotch.Platform.Windows.CommandBar;
 using WinNotch.CommandBar;
 using WinNotch.Platform.Windows.Scratchpad;
+using WinNotch.Platform.Windows.SystemMonitoring;
 
 namespace WinNotch.Services;
 
@@ -41,6 +42,7 @@ public sealed class NotchServices : IDisposable
     public ScratchpadService? Scratchpad { get; private set; }
     public RadialMenuFeatureService? RadialMenu { get; private set; }
     public WindowManagementFeatureService? WindowManager { get; private set; }
+    public SystemMonitorFeatureService? SystemMonitor { get; private set; }
     public FeatureRuntime FeatureRuntime { get; }
 
     private readonly AppSettings _settings;
@@ -74,6 +76,7 @@ public sealed class NotchServices : IDisposable
         FeatureRuntime.Register(BuiltInFeatures.Scratchpad.Id, CreateScratchpadModule);
         FeatureRuntime.Register(BuiltInFeatures.RadialMenu.Id, CreateRadialMenuModule);
         FeatureRuntime.Register(BuiltInFeatures.WindowManagement.Id, CreateWindowManagementModule);
+        FeatureRuntime.Register(BuiltInFeatures.SystemMonitor.Id, CreateSystemMonitorModule);
     }
 
     /// <summary>
@@ -126,6 +129,9 @@ public sealed class NotchServices : IDisposable
         await FeatureRuntime.SetEnabledAsync(
             BuiltInFeatures.WindowManagement.Id,
             _settings.IsFeatureAvailable(BuiltInFeatures.WindowManagement));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.SystemMonitor.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.SystemMonitor));
     }
 
     public void Dispose()
@@ -227,6 +233,14 @@ public sealed class NotchServices : IDisposable
     {
         WindowManager = new WindowManagementFeatureService();
         return WindowManager;
+    }
+
+    private IFeatureModule CreateSystemMonitorModule()
+    {
+        SystemMonitor = new SystemMonitorFeatureService(
+            new WindowsSystemMetricsCollector(),
+            _settings.SystemMonitorPreferences);
+        return SystemMonitor;
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule
