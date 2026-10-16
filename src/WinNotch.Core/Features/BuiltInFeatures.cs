@@ -95,9 +95,11 @@ public static class BuiltInFeatures
         EnabledByDefault: false,
         Maturity: FeatureMaturity.Available);
 
-    public static readonly FeatureDescriptor WindowManagement = Planned(
+    public static readonly FeatureDescriptor WindowManagement = new(
         "windows.management", "Window management", FeatureGroup.Windows,
-        "Switcher, layouts, previews, restore, and multi-monitor movement.");
+        "Switcher, live previews, layouts, restore, and multi-monitor movement.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Available);
 
     public static readonly FeatureDescriptor SystemMonitor = Planned(
         "monitor.system", "System monitor", FeatureGroup.Monitor,

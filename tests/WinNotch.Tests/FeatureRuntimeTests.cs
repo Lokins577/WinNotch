@@ -63,7 +63,7 @@ public sealed class FeatureRuntimeTests
         var runtime = new FeatureRuntime(BuiltInFeatures.Catalog);
 
         Assert.Throws<InvalidOperationException>(() =>
-            runtime.Register(BuiltInFeatures.WindowManagement.Id, () => new FakeModule(BuiltInFeatures.WindowManagement.Id)));
+            runtime.Register(BuiltInFeatures.SystemMonitor.Id, () => new FakeModule(BuiltInFeatures.SystemMonitor.Id)));
     }
 
     [Fact]

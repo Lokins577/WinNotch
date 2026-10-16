@@ -119,6 +119,12 @@ owns the `Ctrl+Alt+R` hotkey, while the WPF composition root maps the typed
 actions to application operations. External actions require a persisted,
 existing absolute path or an HTTP(S) URL; menu labels never become shell text.
 
+Window layout geometry and management contracts live in Core. The Windows
+backend owns top-level window enumeration, documented virtual-desktop queries,
+placement restore points, monitor movement, bounded `WM_CLOSE` requests, and
+DWM thumbnail hosting. The WPF switcher depends only on the Core backend
+contract, so construction tests do not inspect or manipulate real windows.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New
@@ -142,6 +148,10 @@ new work does not return to a single multi-thousand-line file:
 - `NotchWindow.SideContent.cs`: vertical-dock media content.
 - `NotchWindow.Shelf.cs`: file drag-and-drop behavior.
 - `NotchWindow.Effects.cs`: Liquid Glass capture and visual effects.
+- `NotchWindow.CommandBar.cs`: Command Bar window lifecycle.
+- `NotchWindow.QuickPanel.cs`: Quick Panel and Scratchpad launch surfaces.
+- `NotchWindow.RadialMenu.cs`: radial action dispatch and settings.
+- `NotchWindow.WindowManagement.cs`: window switcher lifecycle.
 
 ## Dependency rules
 

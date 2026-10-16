@@ -5,15 +5,16 @@ namespace WinNotch.QuickTools;
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum RadialActionKind
 {
-    CommandBar,
-    Scratchpad,
-    Features,
-    ToggleMute,
-    ToggleTheme,
-    Lock,
-    Application,
-    File,
-    Url
+    CommandBar = 0,
+    Scratchpad = 1,
+    Features = 2,
+    ToggleMute = 3,
+    ToggleTheme = 4,
+    Lock = 5,
+    Application = 6,
+    File = 7,
+    Url = 8,
+    WindowSwitcher = 9
 }
 
 public sealed class RadialMenuItem

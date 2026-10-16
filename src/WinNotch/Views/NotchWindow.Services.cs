@@ -16,6 +16,7 @@ public partial class NotchWindow
         AttachCommandBar();
         AttachQuickPanel();
         AttachRadialMenu();
+        AttachWindowManagement();
 
         // Bind views to services
         MusicPlayer.Bind(_mediaService, _services.Lyrics);

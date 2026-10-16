@@ -131,6 +131,15 @@ Implement window switching with previews, layouts, restore, multi-monitor
 movement, taskbar previews, close/quit policy, and virtual-desktop-aware
 behavior where supported.
 
+Status: implemented. The optional `Ctrl+Alt+W` switcher enumerates top-level
+application windows, filters to the current virtual desktop through the public
+`IVirtualDesktopManager`, and renders live DWM thumbnails. It supports halves,
+quarters, thirds, maximize, session restore, relative multi-monitor movement,
+and foreground activation. Close and confirmed quit actions send bounded
+`WM_CLOSE` requests and never terminate a process. Elevated windows and apps
+that own their positioning may reject operations; WinNotch reports that boundary
+without elevation or undocumented shell APIs.
+
 ### 8. System monitor and alerts
 
 Add CPU, GPU, memory, network, disk, power, battery health, connected devices,
