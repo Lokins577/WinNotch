@@ -21,6 +21,7 @@ public partial class NotchWindow
         AttachAudioMixer();
         AttachCaptureTool();
         AttachMediaTools();
+        AttachAppManagement();
 
         // Bind views to services
         MusicPlayer.Bind(_mediaService, _services.Lyrics);

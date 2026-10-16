@@ -20,6 +20,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Audio control guide: [docs/AUDIO_CONTROL.md](docs/AUDIO_CONTROL.md)
 - Capture and OCR guide: [docs/CAPTURE_AND_OCR.md](docs/CAPTURE_AND_OCR.md)
 - Recording and media tools guide: [docs/RECORDING_MEDIA_TOOLS.md](docs/RECORDING_MEDIA_TOOLS.md)
+- Application management guide: [docs/APP_MANAGEMENT.md](docs/APP_MANAGEMENT.md)
 
 ## Features
 
@@ -43,6 +44,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Ctrl+Alt+A per-app audio mixer, microphone controls, visualizer-device priority, and process spectrum analysis
 - Ctrl+Alt+S region/display/window/scroll capture with annotation, redaction, offline OCR/QR, color sampling, and pinning
 - Ctrl+Alt+V screen recording with separate system/mic tracks, non-destructive edits, GIF/MP4 export, and batch image tools
+- Ctrl+Alt+G reviewed WinGet upgrades, installer/uninstaller handoff, recoverable cleanup, port inspection, and safe process actions
 - Volume and brightness HUDs
 - Calendar, battery, file shelf, and webcam mirror
 - Light, dark, and auto theme support

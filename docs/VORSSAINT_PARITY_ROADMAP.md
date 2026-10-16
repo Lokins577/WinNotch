@@ -205,6 +205,14 @@ uninstaller with review, messaging-download retention, port inspection, and
 safe process termination. Destructive actions require previews and recoverable
 defaults.
 
+Status: implemented. The optional `Ctrl+Alt+G` surface previews WinGet
+upgrades, inventories registered uninstallers, validates installer handoff,
+scans old temporary/browser/messaging-download files, inspects TCP/UDP v4/v6
+owners, and offers cooperative or explicitly confirmed process termination.
+Upgrades and uninstallers are exact selected handoffs; cleanup revalidates every
+file under configured roots and uses the Recycle Bin; force termination requires
+typing the process name and refuses WinNotch plus protected Windows processes.
+
 ### 13. Input enhancements
 
 Add scroll direction and shaping, focus-follows-mouse, acceleration controls,

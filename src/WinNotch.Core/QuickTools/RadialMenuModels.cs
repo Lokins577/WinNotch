@@ -18,7 +18,8 @@ public enum RadialActionKind
     SystemMonitor = 10,
     AudioMixer = 11,
     Capture = 12,
-    MediaTools = 13
+    MediaTools = 13,
+    AppManagement = 14
 }
 
 public sealed class RadialMenuItem

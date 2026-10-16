@@ -150,6 +150,12 @@ microphone tracks, WPF GIF encoding, Windows `MediaComposition` MP4 rendering,
 and bitmap conversion. Zoom, blur, and watermark effects are rendered from a
 non-destructive plan into generated temporary frames.
 
+Application-management models, WinGet table parsing, retention settings, and
+process-protection policy live in Core. The Windows layer owns registry
+inventory, exact WinGet handoff, bounded cache scanning, Recycle Bin operations,
+TCP owner tables, installer/uninstaller launch, and process actions. The WPF
+surface separates discovery from every state-changing confirmation.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New
@@ -181,6 +187,7 @@ new work does not return to a single multi-thousand-line file:
 - `NotchWindow.AudioMixer.cs`: audio control surface lifecycle.
 - `NotchWindow.Capture.cs`: capture launcher lifecycle.
 - `NotchWindow.MediaTools.cs`: recording and media-tool lifecycle.
+- `NotchWindow.AppManagement.cs`: reviewed package and process tooling.
 
 ## Dependency rules
 

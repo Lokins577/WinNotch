@@ -67,6 +67,9 @@ public sealed class JsonAppSettingsStoreTests
         expected.CapturePreferences.CopyAfterCapture = false;
         expected.RecordingPreferences.FramesPerSecond = 12;
         expected.RecordingPreferences.CaptureMicrophone = true;
+        expected.AppManagementPreferences.TemporaryFileMinimumAgeDays = 14;
+        expected.AppManagementPreferences.MessagingRetentionDays = 60;
+        expected.AppManagementPreferences.MessagingDownloadFolders.Add(@"D:\Chat Downloads");
 
         store.Save(expected);
         var actual = store.Load();
@@ -104,6 +107,9 @@ public sealed class JsonAppSettingsStoreTests
         Assert.False(actual.CapturePreferences.CopyAfterCapture);
         Assert.Equal(12, actual.RecordingPreferences.FramesPerSecond);
         Assert.True(actual.RecordingPreferences.CaptureMicrophone);
+        Assert.Equal(14, actual.AppManagementPreferences.TemporaryFileMinimumAgeDays);
+        Assert.Equal(60, actual.AppManagementPreferences.MessagingRetentionDays);
+        Assert.Contains(@"D:\Chat Downloads", actual.AppManagementPreferences.MessagingDownloadFolders);
     }
 
     [Fact]

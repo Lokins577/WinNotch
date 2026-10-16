@@ -125,9 +125,11 @@ public static class BuiltInFeatures
         EnabledByDefault: false,
         Maturity: FeatureMaturity.Available);
 
-    public static readonly FeatureDescriptor AppManagement = Planned(
+    public static readonly FeatureDescriptor AppManagement = new(
         "tools.app-management", "Application management", FeatureGroup.Tools,
-        "Updates, packages, cleaner, uninstaller, ports, and process tools.");
+        "Reviewed updates, installers, uninstallers, cleanup, ports, and safe process actions.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Available);
 
     public static readonly FeatureDescriptor InputEnhancements = Planned(
         "input.enhancements", "Input enhancements", FeatureGroup.Input,

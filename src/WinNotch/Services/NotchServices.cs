@@ -47,6 +47,7 @@ public sealed class NotchServices : IDisposable
     public AudioMixerFeatureService? AudioMixer { get; private set; }
     public CaptureFeatureService? Capture { get; private set; }
     public MediaToolsFeatureService? MediaTools { get; private set; }
+    public AppManagementFeatureService? AppManagement { get; private set; }
     public FeatureRuntime FeatureRuntime { get; }
 
     private readonly AppSettings _settings;
@@ -84,6 +85,7 @@ public sealed class NotchServices : IDisposable
         FeatureRuntime.Register(BuiltInFeatures.AudioMixer.Id, CreateAudioMixerModule);
         FeatureRuntime.Register(BuiltInFeatures.Capture.Id, CreateCaptureModule);
         FeatureRuntime.Register(BuiltInFeatures.MediaTools.Id, CreateMediaToolsModule);
+        FeatureRuntime.Register(BuiltInFeatures.AppManagement.Id, CreateAppManagementModule);
     }
 
     /// <summary>
@@ -152,6 +154,9 @@ public sealed class NotchServices : IDisposable
         await FeatureRuntime.SetEnabledAsync(
             BuiltInFeatures.MediaTools.Id,
             _settings.IsFeatureAvailable(BuiltInFeatures.MediaTools));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.AppManagement.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.AppManagement));
     }
 
     public void Dispose()
@@ -279,6 +284,12 @@ public sealed class NotchServices : IDisposable
     {
         MediaTools = new MediaToolsFeatureService();
         return MediaTools;
+    }
+
+    private IFeatureModule CreateAppManagementModule()
+    {
+        AppManagement = new AppManagementFeatureService(_settings.AppManagementPreferences);
+        return AppManagement;
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule
