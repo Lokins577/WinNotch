@@ -1,11 +1,9 @@
 # WinNotch Plugin SDK
 
-`WinNotch.PluginSdk` is the compile-time package for building WinNotch plugins against the official `WinNotch` assembly.
+`WinNotch.PluginSdk` is the standalone contract package for building WinNotch plugins.
 
 ## What it contains
 
-- The real `WinNotch.dll` reference assembly used by the app
-- XML documentation for the plugin-facing APIs when available
 - The public plugin contracts such as:
   - `IPlugin`
   - `IUIPlugin`
@@ -14,6 +12,7 @@
   - `IConfigurablePlugin`
   - `PluginBase`
   - `PluginManifest`
+- Narrow host capabilities for theme, battery, storage, configuration, and logging
 
 ## Install from GitHub Packages
 
@@ -32,11 +31,11 @@ Your personal access token needs `read:packages`.
 Then add the package:
 
 ```bash
-dotnet add package WinNotch.PluginSdk --version 0.6.2 --source github-winnotch
+dotnet add package WinNotch.PluginSdk --version 0.7.2 --source github-winnotch
 ```
 
 ## Important note
 
 This package is for plugin development. End users should still install WinNotch itself from GitHub Releases.
 
-At runtime, your plugin loads inside the WinNotch app and uses the app's `WinNotch.dll`. Keep your plugin's `MinimumWinNotchVersion` aligned with the app version you target.
+At runtime, your plugin loads inside WinNotch and uses the SDK contracts shipped with the app. Keep your plugin's `MinimumWinNotchVersion` aligned with the app version you target. Plugins do not receive the host window or mutable internal services; use only capabilities exposed by `IPluginContext`.

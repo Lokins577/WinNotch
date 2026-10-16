@@ -5,7 +5,7 @@
 ; Version can be overridden by the build (e.g. ISCC /DMyAppVersion=1.2.3).
 ; The fallback below is used by local build.bat runs; keep it synced with WinNotch.csproj.
 #ifndef MyAppVersion
-  #define MyAppVersion "0.6.2"
+  #define MyAppVersion "0.7.2"
 #endif
 #define MyAppPublisher "N3uralCreativity"
 #define MyAppURL "https://github.com/N3uralCreativity/WinNotch"

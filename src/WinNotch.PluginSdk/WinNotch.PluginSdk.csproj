@@ -2,57 +2,27 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>true</IsPackable>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <PackageId>WinNotch.PluginSdk</PackageId>
     <PackageTitle>WinNotch Plugin SDK</PackageTitle>
-    <Version>0.6.2</Version>
+    <Version>$(WinNotchVersion)</Version>
     <Authors>N3uralCreativity</Authors>
     <Company>N3uralCreativity</Company>
-    <Description>Compile-time SDK for building WinNotch plugins against the official WinNotch plugin interfaces and runtime assembly.</Description>
+    <Description>Stable contracts for building WinNotch UI and service plugins.</Description>
     <PackageTags>WinNotch;Plugins;WPF;Windows;SDK</PackageTags>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/N3uralCreativity/WinNotch</PackageProjectUrl>
     <RepositoryUrl>https://github.com/N3uralCreativity/WinNotch</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <NoWarn>$(NoWarn);NU5128;NU5131</NoWarn>
-    <WinNotchRuntimeIdentifier>win-x64</WinNotchRuntimeIdentifier>
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeWinNotchReferenceAssembly</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WinNotch\WinNotch.csproj"
-                      PrivateAssets="all"
-                      ReferenceOutputAssembly="false" />
-    <None Include="README.md"
-          Pack="true"
-          PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
-
-  <Target Name="IncludeWinNotchReferenceAssembly"
-          DependsOnTargets="Build">
-    <PropertyGroup>
-      <WinNotchReferenceDirectory>..\WinNotch\obj\$(Configuration)\$(TargetFramework)\$(WinNotchRuntimeIdentifier)\ref\</WinNotchReferenceDirectory>
-      <WinNotchDocumentationDirectory>..\WinNotch\bin\$(Configuration)\$(TargetFramework)\$(WinNotchRuntimeIdentifier)\</WinNotchDocumentationDirectory>
-    </PropertyGroup>
-
-    <Error Condition="!Exists('$(WinNotchReferenceDirectory)WinNotch.dll')"
-           Text="Expected WinNotch reference assembly was not found at $(WinNotchReferenceDirectory)WinNotch.dll" />
-
-    <ItemGroup>
-      <TfmSpecificPackageFile Include="$(WinNotchReferenceDirectory)WinNotch.dll">
-        <PackagePath>ref\$(TargetFramework)\WinNotch.dll</PackagePath>
-      </TfmSpecificPackageFile>
-      <TfmSpecificPackageFile Include="$(WinNotchDocumentationDirectory)WinNotch.xml"
-                              Condition="Exists('$(WinNotchDocumentationDirectory)WinNotch.xml')">
-        <PackagePath>ref\$(TargetFramework)\WinNotch.xml</PackagePath>
-      </TfmSpecificPackageFile>
-    </ItemGroup>
-  </Target>
 
 </Project>

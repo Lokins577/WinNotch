@@ -45,7 +45,7 @@ public abstract class PluginBase : IPlugin
 
     protected void OpenPluginManagerConfiguration()
     {
-        Context?.GetService<PluginManagerNavigationService>()?.OpenPluginManager(Id);
+        Context?.OpenConfiguration(Id);
     }
 
     public virtual void Dispose()

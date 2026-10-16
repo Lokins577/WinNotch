@@ -14,9 +14,9 @@
 
     <!-- App metadata -->
     <ApplicationIcon>Assets\Icons\WinNotch.ico</ApplicationIcon>
-    <Version>0.6.2</Version>
-    <FileVersion>0.6.2.0</FileVersion>
-    <AssemblyVersion>0.6.2.0</AssemblyVersion>
+    <Version>$(WinNotchVersion)</Version>
+    <FileVersion>$(WinNotchVersion).0</FileVersion>
+    <AssemblyVersion>$(WinNotchVersion).0</AssemblyVersion>
     <Product>WinNotch</Product>
     <Description>Dynamic Island-inspired notch overlay for Windows</Description>
     <Company>N3uralCreativity</Company>
@@ -31,12 +31,20 @@
     <RuntimeIdentifier Condition="'$(Configuration)' == 'Release'">win-x64</RuntimeIdentifier>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <!-- Keep restore configuration-independent so Release project references
+         can resolve the runtime-specific app assets in solution builds. -->
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
-    <PackageReference Include="NAudio" Version="2.2.*" />
-    <PackageReference Include="System.Management" Version="10.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WinNotch.Core\WinNotch.Core.csproj" />
+    <ProjectReference Include="..\WinNotch.Platform.Windows\WinNotch.Platform.Windows.csproj" />
+    <ProjectReference Include="..\WinNotch.PluginSdk\WinNotch.PluginSdk.csproj" />
+    <ProjectReference Include="..\WinNotch.PluginHost\WinNotch.PluginHost.csproj" />
   </ItemGroup>
 
 </Project>

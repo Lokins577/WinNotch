@@ -28,7 +28,7 @@ Plugin request:
 - Configuration requirements: [NONE or LIST OF REQUIRED TOKENS / URLS / SETTINGS]
 - External services or APIs: [NONE or LIST]
 - Permissions needed: [clipboard / network / filesystem / location / etc.]
-- Minimum WinNotch version target: [for example 0.6.2]
+- Minimum WinNotch version target: [for example 0.7.2]
 - Should it be browser-listable: [yes / no]
 
 Important WinNotch context:
@@ -52,21 +52,19 @@ Important WinNotch context:
   - Overlay
 - If the plugin adds visible content, it must work correctly in both top layout and vertical / side-docked layout.
 - If the plugin has any user-facing visuals, it must support both dark and light theme.
-- Theme changes can be observed through Context.ThemeService.
+- Theme changes can be observed through Context.Theme.
 - Plugin-specific files should be stored using Context.GetPluginDataPath(Id).
 - If the plugin requires user setup, implement IConfigurablePlugin so WinNotch can show the built-in configuration UI in Plugin Manager.
 
 Current project structure and conventions:
 - Main app project: src/WinNotch/WinNotch.csproj
-- Plugin interfaces: src/WinNotch/Plugins/
+- Plugin interfaces: src/WinNotch.PluginSdk/Contracts/
 - Example plugins: Examples/Plugins/
 - Plugin development guide: PLUGIN_DEVELOPMENT.md
 - Example browser manifest format: Examples/Plugins/example-library.json
 - Target framework used by example plugins: net8.0-windows10.0.22621.0
 - WPF should be enabled in plugin projects.
-- If building inside this repo, prefer a ProjectReference to src/WinNotch/WinNotch.csproj with:
-  - Private false
-  - ExcludeAssets runtime
+- If building inside this repo, reference src/WinNotch.PluginSdk/WinNotch.PluginSdk.csproj directly.
 
 Expected project setup:
 - Create a new plugin source folder at:
@@ -115,10 +113,10 @@ Implementation instructions:
 7. If the request can be done as a plugin only, keep it plugin-only.
 
 Required repository checks before coding:
-- inspect src/WinNotch/Plugins/IPlugin.cs
-- inspect src/WinNotch/Plugins/IUIPlugin.cs
-- inspect src/WinNotch/Plugins/IConfigurablePlugin.cs if configuration is needed
-- inspect src/WinNotch/Plugins/IPluginContext.cs
+- inspect src/WinNotch.PluginSdk/Contracts/IPlugin.cs
+- inspect src/WinNotch.PluginSdk/Contracts/IUIPlugin.cs
+- inspect src/WinNotch.PluginSdk/Contracts/IConfigurablePlugin.cs if configuration is needed
+- inspect src/WinNotch.PluginSdk/Contracts/IPluginContext.cs
 - inspect at least 2 relevant examples under Examples/Plugins
 - inspect PLUGIN_DEVELOPMENT.md
 
@@ -180,11 +178,11 @@ Short description: Advanced battery widget with time remaining and charge trends
 Closed notch behavior: nothing
 Expanded notch behavior: shows battery percentage, charging state, estimated remaining time, and a compact trend summary
 Vertical layout behavior: use a stacked layout with the same data in narrower form
-Theme behavior: adapt brushes for both dark and light theme through ThemeService
+Theme behavior: adapt brushes for both dark and light theme through Context.Theme
 Configuration requirements: allow user to choose refresh interval and whether trend history is saved
 External services or APIs: none
 Permissions needed: []
-Minimum WinNotch version target: 0.6.2
+Minimum WinNotch version target: 0.7.2
 Should it be browser-listable: yes
 ```
 

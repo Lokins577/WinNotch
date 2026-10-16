@@ -11,7 +11,6 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using WinNotch.Models;
 using WinNotch.Plugins;
-using WinNotch.Services;
 
 namespace DownloadsWatcherPlugin;
 
@@ -36,7 +35,7 @@ public sealed class DownloadsWatcherPlugin : PluginBase, IUIPlugin
     public override string Description => "Tracks active and recent downloads with quick open actions.";
     public override string MinimumWinNotchVersion => "0.3.8";
 
-    private ThemeService? _themeService;
+    private IPluginThemeService? _themeService;
     private DispatcherTimer? _refreshTimer;
     private DownloadsView? _openView;
     private DownloadsView? _verticalView;
@@ -48,7 +47,7 @@ public sealed class DownloadsWatcherPlugin : PluginBase, IUIPlugin
     {
         await base.InitializeAsync(context);
 
-        _themeService = context.ThemeService;
+        _themeService = context.Theme;
         _isLight = _themeService.IsLight;
         _themeService.ThemeChanged += OnThemeChanged;
 

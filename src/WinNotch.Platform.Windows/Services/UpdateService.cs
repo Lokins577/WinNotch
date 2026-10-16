@@ -7,7 +7,6 @@ using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using WinNotch.Helpers;
 
 namespace WinNotch.Services;
 
@@ -72,9 +71,11 @@ public sealed class UpdateService
         && Version.TryParse(CurrentVersion, out var local)
         && remote > local;
 
-    public UpdateService()
+    public UpdateService(string currentVersion)
     {
-        CurrentVersion = AppInfo.Version;
+        CurrentVersion = Version.TryParse(currentVersion, out var parsed)
+            ? parsed.ToString(3)
+            : "0.0.0";
     }
 
     /// <summary>

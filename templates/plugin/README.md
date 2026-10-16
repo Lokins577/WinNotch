@@ -44,19 +44,13 @@ Restart WinNotch. Your plugin will be auto-discovered and enabled.
 | `Settings` | Plugin settings panel |
 | `Overlay` | Highest-priority overlay layer |
 
-## Available Services via IPluginContext
+## Available capabilities via IPluginContext
 
-- `MediaService` — Now playing info, playback control
-- `AudioCaptureService` — Audio spectrum data (12 bands)
-- `VolumeService` / `BrightnessService` — System volume/brightness
-- `BatteryService` — Battery status
-- `CalendarService` — Calendar events
-- `ThemeService` — Current theme, theme changes
-- `ShelfService` — File shelf management
-- `WebcamService` — Webcam stream
-- `FullscreenService` — Fullscreen app detection
-- `NotchViewModel` — Current notch state
-- `AppSettings` — User settings
+- `Theme` — Read the current light/dark state and observe theme changes
+- `Battery` — Read battery charge, charging state, availability, and time remaining
+- `GetPluginDataPath` — Store plugin-owned files
+- `OpenConfiguration` — Open the plugin's host-managed configuration page
+- `Log` — Write diagnostic messages through the host
 
 ## Data Storage
 

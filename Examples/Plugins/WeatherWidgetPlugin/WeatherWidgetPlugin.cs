@@ -9,7 +9,6 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using WinNotch.Models;
 using WinNotch.Plugins;
-using WinNotch.Services;
 
 namespace WeatherWidgetPlugin;
 
@@ -27,7 +26,7 @@ public sealed class WeatherWidgetPlugin : PluginBase, IUIPlugin
     public override string Description => "Shows current weather in the expanded notch.";
     public override string MinimumWinNotchVersion => "0.3.8";
 
-    private ThemeService? _themeService;
+    private IPluginThemeService? _themeService;
     private DispatcherTimer? _refreshTimer;
     private WeatherView? _accessoryView;
     private WeatherView? _verticalView;
@@ -42,7 +41,7 @@ public sealed class WeatherWidgetPlugin : PluginBase, IUIPlugin
     {
         await base.InitializeAsync(context);
 
-        _themeService = context.ThemeService;
+        _themeService = context.Theme;
         _isLight = _themeService.IsLight;
         _themeService.ThemeChanged += OnThemeChanged;
 

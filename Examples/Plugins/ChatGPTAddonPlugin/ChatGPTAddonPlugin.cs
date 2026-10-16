@@ -10,7 +10,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using WinNotch.Models;
 using WinNotch.Plugins;
-using WinNotch.Services;
 
 namespace ChatGPTAddonPlugin;
 
@@ -31,7 +30,7 @@ public sealed class ChatGPTAddonPlugin : PluginBase, IUIPlugin, IConfigurablePlu
     public override string Description => "Quick-launch ChatGPT from the notch with reusable prompt presets and a shared prompt scratchpad.";
     public override string MinimumWinNotchVersion => "0.5.3";
 
-    private ThemeService? _themeService;
+    private IPluginThemeService? _themeService;
     private ChatView? _openView;
     private ChatView? _verticalView;
     private ChatAddonSettings _settings = ChatAddonSettings.CreateDefault();
@@ -47,7 +46,7 @@ public sealed class ChatGPTAddonPlugin : PluginBase, IUIPlugin, IConfigurablePlu
     {
         await base.InitializeAsync(context);
 
-        _themeService = context.ThemeService;
+        _themeService = context.Theme;
         _isLight = _themeService.IsLight;
         _themeService.ThemeChanged += OnThemeChanged;
 

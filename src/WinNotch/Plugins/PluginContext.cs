@@ -1,64 +1,34 @@
 using System;
 using System.IO;
-using System.Windows;
-using WinNotch.Models;
 using WinNotch.Services;
 
 namespace WinNotch.Plugins;
 
 /// <summary>
-/// Implementation of IPluginContext that provides plugins access to WinNotch services.
+/// Capability-oriented adapter between the application and third-party plugins.
+/// Concrete windows, settings, and mutable host services stay behind this boundary.
 /// </summary>
-internal class PluginContext : IPluginContext
+internal sealed class PluginContext : IPluginContext
 {
-    private readonly Dictionary<Type, object> _services = new();
+    private readonly Action<string?> _openConfiguration;
 
-    public Window MainWindow { get; }
-    public NotchViewModel NotchViewModel { get; }
-    public MediaService MediaService { get; }
-    public ThemeService ThemeService { get; }
-    public VolumeService VolumeService { get; }
-    public BrightnessService BrightnessService { get; }
-    public BatteryService BatteryService { get; }
-    public CalendarService CalendarService { get; }
-    public AudioCaptureService AudioCaptureService { get; }
-    public ShelfService ShelfService { get; }
-    public WebcamService WebcamService { get; }
-    public FullscreenService FullscreenService { get; }
-    public AppSettings Settings { get; }
+    public IPluginThemeService Theme { get; }
+    public IPluginBatteryService Battery { get; }
 
     public PluginContext(
-        Window mainWindow,
-        NotchViewModel notchViewModel,
-        MediaService mediaService,
         ThemeService themeService,
-        VolumeService volumeService,
-        BrightnessService brightnessService,
         BatteryService batteryService,
-        CalendarService calendarService,
-        AudioCaptureService audioCaptureService,
-        ShelfService shelfService,
-        WebcamService webcamService,
-        FullscreenService fullscreenService,
-        AppSettings settings)
+        Action<string?> openConfiguration)
     {
-        MainWindow = mainWindow;
-        NotchViewModel = notchViewModel;
-        MediaService = mediaService;
-        ThemeService = themeService;
-        VolumeService = volumeService;
-        BrightnessService = brightnessService;
-        BatteryService = batteryService;
-        CalendarService = calendarService;
-        AudioCaptureService = audioCaptureService;
-        ShelfService = shelfService;
-        WebcamService = webcamService;
-        FullscreenService = fullscreenService;
-        Settings = settings;
+        Theme = new PluginThemeAdapter(themeService);
+        Battery = new PluginBatteryAdapter(batteryService);
+        _openConfiguration = openConfiguration;
     }
 
     public string GetPluginDataPath(string pluginId)
     {
+        ValidatePluginId(pluginId);
+
         var basePath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "WinNotch",
@@ -69,14 +39,10 @@ internal class PluginContext : IPluginContext
         return basePath;
     }
 
-    public void RegisterService<T>(T service) where T : class
+    public void OpenConfiguration(string pluginId)
     {
-        _services[typeof(T)] = service;
-    }
-
-    public T? GetService<T>() where T : class
-    {
-        return _services.TryGetValue(typeof(T), out var service) ? service as T : null;
+        ValidatePluginId(pluginId);
+        _openConfiguration(pluginId);
     }
 
     public void Log(string message, PluginLogLevel level = PluginLogLevel.Info)
@@ -92,7 +58,6 @@ internal class PluginContext : IPluginContext
 
         System.Diagnostics.Debug.WriteLine($"{prefix} [Plugin] {message}");
 
-        // Optionally write to a log file
         try
         {
             var logPath = Path.Combine(
@@ -104,7 +69,52 @@ internal class PluginContext : IPluginContext
         }
         catch
         {
-            // Ignore logging errors
+            // Diagnostics must not crash the plugin host.
         }
+    }
+
+    private static void ValidatePluginId(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId) || pluginId.Length > 128
+            || pluginId is "." or ".."
+            || pluginId.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
+            || pluginId.Contains(Path.DirectorySeparatorChar)
+            || pluginId.Contains(Path.AltDirectorySeparatorChar))
+        {
+            throw new ArgumentException("Plugin ID is not a safe directory name.", nameof(pluginId));
+        }
+    }
+
+    private sealed class PluginThemeAdapter : IPluginThemeService
+    {
+        private readonly ThemeService _service;
+
+        public PluginThemeAdapter(ThemeService service)
+        {
+            _service = service;
+        }
+
+        public bool IsLight => _service.IsLight;
+
+        public event Action? ThemeChanged
+        {
+            add => _service.ThemeChanged += value;
+            remove => _service.ThemeChanged -= value;
+        }
+    }
+
+    private sealed class PluginBatteryAdapter : IPluginBatteryService
+    {
+        private readonly BatteryService _service;
+
+        public PluginBatteryAdapter(BatteryService service)
+        {
+            _service = service;
+        }
+
+        public int ChargePercent => _service.ChargePercent;
+        public bool IsCharging => _service.IsCharging;
+        public bool HasBattery => _service.HasBattery;
+        public TimeSpan TimeRemaining => _service.TimeRemaining;
     }
 }

@@ -11,7 +11,6 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using WinNotch.Models;
 using WinNotch.Plugins;
-using WinNotch.Services;
 
 namespace FocusTimerPlugin;
 
@@ -27,7 +26,7 @@ public sealed class FocusTimerPlugin : PluginBase, IUIPlugin, IConfigurablePlugi
     public override string Description => "Pomodoro-style focus timer with break cycles, streak tracking, and compact session controls.";
     public override string MinimumWinNotchVersion => "0.5.3";
 
-    private ThemeService? _themeService;
+    private IPluginThemeService? _themeService;
     private DispatcherTimer? _timer;
     private FocusTimerView? _openView;
     private FocusTimerView? _verticalView;
@@ -46,7 +45,7 @@ public sealed class FocusTimerPlugin : PluginBase, IUIPlugin, IConfigurablePlugi
     {
         await base.InitializeAsync(context);
 
-        _themeService = context.ThemeService;
+        _themeService = context.Theme;
         _isLight = _themeService.IsLight;
         _themeService.ThemeChanged += OnThemeChanged;
 

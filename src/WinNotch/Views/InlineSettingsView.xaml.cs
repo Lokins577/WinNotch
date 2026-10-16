@@ -3,14 +3,16 @@ using System.Windows;
 using WinNotch.Helpers;
 using WinNotch.Models;
 using WinNotch.Services;
+using WinNotch.Settings;
 
 namespace WinNotch.Views;
 
 public partial class InlineSettingsView : System.Windows.Controls.UserControl
 {
     private AppSettings? _settings;
+    private IAppSettingsStore? _settingsStore;
     private bool _isLoading;
-    private readonly UpdateService _updateService = new();
+    private readonly UpdateService _updateService = new(AppInfo.Version);
 
     /// <summary>Fired when any setting changes.</summary>
     public event Action<AppSettings>? SettingsChanged;
@@ -30,10 +32,11 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         VersionText.Text = AppInfo.NameWithVersion;
     }
 
-    public void LoadSettings(AppSettings settings)
+    public void LoadSettings(AppSettings settings, IAppSettingsStore settingsStore)
     {
         _isLoading = true;
         _settings = settings;
+        _settingsStore = settingsStore;
 
         StartOnBootCheck.IsChecked = settings.StartOnBoot;
         ShowShadowCheck.IsChecked = settings.ShowShadow;
@@ -82,8 +85,8 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         _settings.SyncIslandsOpenState = SyncIslandsCheck.IsChecked == true;
         _settings.ReserveSpaceAtTop = ReserveSpaceCheck.IsChecked == true;
 
-        _settings.ApplyStartOnBoot();
-        _settings.Save();
+        _settingsStore!.ApplyStartOnBoot(_settings.StartOnBoot);
+        _settingsStore.Save(_settings);
         SettingsChanged?.Invoke(_settings);
     }
 
@@ -95,7 +98,7 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
             ? HoverMode.LongHoverOpen
             : HoverMode.HoverPeekClickOpen;
 
-        _settings.Save();
+        _settingsStore!.Save(_settings);
         SettingsChanged?.Invoke(_settings);
     }
 
@@ -104,7 +107,7 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         if (_isLoading || _settings == null) return;
         _settings.WebcamFps = (int)e.NewValue;
         WebcamFpsLabel.Text = $"{_settings.WebcamFps}";
-        _settings.Save();
+        _settingsStore!.Save(_settings);
         SettingsChanged?.Invoke(_settings);
     }
 
@@ -128,7 +131,7 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         AdaptToWindowsThemeCheck.IsChecked = false;
         _settings.Theme = ThemeLightRadio.IsChecked == true ? AppTheme.Light : AppTheme.Dark;
 
-        _settings.Save();
+        _settingsStore!.Save(_settings);
         ThemeChangeRequested?.Invoke(_settings);
     }
 
@@ -137,7 +140,7 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         if (_isLoading || _settings == null) return;
 
         _settings.AdaptToWindowsTheme = AdaptToWindowsThemeCheck.IsChecked == true;
-        _settings.Save();
+        _settingsStore!.Save(_settings);
         ThemeChangeRequested?.Invoke(_settings);
     }
 
@@ -146,7 +149,7 @@ public partial class InlineSettingsView : System.Windows.Controls.UserControl
         if (_isLoading || _settings == null) return;
 
         _settings.UseLiquidGlassTheme = LiquidGlassCheck.IsChecked == true;
-        _settings.Save();
+        _settingsStore!.Save(_settings);
         SettingsChanged?.Invoke(_settings);
     }
 

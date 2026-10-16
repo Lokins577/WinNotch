@@ -39,7 +39,7 @@ UI plugins can return elements for these locations:
 - `Settings`
 - `Overlay`
 
-The live contracts are in `src/WinNotch/Plugins/`.
+The live contracts are in `src/WinNotch.PluginSdk/`.
 
 ## Choose a development setup
 
@@ -62,12 +62,12 @@ dotnet nuget add source "https://nuget.pkg.github.com/N3uralCreativity/index.jso
 Then install the SDK package:
 
 ```bash
-dotnet add package WinNotch.PluginSdk --version 0.6.2 --source github-winnotch
+dotnet add package WinNotch.PluginSdk --version 0.7.2 --source github-winnotch
 ```
 
 Your personal access token needs `read:packages`.
 
-### Option 2: Reference the WinNotch project directly
+### Option 2: Reference the SDK project directly
 
 This is the best setup when you are already working inside the WinNotch repository and want easy access to the example plugins.
 
@@ -81,10 +81,7 @@ This is the best setup when you are already working inside the WinNotch reposito
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\WinNotch\WinNotch.csproj">
-      <Private>false</Private>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\WinNotch.PluginSdk\WinNotch.PluginSdk.csproj" />
   </ItemGroup>
 </Project>
 ```
@@ -103,7 +100,7 @@ Whether you use the package or a direct project reference, your plugin project s
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WinNotch.PluginSdk" Version="0.6.2" />
+    <PackageReference Include="WinNotch.PluginSdk" Version="0.7.2" />
   </ItemGroup>
 </Project>
 ```
@@ -126,7 +123,7 @@ public sealed class HelloWorldPlugin : PluginBase, IUIPlugin
     public override string Version => "1.0.0";
     public override string Author => "Your Name";
     public override string Description => "A simple test plugin.";
-    public override string MinimumWinNotchVersion => "0.6.2";
+    public override string MinimumWinNotchVersion => "0.7.2";
 
     public UIElement? GetUIElement(UIPluginLocation location)
     {
@@ -164,33 +161,25 @@ If you also include a `manifest.json` beside the DLL, WinNotch can show better i
 
 ## Plugin context
 
-Every plugin receives an `IPluginContext` during initialization. It gives access to WinNotch services and plugin storage.
+Every plugin receives an `IPluginContext` during initialization. It exposes stable, capability-oriented APIs rather than application windows or mutable host internals.
 
 ```csharp
 public interface IPluginContext
 {
-    Window MainWindow { get; }
-    NotchViewModel NotchViewModel { get; }
-    MediaService MediaService { get; }
-    ThemeService ThemeService { get; }
-    VolumeService VolumeService { get; }
-    BrightnessService BrightnessService { get; }
-    BatteryService BatteryService { get; }
-    CalendarService CalendarService { get; }
-    AudioCaptureService AudioCaptureService { get; }
-    ShelfService ShelfService { get; }
-    WebcamService WebcamService { get; }
-    FullscreenService FullscreenService { get; }
-    AppSettings Settings { get; }
-
+    IPluginThemeService Theme { get; }
+    IPluginBatteryService Battery { get; }
     string GetPluginDataPath(string pluginId);
-    void RegisterService<T>(T service) where T : class;
-    T? GetService<T>() where T : class;
+    void OpenConfiguration(string pluginId);
     void Log(string message, PluginLogLevel level = PluginLogLevel.Info);
 }
 ```
 
 Use `GetPluginDataPath(Id)` for plugin-owned files such as `settings.json`, caches, or tokens.
+
+Plugins currently run in the WinNotch process with normal .NET permissions.
+Manifest permission declarations tell users what a plugin intends to do; they
+do not sandbox filesystem, network, process, or native API access. Only install
+plugins whose source and publisher you trust.
 
 ## UI plugin guidance
 
@@ -209,7 +198,7 @@ Layout advice:
 - use `OpenAccessory` for small inline content beside built-in expanded content
 - use `VerticalOpenContent` when a side-docked notch needs a different composition
 - avoid assuming a fixed horizontal canvas unless your plugin is explicitly top-only
-- react to `Context.ThemeService.ThemeChanged` so your UI stays readable in both themes
+- react to `Context.Theme.ThemeChanged` so your UI stays readable in both themes
 
 ## Service and animation plugins
 
@@ -284,7 +273,7 @@ Example manifest:
   "version": "1.0.0",
   "author": "Your Name",
   "description": "Does something useful in the notch.",
-  "minimumWinNotchVersion": "0.6.2",
+  "minimumWinNotchVersion": "0.7.2",
   "downloadUrl": "https://github.com/you/myplugin/releases/download/v1.0.0/MyPlugin.dll",
   "homepage": "https://github.com/you/myplugin",
   "iconUrl": "",

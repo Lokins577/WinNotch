@@ -11,10 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\WinNotch\WinNotch.csproj">
-      <Private>false</Private>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\WinNotch.PluginSdk\WinNotch.PluginSdk.csproj" />
   </ItemGroup>
 
 </Project>

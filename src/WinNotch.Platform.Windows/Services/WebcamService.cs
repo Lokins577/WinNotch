@@ -199,7 +199,7 @@ public class WebcamService : IDisposable
 
             // Create WPF ImageSource on the UI thread (BitmapSource.Create copies
             // the buffer synchronously, after which it is safe to reuse)
-            dispatched = Application.Current?.Dispatcher?.BeginInvoke(() =>
+            dispatched = System.Windows.Application.Current?.Dispatcher?.BeginInvoke(() =>
             {
                 try
                 {

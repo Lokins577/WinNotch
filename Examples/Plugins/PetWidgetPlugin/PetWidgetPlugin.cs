@@ -7,7 +7,6 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using WinNotch.Models;
 using WinNotch.Plugins;
-using WinNotch.Services;
 
 namespace PetWidgetPlugin;
 
@@ -21,8 +20,8 @@ public class PetWidgetPlugin : PluginBase, IUIPlugin
     public override string Description => "A tiny notch cat that reacts to battery level, mood, and attention.";
     public override string MinimumWinNotchVersion => "0.3.0";
 
-    private ThemeService? _themeService;
-    private BatteryService? _batteryService;
+    private IPluginThemeService? _themeService;
+    private IPluginBatteryService? _batteryService;
 
     private TextBlock? _closedEmoji;
     private Border? _openContainer;
@@ -55,8 +54,8 @@ public class PetWidgetPlugin : PluginBase, IUIPlugin
     {
         await base.InitializeAsync(context);
 
-        _themeService = context.ThemeService;
-        _batteryService = context.BatteryService;
+        _themeService = context.Theme;
+        _batteryService = context.Battery;
         _isLight = _themeService.IsLight;
         _themeService.ThemeChanged += OnThemeChanged;
 

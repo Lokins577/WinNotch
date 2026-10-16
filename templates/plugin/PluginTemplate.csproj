@@ -11,11 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Reference WinNotch for plugin interfaces. Adjust path to your local WinNotch build. -->
-    <ProjectReference Include="..\..\src\WinNotch\WinNotch.csproj">
-      <Private>false</Private>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </ProjectReference>
+    <!-- Reference the stable contracts rather than the WinNotch application. -->
+    <ProjectReference Include="..\..\src\WinNotch.PluginSdk\WinNotch.PluginSdk.csproj" />
   </ItemGroup>
 
 </Project>

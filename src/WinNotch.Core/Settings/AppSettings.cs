@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace WinNotch.Models;
@@ -86,57 +83,6 @@ public class AppSettings
     // Beta features
     public bool UseLiquidGlassTheme { get; set; } = false;
 
-    private static readonly string SettingsDir = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WinNotch");
-    private static readonly string SettingsPath = Path.Combine(SettingsDir, "settings.json");
-
-    // Write every property: skipping CLR-default values (0/false) would make
-    // settings like "HoverCloseDelayMs = 0" silently revert on next load.
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        WriteIndented = true
-    };
-
-    public static AppSettings Load()
-    {
-        try
-        {
-            if (File.Exists(SettingsPath))
-            {
-                var json = File.ReadAllText(SettingsPath);
-                var settings = JsonSerializer.Deserialize<AppSettings>(json, JsonOptions) ?? new AppSettings();
-
-                using var document = JsonDocument.Parse(json);
-                bool hasAdaptSetting = document.RootElement.TryGetProperty(nameof(AdaptToWindowsTheme), out _);
-
-                if (!hasAdaptSetting)
-                    settings.AdaptToWindowsTheme = settings.Theme == AppTheme.Auto;
-
-                if (settings.Theme == AppTheme.Auto)
-                    settings.Theme = AppTheme.Dark;
-
-                return settings;
-            }
-        }
-        catch { }
-        return new AppSettings();
-    }
-
-    public void Save()
-    {
-        try
-        {
-            Directory.CreateDirectory(SettingsDir);
-            var json = JsonSerializer.Serialize(this, JsonOptions);
-
-            // Atomic write: a crash mid-write must never corrupt settings.json
-            var tempPath = SettingsPath + ".tmp";
-            File.WriteAllText(tempPath, json);
-            File.Move(tempPath, SettingsPath, overwrite: true);
-        }
-        catch { }
-    }
-
     public AppTheme GetManualTheme()
     {
         return Theme == AppTheme.Light ? AppTheme.Light : AppTheme.Dark;
@@ -147,28 +93,4 @@ public class AppSettings
         return AdaptToWindowsTheme ? AppTheme.Auto : GetManualTheme();
     }
 
-    /// <summary>Register or unregister the app from Windows startup.</summary>
-    public void ApplyStartOnBoot()
-    {
-        const string keyPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
-        const string valueName = "WinNotch";
-
-        try
-        {
-            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(keyPath, true);
-            if (key == null) return;
-
-            if (StartOnBoot)
-            {
-                var exePath = Environment.ProcessPath;
-                if (exePath != null)
-                    key.SetValue(valueName, $"\"{exePath}\"");
-            }
-            else
-            {
-                key.DeleteValue(valueName, false);
-            }
-        }
-        catch { }
-    }
 }

@@ -17,7 +17,6 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using WinNotch.Models;
 using WinNotch.Plugins;
-using WinNotch.Services;
 
 namespace TodoPeekPlugin;
 
@@ -35,7 +34,7 @@ public sealed class TodoPeekPlugin : PluginBase, IUIPlugin, IConfigurablePlugin
     public override string Description => "Expanded-view task widget with quick completion for Todoist, plus manual-token Microsoft To Do support.";
     public override string MinimumWinNotchVersion => "0.5.3";
 
-    private ThemeService? _themeService;
+    private IPluginThemeService? _themeService;
     private DispatcherTimer? _refreshTimer;
     private TodoPeekView? _openView;
     private TodoPeekView? _verticalView;
@@ -55,7 +54,7 @@ public sealed class TodoPeekPlugin : PluginBase, IUIPlugin, IConfigurablePlugin
     {
         await base.InitializeAsync(context);
 
-        _themeService = context.ThemeService;
+        _themeService = context.Theme;
         _isLight = _themeService.IsLight;
         _themeService.ThemeChanged += OnThemeChanged;
 

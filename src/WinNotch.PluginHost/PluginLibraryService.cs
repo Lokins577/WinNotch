@@ -7,7 +7,6 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using WinNotch.Helpers;
 
 namespace WinNotch.Plugins;
 
@@ -26,13 +25,13 @@ public class PluginLibraryService
 
     public string? LastError { get; private set; }
 
-    public PluginLibraryService()
+    public PluginLibraryService(string hostVersion)
     {
         _httpClient = new HttpClient
         {
             Timeout = TimeSpan.FromSeconds(30)
         };
-        _httpClient.DefaultRequestHeaders.Add("User-Agent", $"WinNotch/{AppInfo.Version}");
+        _httpClient.DefaultRequestHeaders.Add("User-Agent", $"WinNotch/{hostVersion}");
     }
 
     public PluginManifest? GetAvailablePlugin(string pluginId)

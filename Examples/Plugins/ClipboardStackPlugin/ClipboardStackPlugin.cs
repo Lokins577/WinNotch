@@ -9,7 +9,6 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using WinNotch.Models;
 using WinNotch.Plugins;
-using WinNotch.Services;
 
 namespace ClipboardStackPlugin;
 
@@ -31,7 +30,7 @@ public sealed class ClipboardStackPlugin : PluginBase, IUIPlugin
     public override string Description => "Keeps the last five copied text snippets and file lists ready to copy back into the clipboard.";
     public override string MinimumWinNotchVersion => "0.3.8";
 
-    private ThemeService? _themeService;
+    private IPluginThemeService? _themeService;
     private DispatcherTimer? _pollTimer;
     private ClipboardStackView? _openView;
     private ClipboardStackView? _verticalView;
@@ -45,7 +44,7 @@ public sealed class ClipboardStackPlugin : PluginBase, IUIPlugin
     {
         await base.InitializeAsync(context);
 
-        _themeService = context.ThemeService;
+        _themeService = context.Theme;
         _isLight = _themeService.IsLight;
         _themeService.ThemeChanged += OnThemeChanged;
 

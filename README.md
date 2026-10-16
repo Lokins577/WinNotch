@@ -14,6 +14,7 @@ Built with `WPF`, `.NET 8`, and `C#`.
 - Releases: `https://github.com/N3uralCreativity/WinNotch/releases`
 - Plugin library repo: `https://github.com/N3uralCreativity/WinNotch-Plugins`
 - Plugin development guide: [PLUGIN_DEVELOPMENT.md](PLUGIN_DEVELOPMENT.md)
+- Architecture guide: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 ## Features
 

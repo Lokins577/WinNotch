@@ -3,8 +3,11 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Threading;
 using System.Windows;
+using WinNotch.Helpers;
 using WinNotch.Models;
+using WinNotch.Platform.Windows.Settings;
 using WinNotch.Services;
+using WinNotch.Settings;
 using WinNotch.Views;
 using Forms = System.Windows.Forms;
 using DrawColor = System.Drawing.Color;
@@ -20,6 +23,7 @@ public partial class App : Application
     private Forms.NotifyIcon? _trayIcon;
     private Forms.ContextMenuStrip? _trayMenu;
     private AppSettings _settings = null!;
+    private IAppSettingsStore _settingsStore = null!;
     private ThemeService _themeService = null!;
     private NotchServices _services = null!;
 
@@ -73,7 +77,8 @@ public partial class App : Application
         }
 
         // Load settings
-        _settings = AppSettings.Load();
+        _settingsStore = new JsonAppSettingsStore();
+        _settings = _settingsStore.Load();
 
         // Initialize theme
         _themeService = new ThemeService();
@@ -88,7 +93,7 @@ public partial class App : Application
         _services = new NotchServices();
 
         // Launch the primary island (on its remembered screen)
-        _notchWindow = new NotchWindow(_settings, _themeService, _services,
+        _notchWindow = new NotchWindow(_settings, _settingsStore, _themeService, _services,
             isPrimary: true, screenDevice: _settings.NotchScreenDevice);
         WireIslandEvents(_notchWindow);
         _notchWindow.Show();
@@ -182,7 +187,7 @@ public partial class App : Application
             if (_secondaryWindows.ContainsKey(device))
                 continue;
 
-            var island = new NotchWindow(_settings, _themeService, _services,
+            var island = new NotchWindow(_settings, _settingsStore, _themeService, _services,
                 isPrimary: false, screenDevice: device);
             WireIslandEvents(island);
             _secondaryWindows[device] = island;
@@ -196,7 +201,7 @@ public partial class App : Application
         {
             await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(15));
 
-            var updateService = new UpdateService();
+            var updateService = new UpdateService(AppInfo.Version);
             var result = await updateService.CheckForUpdateAsync();
 
             if (result == UpdateCheckResult.UpdateAvailable && _trayIcon != null)

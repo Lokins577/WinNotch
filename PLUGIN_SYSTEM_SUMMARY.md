@@ -8,7 +8,7 @@ The WinNotch plugin system has been successfully implemented, providing an extre
 
 ### Core Components
 
-#### 1. Plugin Interfaces (`src/WinNotch/Plugins/`)
+#### 1. Plugin Interfaces (`src/WinNotch.PluginSdk/Contracts/`)
 
 - **`IPlugin`** - Base interface all plugins must implement
   - Lifecycle hooks: `InitializeAsync`, `OnEnableAsync`, `OnDisableAsync`, `ShutdownAsync`
@@ -29,14 +29,19 @@ The WinNotch plugin system has been successfully implemented, providing an extre
 
 #### 2. Plugin Context (`IPluginContext`)
 
-Provides plugins with safe access to WinNotch services:
-- Window and ViewModel access
-- All core services (Media, Theme, Volume, Brightness, Battery, etc.)
-- Plugin data storage paths
-- Service registration/retrieval
+Provides plugins with a narrow capability surface:
+- Read-only theme and battery capabilities
+- Validated plugin data storage paths
+- Host-managed configuration navigation
 - Logging API
 
-#### 3. Plugin Manager (`PluginManager`)
+The context intentionally does not expose the host window, internal ViewModel,
+mutable application settings, or concrete platform services.
+
+This is an API boundary, not a security boundary. Plugins execute in process;
+declared permissions are informational until an out-of-process host exists.
+
+#### 3. Plugin Manager (`src/WinNotch.PluginHost/PluginManager.cs`)
 
 Handles plugin lifecycle:
 - Discovery and loading from `%AppData%\WinNotch\Plugins\`
@@ -45,7 +50,7 @@ Handles plugin lifecycle:
 - Error handling and logging
 - Dependency checking
 
-#### 4. Plugin Library Service (`PluginLibraryService`)
+#### 4. Plugin Library Service (`src/WinNotch.PluginHost/PluginLibraryService.cs`)
 
 Online plugin discovery:
 - Fetches plugin library from GitHub
@@ -250,7 +255,8 @@ To fully integrate the plugin system into WinNotch:
 
 ### Core System (17 files)
 ```
-src/WinNotch/Plugins/
+src/WinNotch.PluginSdk/Contracts/
+src/WinNotch.PluginHost/
 ├── IPlugin.cs
 ├── IPluginContext.cs
 ├── IUIPlugin.cs

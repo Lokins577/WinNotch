@@ -4,9 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows;
-using WinNotch.Helpers;
-using WinNotch.Models;
 
 namespace WinNotch.Plugins;
 
@@ -16,6 +13,7 @@ namespace WinNotch.Plugins;
 public class PluginManager : IDisposable
 {
     private readonly IPluginContext _context;
+    private readonly Version _hostVersion;
     private readonly List<IPlugin> _loadedPlugins = new();
     private readonly Dictionary<string, bool> _pluginEnabledState = new();
     private readonly Dictionary<string, string> _pluginSourceFiles = new();
@@ -32,9 +30,12 @@ public class PluginManager : IDisposable
     public event Action<IPlugin>? PluginUnloaded;
     public event Action<IPlugin, Exception>? PluginError;
 
-    public PluginManager(IPluginContext context)
+    public PluginManager(IPluginContext context, string hostVersion)
     {
         _context = context;
+        _hostVersion = Version.TryParse(hostVersion, out var parsedVersion)
+            ? parsedVersion
+            : new Version(0, 0, 0);
 
         _pluginsDirectory = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -285,9 +286,8 @@ public class PluginManager : IDisposable
     {
         try
         {
-            var currentVersion = new Version(AppInfo.Version); // WinNotch version
             var required = new Version(requiredVersion);
-            return currentVersion >= required;
+            return _hostVersion >= required;
         }
         catch
         {

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>WinNotch</RootNamespace>
+    <AssemblyName>WinNotch.Core</AssemblyName>
+    <Description>Platform-neutral domain and application primitives for WinNotch.</Description>
+  </PropertyGroup>
+
+</Project>
