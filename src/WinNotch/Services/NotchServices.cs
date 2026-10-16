@@ -48,6 +48,7 @@ public sealed class NotchServices : IDisposable
     public CaptureFeatureService? Capture { get; private set; }
     public MediaToolsFeatureService? MediaTools { get; private set; }
     public AppManagementFeatureService? AppManagement { get; private set; }
+    public InputEnhancementFeatureService? InputEnhancements { get; private set; }
     public FeatureRuntime FeatureRuntime { get; }
 
     private readonly AppSettings _settings;
@@ -86,6 +87,7 @@ public sealed class NotchServices : IDisposable
         FeatureRuntime.Register(BuiltInFeatures.Capture.Id, CreateCaptureModule);
         FeatureRuntime.Register(BuiltInFeatures.MediaTools.Id, CreateMediaToolsModule);
         FeatureRuntime.Register(BuiltInFeatures.AppManagement.Id, CreateAppManagementModule);
+        FeatureRuntime.Register(BuiltInFeatures.InputEnhancements.Id, CreateInputEnhancementsModule);
     }
 
     /// <summary>
@@ -157,6 +159,9 @@ public sealed class NotchServices : IDisposable
         await FeatureRuntime.SetEnabledAsync(
             BuiltInFeatures.AppManagement.Id,
             _settings.IsFeatureAvailable(BuiltInFeatures.AppManagement));
+        await FeatureRuntime.SetEnabledAsync(
+            BuiltInFeatures.InputEnhancements.Id,
+            _settings.IsFeatureAvailable(BuiltInFeatures.InputEnhancements));
     }
 
     public void Dispose()
@@ -290,6 +295,12 @@ public sealed class NotchServices : IDisposable
     {
         AppManagement = new AppManagementFeatureService(_settings.AppManagementPreferences);
         return AppManagement;
+    }
+
+    private IFeatureModule CreateInputEnhancementsModule()
+    {
+        InputEnhancements = new InputEnhancementFeatureService(_settings.InputEnhancementPreferences);
+        return InputEnhancements;
     }
 
     private sealed class NoOpFeatureModule : IFeatureModule

@@ -219,6 +219,14 @@ Add scroll direction and shaping, focus-follows-mouse, acceleration controls,
 side-button mapping, middle click, debounce, Super key, text snippets, and app
 exclusions. Anti-cheat and elevated-window limitations must be documented.
 
+Status: implemented as an opt-in experimental module. Scroll direction and
+fractional shaping, delayed focus-follow, reversible Windows acceleration/speed
+overrides, debounced side-button mappings, middle click, Right Super-key
+actions, delimiter-based Unicode expansions, password detection, and process
+exclusions are included. Hooks use a dedicated message thread, ignore injected
+events, and are removed when disabled. Elevated and anti-cheat limitations are
+explicit; WinNotch provides no bypass or driver.
+
 ### 14. Display, energy, and hardware providers
 
 Add Keep Awake rules, external-display DDC/CI, brightness steps, software

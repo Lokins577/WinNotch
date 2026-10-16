@@ -131,9 +131,11 @@ public static class BuiltInFeatures
         EnabledByDefault: false,
         Maturity: FeatureMaturity.Available);
 
-    public static readonly FeatureDescriptor InputEnhancements = Planned(
+    public static readonly FeatureDescriptor InputEnhancements = new(
         "input.enhancements", "Input enhancements", FeatureGroup.Input,
-        "Mouse, scrolling, keyboard, snippets, debounce, and app exclusions.");
+        "Mouse, scrolling, focus, buttons, Super key, snippets, debounce, and app exclusions.",
+        EnabledByDefault: false,
+        Maturity: FeatureMaturity.Experimental);
 
     public static readonly FeatureDescriptor DisplayAndEnergy = Planned(
         "energy.display", "Display and energy", FeatureGroup.EnergyAndDisplay,

@@ -8,6 +8,7 @@ using WinNotch.AudioControl;
 using WinNotch.Capture;
 using WinNotch.MediaTools;
 using WinNotch.AppManagement;
+using WinNotch.InputEnhancements;
 
 namespace WinNotch.Platform.Windows.Settings;
 
@@ -71,6 +72,8 @@ public sealed class JsonAppSettingsStore : IAppSettingsStore
             settings.RecordingPreferences.Normalize();
             settings.AppManagementPreferences ??= new AppManagementPreferences();
             settings.AppManagementPreferences.Normalize();
+            settings.InputEnhancementPreferences ??= new InputEnhancementPreferences();
+            settings.InputEnhancementPreferences.Normalize();
 
             return settings;
         }

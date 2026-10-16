@@ -156,6 +156,12 @@ inventory, exact WinGet handoff, bounded cache scanning, Recycle Bin operations,
 TCP owner tables, installer/uninstaller launch, and process actions. The WPF
 surface separates discovery from every state-changing confirmation.
 
+Input preferences, scroll residuals, text-expansion matching, and protected
+process exclusions live in Core. The Windows layer owns a dedicated low-level
+hook thread, `SendInput`, foreground/password context, and reversible
+`SystemParametersInfo` overrides. The application service maps typed input
+actions to WinNotch surfaces without giving the hook layer UI dependencies.
+
 Legacy public type names moved out of `WinNotch.dll` are forwarded to their new
 assemblies where practical. The 0.7 PluginSdk intentionally narrows
 `IPluginContext`; plugins that used removed host internals must migrate. New
@@ -188,6 +194,7 @@ new work does not return to a single multi-thousand-line file:
 - `NotchWindow.Capture.cs`: capture launcher lifecycle.
 - `NotchWindow.MediaTools.cs`: recording and media-tool lifecycle.
 - `NotchWindow.AppManagement.cs`: reviewed package and process tooling.
+- `NotchWindow.InputEnhancements.cs`: input settings and typed action dispatch.
 
 ## Dependency rules
 

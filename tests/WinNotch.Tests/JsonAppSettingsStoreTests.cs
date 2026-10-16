@@ -70,6 +70,14 @@ public sealed class JsonAppSettingsStoreTests
         expected.AppManagementPreferences.TemporaryFileMinimumAgeDays = 14;
         expected.AppManagementPreferences.MessagingRetentionDays = 60;
         expected.AppManagementPreferences.MessagingDownloadFolders.Add(@"D:\Chat Downloads");
+        expected.InputEnhancementPreferences.ReverseVerticalScroll = true;
+        expected.InputEnhancementPreferences.XButton1Action = WinNotch.InputEnhancements.SideButtonAction.MiddleClick;
+        expected.InputEnhancementPreferences.ExcludedApplications.Add("game");
+        expected.InputEnhancementPreferences.TextExpansions.Add(new WinNotch.InputEnhancements.TextExpansionSnippet
+        {
+            Trigger = ":sig",
+            Replacement = "Regards"
+        });
 
         store.Save(expected);
         var actual = store.Load();
@@ -110,6 +118,10 @@ public sealed class JsonAppSettingsStoreTests
         Assert.Equal(14, actual.AppManagementPreferences.TemporaryFileMinimumAgeDays);
         Assert.Equal(60, actual.AppManagementPreferences.MessagingRetentionDays);
         Assert.Contains(@"D:\Chat Downloads", actual.AppManagementPreferences.MessagingDownloadFolders);
+        Assert.True(actual.InputEnhancementPreferences.ReverseVerticalScroll);
+        Assert.Equal(WinNotch.InputEnhancements.SideButtonAction.MiddleClick, actual.InputEnhancementPreferences.XButton1Action);
+        Assert.Contains("game", actual.InputEnhancementPreferences.ExcludedApplications);
+        Assert.Equal(":sig", Assert.Single(actual.InputEnhancementPreferences.TextExpansions).Trigger);
     }
 
     [Fact]
